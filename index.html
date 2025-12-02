@@ -8,39 +8,50 @@
   <title>Imposter (Clash Royale)</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * { 
+      box-sizing: border-box; 
+    }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
       background: #f4f4f8;
       display: flex;
       justify-content: center;
+      align-items: flex-start;
       min-height: 100vh;
       color: #222;
+      padding: 12px;
     }
 
     .container {
       width: 100%;
-      max-width: 650px;
-      padding: 20px 12px 32px;
+      max-width: 800px;
+      min-width: 300px;
+      padding: 16px 12px 24px;
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
     h1 {
       text-align: center;
       margin: 0 0 8px;
-      font-size: 28px;
-      font-weight: 700;
+      font-size: clamp(24px, 5vw, 32px);
+      font-weight: 800;
+      line-height: 1.2;
+      padding: 0 8px;
     }
 
     p.instructions {
-      margin: 0 0 18px;
+      margin: 0 0 20px;
       text-align: center;
-      font-size: 15px;
+      font-size: clamp(14px, 3.5vw, 16px);
       color: #555;
+      line-height: 1.4;
+      padding: 0 8px;
+      max-width: 600px;
     }
 
     /* ===== Controls ===== */
@@ -51,41 +62,64 @@
       gap: 12px;
       align-items: center;
       justify-content: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
       background: #fff;
-      padding: 14px;
+      padding: 16px;
       border-radius: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .controls > div {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 120px;
+      max-width: 200px;
     }
 
     .controls label {
       font-size: 14px;
       color: #444;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
+      font-weight: 600;
     }
 
     .controls input {
-      width: 110px;
-      padding: 10px;
-      font-size: 17px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
       text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .controls input:focus {
+      outline: none;
+      border-color: #4f46e5;
     }
 
     .btn {
-      padding: 12px 20px;
+      padding: 14px 24px;
       border: none;
       border-radius: 999px;
-      background: #4f46e5;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
       color: white;
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      max-width: 300px;
       width: 100%;
+      max-width: 300px;
       text-align: center;
-      transition: transform 0.12s ease;
+      transition: transform 0.12s ease, box-shadow 0.2s;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+      margin-top: 8px;
+    }
+
+    .btn:hover {
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3);
     }
 
     .btn:active {
@@ -94,84 +128,130 @@
 
     .error {
       text-align: center;
-      color: #c53030;
-      min-height: 18px;
+      color: #dc2626;
+      min-height: 20px;
       font-size: 14px;
+      font-weight: 500;
+      margin: 8px 0 16px;
+      width: 100%;
+      padding: 0 12px;
     }
 
     /* ===== Cards ===== */
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-      align-items: start;
-      flex-grow: 1;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    @media (max-width: 600px) {
+      .cards {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .cards {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 8px;
+      }
     }
 
     .card {
       background: #fff;
       border-radius: 14px;
-      padding: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       user-select: none;
       overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
-      font-size: 17px;
-      font-weight: 600;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 700;
     }
 
     .status-label {
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       color: #777;
+      font-weight: 600;
+      letter-spacing: 0.5px;
       transition: color 0.15s;
     }
 
     /* ===== Word box ===== */
 
     .word-box {
-      padding: 14px 10px;
+      padding: 16px 10px;
       border-radius: 12px;
       border: 1px dashed #bbb;
       text-align: center;
-      font-size: 19px;
-      font-weight: 700;
+      font-size: clamp(16px, 4vw, 20px);
+      font-weight: 800;
       opacity: 0;
       transform: scale(0.9);
       transition: opacity 0.25s, transform 0.25s;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
-    .word-hidden { color: #777; }
-    .word-revealed { color: #111; opacity: 1; transform: scale(1); }
+    .word-hidden { 
+      color: #777; 
+    }
+    
+    .word-revealed { 
+      color: #111; 
+      opacity: 1; 
+      transform: scale(1); 
+    }
 
     .word-locked {
       color: #999;
       font-style: italic;
       opacity: 1;
       transform: scale(1);
+      font-size: 18px;
     }
 
     /* ===== Category box ===== */
 
     .category-box {
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
       background: #eef2ff;
       text-align: center;
-      font-size: 16px;
+      font-size: clamp(14px, 3.5vw, 16px);
       font-weight: 600;
       opacity: 0;
       transform: translateY(-10px);
       transition: opacity 0.25s, transform 0.25s;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      word-break: break-word;
     }
 
     .category-shown {
@@ -182,15 +262,17 @@
     /* ===== Button ===== */
 
     .card-btn {
-      padding: 10px 12px;
+      padding: 12px 14px;
       border-radius: 999px;
       border: none;
       background: #e5e7eb;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       width: 100%;
-      transition: opacity 0.2s, transform 0.15s;
+      transition: all 0.2s;
+      color: #333;
+      margin-top: 4px;
     }
 
     .card-btn:active {
@@ -198,45 +280,52 @@
     }
 
     .card-btn.locked {
-      background: #ddd;
-      color: #999;
+      background: #d1d5db;
+      color: #6b7280;
       cursor: default;
       transform: none;
-      opacity: 0.7;
+      opacity: 0.8;
     }
 
-    /* ===== Status Section (Bottom) ===== */
+    /* ===== Status Section ===== */
     
     .status-section {
-      margin-top: 25px;
+      margin-top: 28px;
       width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .reveal-tracker {
       text-align: center;
-      margin-bottom: 15px;
-      font-size: 18px;
-      font-weight: 700;
+      margin-bottom: 20px;
+      font-size: clamp(16px, 4vw, 20px);
+      font-weight: 800;
       color: #4f46e5;
-      min-height: 28px;
-      padding: 12px;
+      min-height: 32px;
+      padding: 16px;
       background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
     }
 
     .first-player {
       text-align: center;
-      padding: 18px;
+      padding: 20px 16px;
       background: linear-gradient(135deg, #4f46e5, #8b5cf6);
       color: white;
-      border-radius: 16px;
-      font-size: 20px;
-      font-weight: 800;
+      border-radius: 18px;
+      font-size: clamp(18px, 5vw, 24px);
+      font-weight: 900;
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s, transform 0.5s;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+      width: 100%;
+      line-height: 1.3;
     }
 
     .first-player.show {
@@ -245,10 +334,64 @@
     }
 
     .footer-note {
-      margin-top: 20px;
+      margin-top: 24px;
       text-align: center;
       font-size: 13px;
       color: #666;
+      padding: 0 12px;
+      line-height: 1.5;
+      max-width: 500px;
+    }
+
+    /* Small screen optimizations */
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      
+      .container {
+        padding: 12px 8px 20px;
+      }
+      
+      .controls {
+        padding: 14px;
+        gap: 10px;
+      }
+      
+      .controls > div {
+        min-width: 100px;
+      }
+      
+      .card {
+        padding: 12px;
+      }
+      
+      .word-box {
+        padding: 14px 8px;
+        min-height: 54px;
+      }
+      
+      .category-box {
+        padding: 8px 10px;
+        min-height: 40px;
+      }
+    }
+
+    /* Very small screen adjustments */
+    @media (max-width: 350px) {
+      .cards {
+        grid-template-columns: 1fr;
+        max-width: 300px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .controls > div {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -263,19 +406,17 @@
   </p>
 
   <div class="controls">
-
-    <div style="display:flex;flex-direction:column;">
+    <div>
       <label>Players</label>
-      <input id="playerCount" type="number" min="3" max="20">
+      <input id="playerCount" type="number" min="3" max="20" value="3">
     </div>
 
-    <div style="display:flex;flex-direction:column;">
+    <div>
       <label>Imposters</label>
-      <input id="imposterCount" type="number" min="1" max="10">
+      <input id="imposterCount" type="number" min="1" max="10" value="1">
     </div>
 
     <button id="generateBtn" class="btn">Deal Cards</button>
-
   </div>
 
   <div id="error" class="error"></div>
@@ -291,7 +432,7 @@
   <div class="footer-note">
     Close your card before passing the device.
   </div>
-    <div class="footer-note">
+  <div class="footer-note">
     leoniscool.com
   </div>
 
@@ -418,10 +559,9 @@ function generateCards() {
   localStorage.setItem("playerCount", playerCount);
   localStorage.setItem("imposterCount", imposterCount);
 
-  /* Select random word + category */
-  const groups = [troops, buildings, spells];
-  const chosenGroup = randomFrom(groups);
-  const secretWord = randomFrom(chosenGroup);
+  /* Combine all cards into one array and select random word */
+  const allCards = [...troops, ...buildings, ...spells];
+  const secretWord = randomFrom(allCards);
   const secretCategory = getCategory(secretWord);
 
   let words = Array(playerCount).fill(secretWord);
@@ -522,6 +662,5 @@ function generateCards() {
 
 generateBtn.addEventListener("click", generateCards);
 </script>
-
 </body>
 </html>
