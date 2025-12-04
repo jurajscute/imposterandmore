@@ -5,7 +5,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-  <title>Imposter (Clash Royale)</title>
+  <title>Imposter Game</title>
 
   <style>
     * { 
@@ -52,6 +52,154 @@
       line-height: 1.4;
       padding: 0 8px;
       max-width: 600px;
+    }
+
+    /* ===== Subject Selection ===== */
+    .subject-section {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .subject-section h2 {
+      margin: 0 0 16px;
+      text-align: center;
+      font-size: 20px;
+      color: #333;
+      font-weight: 700;
+    }
+
+    .subject-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .subject-options {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+
+    .subject-option {
+      padding: 14px 10px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f9fafb;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #4b5563;
+    }
+
+    .subject-option:hover {
+      background: #f3f4f6;
+      transform: translateY(-2px);
+      border-color: #d1d5db;
+    }
+
+    .subject-option.selected {
+      background: #e0e7ff;
+      border-color: #4f46e5;
+      color: #4f46e5;
+      box-shadow: 0 4px 8px rgba(79, 70, 229, 0.1);
+    }
+
+    .custom-subject-container {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .custom-subject-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .custom-subject-input input {
+      flex: 1;
+      padding: 12px;
+      font-size: 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .custom-subject-input input:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+
+    .custom-subject-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.12s ease, box-shadow 0.2s;
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.25);
+    }
+
+    .custom-subject-btn:hover {
+      box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .custom-subject-btn:active {
+      transform: scale(0.96);
+    }
+
+    .selected-subject-display {
+      text-align: center;
+      margin: 20px 0;
+      padding: 16px;
+      background: linear-gradient(135deg, #e0e7ff, #f3f4f6);
+      border-radius: 14px;
+      border: 2px solid #4f46e5;
+    }
+
+    .selected-subject-display h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+
+    .selected-subject-display .subject-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: #4f46e5;
+      margin: 0;
+    }
+
+    .change-subject-btn {
+      display: block;
+      margin: 8px auto 0;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .change-subject-btn:hover {
+      background: #e5e7eb;
+      color: #4b5563;
     }
 
     /* ===== Controls ===== */
@@ -124,6 +272,13 @@
 
     .btn:active {
       transform: scale(0.96);
+    }
+
+    .btn:disabled {
+      background: linear-gradient(135deg, #9ca3af, #d1d5db);
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
     }
 
     .error {
@@ -353,6 +508,10 @@
         padding: 12px 8px 20px;
       }
       
+      .subject-section {
+        padding: 16px;
+      }
+      
       .controls {
         padding: 14px;
         gap: 10px;
@@ -360,6 +519,14 @@
       
       .controls > div {
         min-width: 100px;
+      }
+      
+      .custom-subject-input {
+        flex-direction: column;
+      }
+      
+      .custom-subject-btn {
+        width: 100%;
       }
       
       .card {
@@ -392,6 +559,10 @@
       .controls > div {
         max-width: 100%;
       }
+      
+      .subject-options {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -399,11 +570,34 @@
 <body>
 <div class="container">
 
-  <h1>Imposter (Clash Royale)</h1>
+  <h1>Imposter Game</h1>
   <p class="instructions">
     You get a word + category. Imposters see the category, too.<br>
     Cards can only be opened once.
   </p>
+
+  <div class="subject-section" id="subjectSection">
+    <h2>Choose a Subject</h2>
+    
+    <div id="subjectDisplay" class="selected-subject-display" style="display: none;">
+      <h3>Selected Subject:</h3>
+      <div class="subject-name" id="selectedSubjectName"></div>
+      <button class="change-subject-btn" id="changeSubjectBtn">Change Subject</button>
+    </div>
+    
+    <div id="subjectSelection">
+      <div class="subject-options" id="subjectOptions">
+        <!-- Subjects will be added here by JavaScript -->
+      </div>
+      
+      <div class="custom-subject-container">
+        <div class="custom-subject-input">
+          <input type="text" id="customSubjectInput" placeholder="Enter any word or phrase...">
+          <button class="custom-subject-btn" id="customSubjectBtn">Use Custom</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="controls">
     <div>
@@ -416,7 +610,7 @@
       <input id="imposterCount" type="number" min="1" max="10" value="1">
     </div>
 
-    <button id="generateBtn" class="btn">Deal Cards</button>
+    <button id="generateBtn" class="btn" disabled>Deal Cards</button>
   </div>
 
   <div id="error" class="error"></div>
@@ -439,42 +633,16 @@
 </div>
 
 <script>
-/* ====== DATA ===== */
-
-const troops = ["Archers","Archer Queen","Baby Dragon","Balloon","Bandit","Barbarians","Bats","Battle Healer","Battle Ram",
-"Berserker","Bomber","Boss Bandit","Bowler","Bush Goblins","Cannon Cart","Cursed Hog","Dark Prince","Dart Goblin",
-"Electro Dragon","Electro Giant","Electro Spirit","Electro Wizard","Elite Barbarians","Elixir Blob","Elixir Golem",
-"Elixir Golemite","Executioner","Firecracker","Fire Spirit","Fisherman","Flying Machine","Furnace","Giant",
-"Giant Skeleton","Goblin Brawler","Goblin Gang","Goblin Demolisher","Goblin Giant","Goblin Machine","Goblins",
-"Goblinstein","Golden Knight","Golem","Golemite","Guardienne","Guards","Hog Rider","Hunter","Heal Spirit",
-"Ice Golem","Ice Spirit","Ice Wizard","Inferno Dragon","Knight","Lava Hound","Lava Pup","Little Prince","Lumberjack",
-"Magic Archer","Mega Knight","Mega Minion","Mighty Miner","Miner","Mini P.E.K.K.A.","Minion Horde","Minions",
-"Monk","Mother Witch","Monster","Musketeer","Night Witch","P.E.K.K.A.","Phoenix","Prince","Princess","Ram Rider",
-"Rascal Boy","Rascal Girl","Royal Ghost","Royal Giant","Royal Hogs","Royal Recruits","Rune Giant","Skeleton Army",
-"Skeleton Barrel","Skeleton Dragons","Skeleton King","Skeletons","Sparky","Spear Goblins","Spirit Empress",
-"Suspicious Bush","Three Musketeers","Valkyrie","Wall Breakers","Witch","Wizard","Zappies"];
-
-const buildings = ["Bomb Tower","Cannon","Inferno Tower","Mortar","Tesla","X-Bow","Barbarian Hut","Elixir Collector",
-"Goblin Cage","Goblin Drill","Goblin Hut","Tombstone"];
-
-const spells = ["Arrows","Barbarian Barrel","Earthquake","Fireball","Freeze","Giant Snowball","Goblin Curse","Lightning",
-"Poison","Rage","Rocket","Royal Delivery","The Log","Tornado","Vines","Void","Zap"];
-
-/* ===== UTIL ===== */
-
-function randomFrom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function getCategory(word) {
-  if (troops.includes(word)) return "Troop";
-  if (buildings.includes(word)) return "Building";
-  if (spells.includes(word)) return "Spell";
-  return "Unknown";
-}
+/* ====== GAME STATE ===== */
+let currentSubject = "";
+let actualCustomSubject = ""; // Stores the actual custom word
+let customItems = [];
+let totalCards = 0;
+let revealedCards = 0;
+let lockedCards = 0;
+let playerNumbers = [];
 
 /* ===== ELEMENTS ===== */
-
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
 const playerCountInput = document.getElementById("playerCount");
@@ -482,20 +650,342 @@ const imposterCountInput = document.getElementById("imposterCount");
 const errorBox = document.getElementById("error");
 const revealTracker = document.getElementById("revealTracker");
 const firstPlayerBox = document.getElementById("firstPlayer");
+const subjectSection = document.getElementById("subjectSection");
+const subjectOptions = document.getElementById("subjectOptions");
+const subjectDisplay = document.getElementById("subjectDisplay");
+const subjectSelection = document.getElementById("subjectSelection");
+const selectedSubjectName = document.getElementById("selectedSubjectName");
+const changeSubjectBtn = document.getElementById("changeSubjectBtn");
+const customSubjectInput = document.getElementById("customSubjectInput");
+const customSubjectBtn = document.getElementById("customSubjectBtn");
 
-/* ===== GAME STATE ===== */
-let totalCards = 0;
-let revealedCards = 0;
-let lockedCards = 0;
-let playerNumbers = [];
+/* ===== DEFAULT SUBJECTS ===== */
+const defaultSubjects = {
+  "Clash Royale": {
+    troops: ["Archers","Archer Queen","Baby Dragon","Balloon","Bandit","Barbarians","Bats","Battle Healer","Battle Ram",
+      "Berserker","Bomber","Boss Bandit","Bowler","Bush Goblins","Cannon Cart","Cursed Hog","Dark Prince","Dart Goblin",
+      "Electro Dragon","Electro Giant","Electro Spirit","Electro Wizard","Elite Barbarians","Elixir Blob","Elixir Golem",
+      "Elixir Golemite","Executioner","Firecracker","Fire Spirit","Fisherman","Flying Machine","Furnace","Giant",
+      "Giant Skeleton","Goblin Brawler","Goblin Gang","Goblin Demolisher","Goblin Giant","Goblin Machine","Goblins",
+      "Goblinstein","Golden Knight","Golem","Golemite","Guardienne","Guards","Hog Rider","Hunter","Heal Spirit",
+      "Ice Golem","Ice Spirit","Ice Wizard","Inferno Dragon","Knight","Lava Hound","Lava Pup","Little Prince","Lumberjack",
+      "Magic Archer","Mega Knight","Mega Minion","Mighty Miner","Miner","Mini P.E.K.K.A.","Minion Horde","Minions",
+      "Monk","Mother Witch","Monster","Musketeer","Night Witch","P.E.K.K.A.","Phoenix","Prince","Princess","Ram Rider",
+      "Rascal Boy","Rascal Girl","Royal Ghost","Royal Giant","Royal Hogs","Royal Recruits","Rune Giant","Skeleton Army",
+      "Skeleton Barrel","Skeleton Dragons","Skeleton King","Skeletons","Sparky","Spear Goblins","Spirit Empress",
+      "Suspicious Bush","Three Musketeers","Valkyrie","Wall Breakers","Witch","Wizard","Zappies"
+    ],
+    
+    buildings: ["Bomb Tower","Cannon","Inferno Tower","Mortar","Tesla","X-Bow","Barbarian Hut","Elixir Collector",
+      "Goblin Cage","Goblin Drill","Goblin Hut","Tombstone"
+    ],
+    
+    spells: ["Arrows","Barbarian Barrel","Earthquake","Fireball","Freeze","Giant Snowball","Goblin Curse","Lightning",
+      "Poison","Rage","Rocket","Royal Delivery","The Log","Tornado","Vines","Void","Zap"
+    ]
+  },
+  
+  "Physics": {
+    kinematics: [
+      "Displacement","Velocity","Acceleration","Free Fall","Projectile Motion","Kinematic Equations","Relative Motion",
+      "Uniform Motion","Non-uniform Motion","Instantaneous Velocity","Average Speed","Average Velocity","Constant Acceleration",
+      "Motion Graphs","Position-Time Graph","Velocity-Time Graph","Slope","Area Under Curve"
+    ],
+
+    forces: [
+      "Newton's First Law","Newton's Second Law","Newton's Third Law","Force","Mass","Weight","Friction","Normal Force",
+      "Tension","Net Force","Inertia","Equilibrium","Action-Reaction","Free Body Diagram","System Mass","Air Resistance","Drag Force"
+    ],
+
+    energy: [
+      "Kinetic Energy","Potential Energy","Conservation of Energy","Work","Power","Mechanical Energy","Thermal Energy",
+      "Energy Transfer","Work-Energy Theorem","Efficiency","Gravitational Energy","Spring Energy","Elastic Energy",
+      "Hooke’s Law","Simple Machines","Energy Loss"
+    ],
+
+    momentum: [
+      "Linear Momentum","Impulse","Conservation of Momentum","Elastic Collision","Inelastic Collision","Center of Mass",
+      "Momentum Transfer","Recoil","Explosion","Momentum Vector","Elastic Bounce","Inelastic Bounce","Perfectly Inelastic",
+      "Angular Momentum"
+    ],
+
+    circular: [
+      "Centripetal Force","Centripetal Acceleration","Uniform Circular Motion","Period","Frequency","Angular Velocity",
+      "Banked Curve","Vertical Circle","Satellite Motion","Orbital Velocity","Radial Force","Radial Speed","Centripetal Net Force",
+      "Tangential Speed"
+    ],
+
+    fluids: [
+      "Density","Pressure","Buoyancy","Archimedes' Principle","Bernoulli's Principle","Continuity Equation","Fluid Flow",
+      "Laminar Flow","Viscosity","Hydraulic Lift","Pascal’s Law","Hydrostatic Pressure","Streamlines","Flow Rate","Turbulent Flow"
+    ],
+
+    rotation: [
+      "Torque","Angular Acceleration","Angular Momentum","Rotational Inertia","Center of Mass","Rolling Motion",
+      "Moment of Inertia","Rotational Kinetic Energy","Rotational Work","Rotational Power"
+    ],
+
+    shm: [
+      "Periodic Motion","Frequency","Amplitude","Phase","Restoring Force","Spring Oscillation","Pendulum Oscillation","Resonance"
+    ],
+
+    waves: [
+      "Wave Speed","Wavelength","Frequency","Period","Amplitude","Superposition","Interference","Standing Wave",
+      "Node","Antinode"
+    ],
+
+    thermo: [
+      "Temperature","Heat Transfer","Conduction","Convection","Radiation","Internal Energy","Specific Heat",
+      "Thermal Equilibrium"
+    ],
+
+    electricity: [
+      "Charge","Electric Field","Voltage","Current","Resistance","Ohm’s Law","Power","Series Circuit",
+      "Parallel Circuit","Circuit Diagram"
+    ],
+
+    gravity: [
+      "Universal Law","Gravitational Constant","Gravitational Force","Weight","Orbit","Satellite","Escape Velocity"
+    ]
+  },
+  
+  "Math": {
+    algebra: [
+      "Variable","Expression","Equation","Inequality","Linear Equation",
+      "Quadratic Equation","Polynomial","Factoring","Completing the Square",
+      "Exponential Function","Logarithmic Function","Rational Expression",
+      "System of Equations","Matrix","Vector","Function","Domain","Range"
+    ],
+
+    geometry: [
+      "Point","Line","Plane","Angle","Congruent","Similarity","Triangle",
+      "Pythagorean Theorem","Circle","Radius","Diameter","Chord","Arc",
+      "Central Angle","Inscribed Angle","Area","Perimeter","Volume","Surface Area"
+    ],
+
+    trigonometry: [
+      "Sine","Cosine","Tangent","Unit Circle","Radians","Degrees",
+      "Pythagorean Identity","Law of Sines","Law of Cosines","Trigonometric Graphs",
+      "Amplitude","Period","Phase Shift","Inverse Trig Function"
+    ],
+
+    precalculus: [
+      "Sequence","Series","Arithmetic Sequence","Geometric Sequence",
+      "Binomial Theorem","Polynomial Division","Rational Function",
+      "Asymptote","Complex Number","Imaginary Unit"
+    ],
+
+    statistics: [
+      "Mean","Median","Mode","Range","Standard Deviation","Variance",
+      "Probability","Combination","Permutation","Normal Distribution",
+      "Outlier","Correlation"
+    ]
+  },
+
+  "Calculus": [
+    "Limit","Continuity","One-Sided Limit","Infinite Limit","Limit Laws","Indeterminate Form",
+    "Removable Discontinuity","Jump Discontinuity","Vertical Asymptote","Horizontal Asymptote",
+    "Derivative","Differentiability","Tangent Line","Instantaneous Rate","Power Rule","Sum Rule","Difference Rule",
+    "Implicit Differentiation","Higher Derivative","Second Derivative","Third Derivative","Inverse Function",
+    "Logarithmic Differentiation","Exponential Derivative","Trig Derivative","Critical Point","Local Maximum",
+    "Local Minimum","First Derivative Test","Second Derivative Test","Inflection Point","Concave Up","Concave Down",
+    "Optimization","Related Rates","Velocity Function","Acceleration Function","Motion on a Line",
+    "Antiderivative","Definite Integral","Indefinite Integral","Constant of Integration","Net Change",
+    "Differential Equation","Separation of Variables","Initial Condition","Area Under Curve","Riemann Sum",
+    "Trapezoidal Rule","Fundamental Theorem","Mean Value Theorem","Average Value","Rate of Change","Accumulation Function"
+  ],
+  
+  "Computer Science": {
+    programmingBasics: [
+      "Variable","Constant","Data Type","Integer","Float","Boolean","String",
+      "Expression","Statement","Comment","Indentation"
+    ],
+
+    basicCommands: [
+      "If Statement","Else Statement","Else If","Comparison Operator","Logical Operator",
+      "For Loop","While Loop","Break","Continue","Iteration","Recursion"
+    ],
+
+    functions: [
+      "Function","Parameter","Argument","Return Value","Scope","Local Variable",
+      "Global Variable","Function Call","Function Definition"
+    ],
+
+    dataStructures: [
+      "Array","List","Tuple","Dictionary","Object","Stack","Queue","Set",
+      "Linked List","Tree","Binary Tree","Graph","Hash Table","Pointer","Node"
+    ],
+
+    algorithms: [
+      "Searching","Linear Search","Binary Search","Sorting","Bubble Sort",
+      "Selection Sort","Insertion Sort","Merge Sort","Quick Sort",
+      "Time Complexity","Space Complexity","Big O Notation","Recursion","Divide and Conquer"
+    ],
+
+    ai: [
+      "Machine Learning","Neural Network","Training","Testing","Dataset",
+      "Supervised Learning","Unsupervised Learning","Classification",
+      "Regression","Accuracy","Precision","Recall","Overfitting","Underfitting"
+    ],
+    
+    languages: [
+      "Python","Java","JavaScript","C","C++","C#","Scratch","SQL","HTML","CSS"
+    ]
+  },
+
+  "Animals": {
+    mammals: ["Lion","Elephant","Dolphin","Kangaroo","Panda","Giraffe","Tiger","Wolf","Bear","Monkey"],
+    birds: ["Eagle","Penguin","Peacock","Owl","Hummingbird","Parrot","Flamingo","Swan","Woodpecker","Kingfisher"],
+    reptiles: ["Crocodile","Komodo Dragon","Chameleon","Iguana","Gecko","Turtle","Snake","Alligator","Monitor Lizard","Tortoise"],
+    aquatic: ["Shark","Octopus","Jellyfish","Starfish","Seahorse","Whale","Dolphin","Squid","Crab","Lobster"],
+    insects: ["Butterfly","Dragonfly","Ladybug","Ant","Bee","Spider","Beetle","Grasshopper","Mantis","Firefly"]
+  },
+  
+  "Fruits": {
+    citrus: ["Orange","Lemon","Lime","Grapefruit","Tangerine","Clementine","Kumquat","Pomelo","Yuzu","Ugli Fruit"],
+    tropical: ["Mango","Pineapple","Coconut","Papaya","Dragon Fruit","Passion Fruit","Guava","Lychee","Rambutan","Durian"],
+    berries: ["Strawberry","Blueberry","Raspberry","Blackberry","Cranberry","Gooseberry","Elderberry","Boysenberry","Mulberry","Acai Berry"],
+    stone: ["Peach","Plum","Cherry","Apricot","Nectarine","Mango","Lychee","Date","Olive","Coconut"],
+    melons: ["Watermelon","Cantaloupe","Honeydew","Galia","Canary","Santa Claus","Crenshaw","Sharlyn","Casaba","Sprite"]
+  },
+  
+  "Countries": {
+    europe: ["France","Germany","Italy","Spain","United Kingdom","Greece","Netherlands","Sweden","Switzerland","Norway"],
+    asia: ["Japan","China","India","South Korea","Thailand","Vietnam","Indonesia","Philippines","Malaysia","Singapore"],
+    americas: ["United States","Canada","Brazil","Mexico","Argentina","Chile","Peru","Colombia","Cuba","Jamaica"],
+    africa: ["Egypt","South Africa","Kenya","Morocco","Nigeria","Ghana","Tanzania","Ethiopia","Uganda","Rwanda"],
+    oceania: ["Australia","New Zealand","Fiji","Papua New Guinea","Samoa","Tonga","Vanuatu","Solomon Islands","Kiribati","Micronesia"]
+  },
+  
+  "Sports": {
+    ball: ["Basketball","Soccer","Football","Baseball","Tennis","Volleyball","Golf","Rugby","Cricket","Handball"],
+    water: ["Swimming","Surfing","Water Polo","Diving","Rowing","Sailing","Canoeing","Kayaking","Water Skiing","Synchronized Swimming"],
+    winter: ["Skiing","Snowboarding","Ice Hockey","Figure Skating","Bobsleigh","Curling","Biathlon","Luge","Speed Skating","Freestyle Skiing"],
+    combat: ["Boxing","Wrestling","Martial Arts","Fencing","Judo","Taekwondo","Karate","MMA","Kendo","Sumo"],
+    individual: ["Gymnastics","Athletics","Cycling","Archery","Weightlifting","Triathlon","Equestrian","Shooting","Badminton","Table Tennis"]
+  }
+};
+
+
+
 
 /* ===== LOCAL STORAGE LOAD ===== */
-
 playerCountInput.value = localStorage.getItem("playerCount") || 3;
 imposterCountInput.value = localStorage.getItem("imposterCount") || 1;
+currentSubject = localStorage.getItem("currentSubject") || "";
+actualCustomSubject = localStorage.getItem("actualCustomSubject") || "";
+customItems = JSON.parse(localStorage.getItem("customItems")) || [];
+
+/* ===== INITIALIZE SUBJECT OPTIONS ===== */
+function initializeSubjectOptions() {
+  subjectOptions.innerHTML = "";
+  
+  Object.keys(defaultSubjects).forEach(subject => {
+    const option = document.createElement("div");
+    option.className = "subject-option";
+    option.textContent = subject;
+    option.dataset.subject = subject;
+    
+    if (subject === currentSubject) {
+      option.classList.add("selected");
+    }
+    
+    option.addEventListener("click", () => selectSubject(subject));
+    subjectOptions.appendChild(option);
+  });
+}
+
+/* ===== SUBJECT MANAGEMENT ===== */
+function selectSubject(subject) {
+  // Remove selected class from all options
+  document.querySelectorAll('.subject-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  
+  // Add selected class to clicked option
+  const selectedOption = document.querySelector(`[data-subject="${subject}"]`);
+  if (selectedOption) {
+    selectedOption.classList.add('selected');
+  }
+  
+  currentSubject = subject;
+  actualCustomSubject = ""; // Clear custom subject when selecting a default one
+  
+  // For default subjects, combine all items from all categories
+  customItems = [];
+  Object.values(defaultSubjects[subject]).forEach(categoryItems => {
+    customItems.push(...categoryItems);
+  });
+  
+  localStorage.setItem("currentSubject", currentSubject);
+  localStorage.setItem("actualCustomSubject", actualCustomSubject);
+  localStorage.setItem("customItems", JSON.stringify(customItems));
+  
+  showSelectedSubject();
+  enableGenerateButton();
+  errorBox.textContent = "";
+  
+  // Clear custom input
+  customSubjectInput.value = "";
+}
+
+function useCustomSubject() {
+  const subject = customSubjectInput.value.trim();
+  if (!subject) {
+    errorBox.textContent = "Please enter a custom subject";
+    return;
+  }
+  
+  // Remove selected class from all options
+  document.querySelectorAll('.subject-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  
+  // Store the actual custom word privately
+  actualCustomSubject = subject;
+  // Display "Custom" to users so they can't see what was entered
+  currentSubject = "Custom";
+  
+  // Use only the exact word/phrase entered - no modifications
+  customItems = [actualCustomSubject];
+  
+  localStorage.setItem("currentSubject", currentSubject);
+  localStorage.setItem("actualCustomSubject", actualCustomSubject);
+  localStorage.setItem("customItems", JSON.stringify(customItems));
+  
+  showSelectedSubject();
+  enableGenerateButton();
+  errorBox.textContent = "";
+  
+  // Clear input
+  customSubjectInput.value = "";
+}
+
+function showSelectedSubject() {
+  selectedSubjectName.textContent = currentSubject;
+  subjectDisplay.style.display = 'block';
+  subjectSelection.style.display = 'none';
+}
+
+function changeSubject() {
+  subjectDisplay.style.display = 'none';
+  subjectSelection.style.display = 'block';
+  generateBtn.disabled = true;
+  generateBtn.textContent = "Select Subject First";
+  
+  // Clear any existing cards
+  cardsContainer.innerHTML = "";
+  revealTracker.textContent = "";
+  firstPlayerBox.classList.remove('show');
+  firstPlayerBox.textContent = '';
+}
+
+function enableGenerateButton() {
+  generateBtn.disabled = false;
+  generateBtn.textContent = "Deal Cards";
+}
 
 /* ===== UPDATE TRACKER ===== */
-
 function updateTracker() {
   if (totalCards === 0) {
     revealTracker.textContent = "";
@@ -510,31 +1000,34 @@ function updateTracker() {
 }
 
 /* ===== SELECT FIRST PLAYER ===== */
-
 function selectFirstPlayer() {
-  // Pick a random player number (not necessarily an imposter)
   const randomPlayer = Math.floor(Math.random() * totalCards) + 1;
   
-  // Animate the display
   setTimeout(() => {
     firstPlayerBox.textContent = `Player ${randomPlayer} goes first!`;
     firstPlayerBox.classList.add('show');
-    
-    // Scroll to show the announcement
     firstPlayerBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 }
 
-/* ===== MAIN ===== */
+/* ===== HELPER FUNCTIONS ===== */
+function getRandomItemFromArray(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
+/* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+  if (!currentSubject || customItems.length === 0) {
+    errorBox.textContent = "Please select a subject first";
+    return;
+  }
+  
   // Reset state
   revealedCards = 0;
   lockedCards = 0;
   playerNumbers = [];
   firstPlayerBox.classList.remove('show');
   firstPlayerBox.textContent = '';
-  
   errorBox.textContent = "";
 
   const playerCount = parseInt(playerCountInput.value, 10);
@@ -555,24 +1048,37 @@ function generateCards() {
     return;
   }
 
-  /* Save settings */
+  // Save settings
   localStorage.setItem("playerCount", playerCount);
   localStorage.setItem("imposterCount", imposterCount);
 
-  /* Combine all cards into one array and select random word */
-  const allCards = [...troops, ...buildings, ...spells];
-  const secretWord = randomFrom(allCards);
-  const secretCategory = getCategory(secretWord);
+  // Select random item from all available items
+  const secretItem = getRandomItemFromArray(customItems);
+  
+  // Determine category based on whether it's a default subject
+  let secretCategory = "Common";
+  if (defaultSubjects[currentSubject]) {
+    // Find which category the item belongs to
+    for (const [category, items] of Object.entries(defaultSubjects[currentSubject])) {
+      if (items.includes(secretItem)) {
+        secretCategory = category;
+        break;
+      }
+    }
+  } else {
+    // For custom subjects, just use "Custom" as the category
+    secretCategory = "Custom";
+  }
 
-  let words = Array(playerCount).fill(secretWord);
+  let words = Array(playerCount).fill(secretItem);
 
-  /* Assign imposters */
+  // Assign imposters
   while (words.filter(w => w === "Imposter").length < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
     words[idx] = "Imposter";
   }
 
-  /* Shuffle */
+  // Shuffle
   for (let i = words.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [words[i], words[j]] = [words[j], words[i]];
@@ -582,7 +1088,7 @@ function generateCards() {
   totalCards = playerCount;
   updateTracker();
 
-  /* Build cards */
+  // Build cards
   words.forEach((word, i) => {
     const playerNumber = i + 1;
     playerNumbers.push(playerNumber);
@@ -613,7 +1119,7 @@ function generateCards() {
     btn.addEventListener("click", () => {
       if (viewed) return;
 
-      /* Reveal */
+      // Reveal
       if (btn.textContent === "Reveal") {
         wordBox.textContent = word === "Imposter" ? "Imposter" : word;
         wordBox.classList.add("word-revealed");
@@ -633,7 +1139,7 @@ function generateCards() {
         return;
       }
 
-      /* Close + lock */
+      // Close + lock
       if (btn.textContent === "Close") {
         viewed = true;
 
@@ -660,7 +1166,27 @@ function generateCards() {
   });
 }
 
+/* ===== EVENT LISTENERS ===== */
+customSubjectBtn.addEventListener("click", useCustomSubject);
+customSubjectInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    useCustomSubject();
+  }
+});
+
+changeSubjectBtn.addEventListener("click", changeSubject);
 generateBtn.addEventListener("click", generateCards);
+
+/* ===== INITIALIZATION ===== */
+initializeSubjectOptions();
+
+if (currentSubject) {
+  showSelectedSubject();
+  enableGenerateButton();
+} else {
+  generateBtn.disabled = true;
+  generateBtn.textContent = "Select Subject First";
+}
 </script>
 </body>
 </html>
