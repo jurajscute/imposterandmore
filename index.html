@@ -476,6 +476,125 @@
       color: #4b5563;
     }
 
+    /* ===== Player Names Section ===== */
+    .player-names-section {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      display: none; /* Hidden by default */
+    }
+
+    .player-names-section h2 {
+      margin: 0 0 16px;
+      text-align: center;
+      font-size: clamp(18px, 4vw, 20px);
+      color: #333;
+      font-weight: 700;
+    }
+
+    .player-names-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #eef2ff;
+    }
+
+    .player-names-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #4f46e5;
+      font-weight: 700;
+    }
+
+    .player-names-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .randomize-names-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #4f46e5;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .randomize-names-btn:hover {
+      background: #c7d2fe;
+      transform: translateY(-1px);
+    }
+
+    .reset-names-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .reset-names-btn:hover {
+      background: #fecaca;
+      transform: translateY(-1px);
+    }
+
+    .player-names-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    @media (max-width: 500px) {
+      .player-names-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+    }
+
+    .player-name-input-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .player-name-label {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .player-name-input {
+      padding: 12px;
+      font-size: 15px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      text-align: center;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .player-name-input:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+
     /* ===== Controls ===== */
     .controls {
       display: flex;
@@ -1112,6 +1231,29 @@
       width: 100%;
     }
 
+    /* Toggle for player names */
+    .toggle-player-names {
+      margin: 8px 0 0;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #4f46e5;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: fit-content;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .toggle-player-names:hover {
+      background: #c7d2fe;
+      transform: translateY(-1px);
+    }
+
     /* Small screen optimizations */
     @media (max-width: 480px) {
       body {
@@ -1127,12 +1269,20 @@
         padding: 16px;
       }
       
+      .player-names-section {
+        padding: 16px;
+      }
+      
       .controls {
         padding: 14px;
         gap: 16px;
       }
       
       .subject-options {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      }
+      
+      .player-names-list {
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
       }
       
@@ -1177,6 +1327,10 @@
     /* Very small screen adjustments */
     @media (max-width: 350px) {
       .subject-options {
+        grid-template-columns: 1fr;
+      }
+      
+      .player-names-list {
         grid-template-columns: 1fr;
       }
       
@@ -1394,6 +1548,25 @@
     </div>
   </div>
 
+  <!-- Player Names Section -->
+  <div class="player-names-section" id="playerNamesSection">
+    <h2>Customize Player Names</h2>
+    
+    <div class="player-names-header">
+      <h3>Players (Click to Edit)</h3>
+      <div class="player-names-buttons">
+        <button class="randomize-names-btn" id="randomizeNamesBtn">Randomize</button>
+        <button class="reset-names-btn" id="resetNamesBtn">Reset</button>
+      </div>
+    </div>
+    
+    <div class="player-names-list" id="playerNamesList">
+      <!-- Player name inputs will be added here by JavaScript -->
+    </div>
+    
+    <button class="toggle-player-names" id="hidePlayerNamesBtn">Hide Player Names</button>
+  </div>
+
   <div class="controls">
     <div>
       <label>Players</label>
@@ -1427,6 +1600,8 @@
     </div>
 
     <button id="generateBtn" class="btn" disabled>Deal Cards</button>
+    
+    <button class="toggle-player-names" id="showPlayerNamesBtn">Customize Player Names</button>
   </div>
 
   <div id="error" class="error"></div>
@@ -1463,6 +1638,7 @@ let words = []; // Store words globally for detective peek
 let secretItem = ""; // Store secret item globally for detective
 let secretCategory = ""; // Store secret category globally for detective
 let assassinTarget = null; // Store assassin's target
+let playerNames = []; // Store custom player names
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -1485,6 +1661,14 @@ const selectedSubjectName = document.getElementById("selectedSubjectName");
 const changeSubjectBtn = document.getElementById("changeSubjectBtn");
 const customSubjectInput = document.getElementById("customSubjectInput");
 const customSubjectBtn = document.getElementById("customSubjectBtn");
+
+// Player names elements
+const playerNamesSection = document.getElementById("playerNamesSection");
+const playerNamesList = document.getElementById("playerNamesList");
+const randomizeNamesBtn = document.getElementById("randomizeNamesBtn");
+const resetNamesBtn = document.getElementById("resetNamesBtn");
+const hidePlayerNamesBtn = document.getElementById("hidePlayerNamesBtn");
+const showPlayerNamesBtn = document.getElementById("showPlayerNamesBtn");
 
 // Modal elements
 const infoBtn = document.getElementById("infoBtn");
@@ -1978,6 +2162,10 @@ detectiveToggle.checked = JSON.parse(localStorage.getItem("detectiveEnabled")) |
 jesterToggle.checked = JSON.parse(localStorage.getItem("jesterEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
 
+// DON'T load player names from localStorage - always reset to default on page load
+// This ensures names reset to Player 1, Player 2, etc. when page reloads
+playerNames = []; // Start with empty array
+
 /* ===== MODAL FUNCTIONS ===== */
 function openModal() {
   modalOverlay.classList.add('active');
@@ -2122,6 +2310,117 @@ function enableGenerateButton() {
   generateBtn.textContent = "Deal Cards";
 }
 
+/* ===== PLAYER NAMES MANAGEMENT ===== */
+function updatePlayerNamesList() {
+  const playerCount = parseInt(playerCountInput.value, 10);
+  playerNamesList.innerHTML = "";
+  
+  // Ensure playerNames array has the right length with default names
+  while (playerNames.length < playerCount) {
+    playerNames.push(`Player ${playerNames.length + 1}`);
+  }
+  
+  // Trim if too long
+  playerNames = playerNames.slice(0, playerCount);
+  
+  // Save to localStorage
+  localStorage.setItem("playerNames", JSON.stringify(playerNames));
+  
+  // Create input for each player
+  for (let i = 0; i < playerCount; i++) {
+    const container = document.createElement("div");
+    container.className = "player-name-input-container";
+    
+    const label = document.createElement("div");
+    label.className = "player-name-label";
+    label.textContent = `Player ${i + 1}`;
+    
+    const input = document.createElement("input");
+    input.className = "player-name-input";
+    input.type = "text";
+    input.value = playerNames[i] || `Player ${i + 1}`;
+    input.placeholder = `Player ${i + 1}`;
+    input.dataset.index = i;
+    
+    // Update player name when input changes
+    input.addEventListener("input", (e) => {
+      const index = parseInt(e.target.dataset.index);
+      playerNames[index] = e.target.value.trim() || `Player ${index + 1}`;
+      localStorage.setItem("playerNames", JSON.stringify(playerNames));
+    });
+    
+    container.appendChild(label);
+    container.appendChild(input);
+    playerNamesList.appendChild(container);
+  }
+}
+
+function randomizePlayerNames() {
+  const namePool = [
+    "Alex", "Jordan", "Taylor", "Casey", "Riley", "Morgan", "Quinn", "Avery", "Blake", "Cameron",
+    "Dakota", "Drew", "Emerson", "Finley", "Harley", "Hayden", "Hunter", "Jamie", "Kai", "Logan",
+    "Marley", "Micah", "Parker", "Peyton", "Reese", "River", "Rowan", "Sage", "Skyler", "Spencer",
+    "Charlie", "Sam", "Ash", "Lee", "Jesse", "Robin", "Dylan", "Jordan", "Morgan", "Casey",
+    "Ariel", "Bailey", "Cameron", "Dakota", "Emerson", "Finley", "Harley", "Hayden", "Hunter", "Jamie",
+    "Kai", "Logan", "Marley", "Micah", "Parker", "Peyton", "Reese", "River", "Rowan", "Sage"
+  ];
+  
+  const playerCount = parseInt(playerCountInput.value, 10);
+  const usedNames = new Set();
+  
+  // Reset playerNames array
+  playerNames = [];
+  
+  for (let i = 0; i < playerCount; i++) {
+    let name;
+    let attempts = 0;
+    
+    // Try to find a unique name
+    do {
+      name = namePool[Math.floor(Math.random() * namePool.length)];
+      attempts++;
+      
+      // If we've tried too many times, add a number to make it unique
+      if (attempts > 20) {
+        name = `${name} ${Math.floor(Math.random() * 100) + 1}`;
+        break;
+      }
+    } while (usedNames.has(name));
+    
+    usedNames.add(name);
+    playerNames.push(name);
+  }
+  
+  // Save to localStorage and update UI
+  localStorage.setItem("playerNames", JSON.stringify(playerNames));
+  updatePlayerNamesList();
+}
+
+function resetPlayerNames() {
+  const playerCount = parseInt(playerCountInput.value, 10);
+  
+  // Reset to Player 1, Player 2, etc.
+  playerNames = [];
+  for (let i = 0; i < playerCount; i++) {
+    playerNames.push(`Player ${i + 1}`);
+  }
+  
+  // Save to localStorage and update UI
+  localStorage.setItem("playerNames", JSON.stringify(playerNames));
+  updatePlayerNamesList();
+}
+
+function showPlayerNames() {
+  playerNamesSection.style.display = 'block';
+  showPlayerNamesBtn.style.display = 'none';
+  updatePlayerNamesList();
+}
+
+function hidePlayerNames() {
+  playerNamesSection.style.display = 'none';
+  showPlayerNamesBtn.style.display = 'block';
+}
+
 /* ===== UPDATE TRACKER ===== */
 function updateTracker() {
   if (totalCards === 0) {
@@ -2141,7 +2440,9 @@ function selectFirstPlayer() {
   const randomPlayer = Math.floor(Math.random() * totalCards) + 1;
   
   setTimeout(() => {
-    let firstPlayerText = `Player ${randomPlayer} goes first!`;
+    // Use custom player name if available
+    const playerName = playerNames[randomPlayer - 1] || `Player ${randomPlayer}`;
+    let firstPlayerText = `${playerName} goes first!`;
     
     // Add role status
     const roleNotes = [];
@@ -2180,6 +2481,8 @@ function revealAllRoles() {
   
   words.forEach((word, i) => {
     const playerNumber = i + 1;
+    const playerName = playerNames[i] || `Player ${playerNumber}`;
+    
     let roleName = "";
     let roleClass = "";
     let specialNote = "";
@@ -2200,14 +2503,15 @@ function revealAllRoles() {
       roleName = "Assassin";
       roleClass = "assassin-role";
       if (assassinTarget) {
-        specialNote = `<div class="assassin-target">Target: Player ${assassinTarget}</div>`;
+        const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
+        specialNote = `<div class="assassin-target">Target: ${targetName}</div>`;
       }
     }
     
     const li = document.createElement('li');
     li.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <span class="player-number">Player ${playerNumber}</span>
+        <span class="player-number">${playerName}</span>
         <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
           <span class="role-name ${roleClass}">${roleName}</span>
           ${specialNote}
@@ -2448,6 +2752,7 @@ function generateCards() {
   // Build cards
   words.forEach((word, i) => {
     const playerNumber = i + 1;
+    const playerName = playerNames[i] || `Player ${playerNumber}`;
     playerNumbers.push(playerNumber);
 
     const card = document.createElement("div");
@@ -2455,7 +2760,7 @@ function generateCards() {
 
     card.innerHTML = `
       <div class="card-header">
-        <span>Player ${playerNumber}</span>
+        <span>${playerName}</span>
         <span class="status-label">Hidden</span>
       </div>
 
@@ -2538,10 +2843,11 @@ function generateCards() {
                              otherWord === "Jester" ? "Jester" : 
                              otherWord === "Assassin" ? "Assassin" : 
                              "Non-Imposter";
+            const otherPlayerName = playerNames[otherPlayer] || `Player ${otherPlayer + 1}`;
 
             specialHint = document.createElement("div");
             specialHint.className = "detective-hint";
-            specialHint.innerHTML = `<strong>You peeked at Player ${otherPlayer + 1}:</strong><br>Their role: ${otherRole}`;
+            specialHint.innerHTML = `<strong>You peeked at ${otherPlayerName}:</strong><br>Their role: ${otherRole}`;
 
             card.appendChild(specialHint);
             
@@ -2564,9 +2870,10 @@ function generateCards() {
 
         // Assassin ability: show target player
         if (word === "Assassin" && assassinTarget) {
+          const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
           specialHint = document.createElement("div");
           specialHint.className = "assassin-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get Player ${assassinTarget} voted out!`;
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
 
           card.appendChild(specialHint);
           
@@ -2657,6 +2964,28 @@ changeSubjectBtn.addEventListener("click", changeSubject);
 generateBtn.addEventListener("click", generateCards);
 revealRolesBtn.addEventListener("click", revealAllRoles);
 
+// Player names event listeners
+randomizeNamesBtn.addEventListener("click", randomizePlayerNames);
+resetNamesBtn.addEventListener("click", resetPlayerNames);
+showPlayerNamesBtn.addEventListener("click", showPlayerNames);
+hidePlayerNamesBtn.addEventListener("click", hidePlayerNames);
+
+// Update player names when player count changes
+playerCountInput.addEventListener("input", () => {
+  // Ensure playerNames array has the right length with default names
+  const playerCount = parseInt(playerCountInput.value, 10);
+  while (playerNames.length < playerCount) {
+    playerNames.push(`Player ${playerNames.length + 1}`);
+  }
+  playerNames = playerNames.slice(0, playerCount);
+  localStorage.setItem("playerNames", JSON.stringify(playerNames));
+  
+  // Update the player names list if it's visible
+  if (playerNamesSection.style.display === 'block') {
+    updatePlayerNamesList();
+  }
+});
+
 // Save toggle states
 detectiveToggle.addEventListener("change", () => {
   localStorage.setItem("detectiveEnabled", detectiveToggle.checked);
@@ -2673,6 +3002,16 @@ assassinToggle.addEventListener("change", () => {
 /* ===== INITIALIZATION ===== */
 initializeSubjectOptions();
 
+// Initialize player names array with default values (Player 1, Player 2, etc.)
+const playerCount = parseInt(playerCountInput.value, 10);
+if (playerNames.length === 0) {
+  for (let i = 0; i < playerCount; i++) {
+    playerNames.push(`Player ${i + 1}`);
+  }
+  // Save default names to localStorage
+  localStorage.setItem("playerNames", JSON.stringify(playerNames));
+}
+
 if (currentSubject) {
   showSelectedSubject();
   enableGenerateButton();
@@ -2680,6 +3019,44 @@ if (currentSubject) {
   generateBtn.disabled = true;
   generateBtn.textContent = "Select Subject First";
 }
+
+// Initialize the show player names button visibility
+showPlayerNamesBtn.style.display = 'block';
+hidePlayerNamesBtn.textContent = 'Hide Player Names';
+playerNamesSection.style.display = 'none';
+
+// Update the button text based on current state
+function updatePlayerNamesToggleButton() {
+  if (playerNamesSection.style.display === 'block') {
+    hidePlayerNamesBtn.textContent = 'Hide Player Names';
+  } else {
+    hidePlayerNamesBtn.textContent = 'Show Player Names';
+  }
+}
+
+// Update the button text initially
+updatePlayerNamesToggleButton();
+
+// Update event listener for hide/show button
+hidePlayerNamesBtn.addEventListener('click', () => {
+  if (playerNamesSection.style.display === 'block') {
+    playerNamesSection.style.display = 'none';
+    showPlayerNamesBtn.style.display = 'block';
+  } else {
+    playerNamesSection.style.display = 'block';
+    showPlayerNamesBtn.style.display = 'none';
+    updatePlayerNamesList();
+  }
+  updatePlayerNamesToggleButton();
+});
+
+// Update event listener for the other toggle button
+showPlayerNamesBtn.addEventListener('click', () => {
+  playerNamesSection.style.display = 'block';
+  showPlayerNamesBtn.style.display = 'none';
+  updatePlayerNamesList();
+  updatePlayerNamesToggleButton();
+});
 </script>
 </body>
 </html>
