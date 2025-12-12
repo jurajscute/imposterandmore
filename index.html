@@ -1477,6 +1477,32 @@
       transform: translateY(-1px);
     }
 
+    /* ===== Detective Interaction Styles ===== */
+    body.detective-mode .card {
+      cursor: crosshair;
+      border: 2px dashed #10b981;
+      animation: pulse-border 1.5s infinite;
+    }
+
+    body.detective-mode .card.detective-active-card {
+      border: 2px solid #10b981;
+      animation: none;
+      cursor: default;
+      background: #f0fdf4;
+    }
+    
+    /* Disable buttons on other cards while detective is choosing */
+    body.detective-mode .card:not(.detective-active-card) .card-btn {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    @keyframes pulse-border {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
     /* Small screen optimizations */
     @media (max-width: 480px) {
       body {
@@ -1939,6 +1965,11 @@ let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let pregnantPlayer = null; // Store which player is pregnant (index)
 let cluelessWord = ""; // Store the wrong word given to the clueless player
+
+// NEW: State for detective interaction
+let isDetectiveChoosing = false;
+let activeDetectiveCardElement = null;
+let activeDetectiveHintElement = null;
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -2933,6 +2964,10 @@ function generateCards() {
   revealedCards = 0;
   lockedCards = 0;
   playerNumbers = [];
+  isDetectiveChoosing = false; // Reset detective state
+  activeDetectiveCardElement = null;
+  document.body.classList.remove('detective-mode');
+
   firstPlayerBox.classList.remove('show');
   firstPlayerBox.textContent = '';
   revealRolesBtn.style.display = 'none';
@@ -2962,18 +2997,17 @@ function generateCards() {
     return;
   }
 
-  // Check if we have enough non-imposter slots for special roles
+  // Check role slots
   const civilianSlots = playerCount - imposterCount;
   let specialRolesCount = 0;
   if (detectiveToggle.checked) specialRolesCount++;
   if (jesterToggle.checked) specialRolesCount++;
   if (assassinToggle.checked) specialRolesCount++;
   if (cluelessToggle.checked) specialRolesCount++;
-  // Pregnant doesn't count against civilian slots since it stacks
   const pregnantEnabled = pregnantToggle.checked;
   
-  if (civilianSlots < specialRolesCount + 1) { // +1 for at least one regular civilian
-    errorBox.textContent = `Need at least ${specialRolesCount + 1} non-imposters for special roles. Reduce imposters or players.`;
+  if (civilianSlots < specialRolesCount + 1) { 
+    errorBox.textContent = `Need at least ${specialRolesCount + 1} non-imposters for special roles.`;
     return;
   }
 
@@ -2981,15 +3015,12 @@ function generateCards() {
   localStorage.setItem("playerCount", playerCount);
   localStorage.setItem("imposterCount", imposterCount);
 
-  // Select random item from all available items
+  // Logic setup (Word/Category selection)
   secretItem = getRandomItemFromArray(customItems);
-  
-  // Determine category and available items for that category
   secretCategory = "Common";
   let categoryItems = [];
 
   if (defaultSubjects[currentSubject]) {
-    // Find which category the item belongs to
     for (const [category, items] of Object.entries(defaultSubjects[currentSubject])) {
       if (items.includes(secretItem)) {
         secretCategory = category;
@@ -2998,24 +3029,19 @@ function generateCards() {
       }
     }
   } else {
-    // For custom subjects, just use "Custom" as the category
     secretCategory = "Custom";
     categoryItems = customItems;
   }
 
-  // Check Clueless Feasibility: Need at least 2 items in category (Secret + Clueless)
   if (cluelessToggle.checked && categoryItems.length < 2) {
       errorBox.textContent = "Clueless role disabled: Not enough words in this category.";
-      // Disable clue toggle internally for this round logic, but keep UI checked? 
-      // Better to just treat it as if toggle was off for logic flow, but user sees warning
-      // Actually, let's just error out for clarity
       return;
   }
 
-  // Initialize words array with all civilians
+  // --- ROLE ASSIGNMENT LOGIC ---
   words = Array(playerCount).fill("Civilian");
 
-  // Assign imposters first
+  // Imposters
   let imposters = 0;
   while (imposters < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
@@ -3025,7 +3051,7 @@ function generateCards() {
     }
   }
 
-  // Assign detective (optional) - replaces a civilian
+  // Detective
   let detectiveIndex = null;
   if (detectiveToggle.checked) {
     let assigned = false;
@@ -3039,21 +3065,19 @@ function generateCards() {
     }
   }
 
-  // Assign jester (optional) - replaces a civilian
-  let jesterIndex = null;
+  // Jester
   if (jesterToggle.checked) {
     let assigned = false;
     while (!assigned) {
       const idx = Math.floor(Math.random() * playerCount);
       if (words[idx] === "Civilian") {
         words[idx] = "Jester";
-        jesterIndex = idx;
         assigned = true;
       }
     }
   }
 
-  // Assign Clueless (optional) - replaces a civilian
+  // Clueless
   if (cluelessToggle.checked) {
     let assigned = false;
     while (!assigned) {
@@ -3061,15 +3085,13 @@ function generateCards() {
       if (words[idx] === "Civilian") {
         words[idx] = "Clueless";
         assigned = true;
-
-        // Pick a clueless word from the SAME category that is NOT the secret item
         const potentialCluelessWords = categoryItems.filter(item => item !== secretItem);
         cluelessWord = getRandomItemFromArray(potentialCluelessWords);
       }
     }
   }
 
-  // Assign assassin (optional) - replaces a civilian
+  // Assassin
   let assassinIndex = null;
   assassinTarget = null;
   if (assassinToggle.checked) {
@@ -3079,116 +3101,82 @@ function generateCards() {
       if (words[idx] === "Civilian") {
         words[idx] = "Assassin";
         assassinIndex = idx;
-        
-        // Choose a target for the assassin (not themselves, not an imposter)
-        // Create list of possible targets
         const possibleTargets = [];
         for (let i = 0; i < playerCount; i++) {
           if (i !== idx && words[i] !== "Imposter") {
             possibleTargets.push(i);
           }
         }
-        
-        // Check if there are any valid targets
         if (possibleTargets.length > 0) {
           const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
-          assassinTarget = targetIdx + 1; // Store as player number (1-based)
+          assassinTarget = targetIdx + 1;
           assigned = true;
         } else {
-          // If no valid targets, try a different assassin
-          words[idx] = "Civilian"; // Reset and try again
+          words[idx] = "Civilian"; 
         }
       }
     }
   }
 
-  // Assign pregnant (optional) - can be any player, stacks with other roles
+  // Pregnant
   if (pregnantEnabled) {
-    // Pregnant can be assigned to any player (including imposters, detectives, etc.)
     pregnantPlayer = Math.floor(Math.random() * playerCount);
   }
 
-  // Replace all non-special roles with the secret item
+  // Fill Civilians
   for (let i = 0; i < words.length; i++) {
     if (words[i] === "Civilian") {
       words[i] = secretItem;
     }
   }
 
-  // Track which player is which role before shuffling
-  const rolesBeforeShuffle = [...words];
-  
-  // Create a mapping of original positions to shuffled positions
+  // SHUFFLE
   const indices = Array.from({length: playerCount}, (_, i) => i);
-  
-  // Shuffle indices
   for (let i = indices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [indices[i], indices[j]] = [indices[j], indices[i]];
   }
-  
-  // Apply the same shuffle to words
   const shuffledWords = indices.map(i => words[i]);
   words = shuffledWords;
-  
-  // Now we need to update the assassin's target and pregnant player based on the shuffle
+
+  // Re-map Assassin Target & Pregnant
   if (assassinToggle.checked && assassinIndex !== null && assassinTarget !== null) {
-    // Find where the assassin ended up after shuffle
     let newAssassinIndex = null;
     for (let i = 0; i < indices.length; i++) {
-      if (indices[i] === assassinIndex) {
-        newAssassinIndex = i;
-        break;
-      }
+      if (indices[i] === assassinIndex) { newAssassinIndex = i; break; }
     }
-    
-    // Find where the target ended up after shuffle
     let newTargetIndex = null;
-    const originalTargetIndex = assassinTarget - 1; // Convert from player number to index
+    const originalTargetIndex = assassinTarget - 1;
     for (let i = 0; i < indices.length; i++) {
-      if (indices[i] === originalTargetIndex) {
-        newTargetIndex = i;
-        break;
-      }
+      if (indices[i] === originalTargetIndex) { newTargetIndex = i; break; }
     }
     
-    // If the assassin somehow ended up as their own target (shouldn't happen with proper shuffle),
-    // we need to fix it by swapping with another non-imposter
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
-      // Find another non-imposter to swap with
       for (let i = 0; i < words.length; i++) {
         if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Assassin" && words[i] !== "Clueless") {
-          // Swap the assassin's position with this player
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
-          
-          // Update the target to the player we swapped with
           assassinTarget = i + 1;
           break;
         }
       }
     } else if (newTargetIndex !== null) {
-      // Update the assassin target to the new position
       assassinTarget = newTargetIndex + 1;
     }
   }
   
-  // Update pregnant player position after shuffle
   if (pregnantEnabled && pregnantPlayer !== null) {
     let newPregnantIndex = null;
     for (let i = 0; i < indices.length; i++) {
-      if (indices[i] === pregnantPlayer) {
-        newPregnantIndex = i;
-        break;
-      }
+      if (indices[i] === pregnantPlayer) { newPregnantIndex = i; break; }
     }
     pregnantPlayer = newPregnantIndex;
   }
 
+  // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
   totalCards = playerCount;
   updateTracker();
 
-  // Build cards
   words.forEach((word, i) => {
     const playerNumber = i + 1;
     const playerName = playerNames[i] || `Player ${playerNumber}`;
@@ -3196,16 +3184,15 @@ function generateCards() {
 
     const card = document.createElement("div");
     card.className = "card";
+    card.dataset.index = i; // Store index for detective logic
 
     card.innerHTML = `
       <div class="card-header">
         <span>${playerName}</span>
         <span class="status-label">Hidden</span>
       </div>
-
       <div class="word-box word-hidden"></div>
       <div class="category-box"></div>
-
       <button class="card-btn">Reveal</button>
     `;
 
@@ -3216,51 +3203,83 @@ function generateCards() {
 
     let viewed = false;
     let revealed = false;
-    let specialHint = null; // Store reference to role hint
+    let specialHint = null;
 
-    btn.addEventListener("click", () => {
+    // --- DETECTIVE CLICK HANDLER (ON THE CARD ITSELF) ---
+    // This handles the click when the detective selects THIS card as a target
+    card.addEventListener('click', (e) => {
+      // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
+      if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
+        
+        // 1. Identify role of this target
+        const targetWord = words[i];
+        let roleReveal = "Civilian";
+        
+        if (targetWord === "Imposter") roleReveal = "Imposter";
+        else if (targetWord === "Jester") roleReveal = "Jester";
+        else if (targetWord === "Assassin") roleReveal = "Assassin";
+        else if (targetWord === "Clueless") roleReveal = "Clueless";
+        else if (targetWord === "Detective") roleReveal = "Detective"; // Should be impossible if logic holds
+        else roleReveal = "Civilian"; // Or the secret word
+
+        // 2. Update the Detective's card hint
+        if (activeDetectiveHintElement) {
+          activeDetectiveHintElement.innerHTML = `
+            <strong>Your Mission:</strong><br>Find imposters!<br><br>
+            <strong>Investigation Result:</strong><br>
+            <span style="color:#10b981; font-size:1.1em">${playerName} is: ${roleReveal}</span>
+          `;
+          activeDetectiveHintElement.style.border = "2px solid #10b981";
+          activeDetectiveHintElement.style.background = "#fff";
+        }
+
+        // 3. Reset Detective Mode
+        isDetectiveChoosing = false;
+        document.body.classList.remove('detective-mode');
+        
+        // Remove highlighting from all cards
+        document.querySelectorAll('.card').forEach(c => {
+          c.classList.remove('detective-active-card');
+        });
+      }
+    });
+
+
+    // --- STANDARD BUTTON HANDLER ---
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent triggering the card click event
       if (viewed) return;
 
-      // Reveal
+      // Reveal Logic
       if (btn.textContent === "Reveal") {
-        // Show appropriate word based on role
+        
+        // Render Role Text
         if (word === "Imposter") {
           wordBox.textContent = "Imposter";
         } else if (word === "Detective") {
-          // For detective, show the subject word in black
           wordBox.textContent = secretItem;
-          
-          // Add "Detective" text underneath in green
-          const detectiveText = document.createElement("div");
-          detectiveText.className = "detective-role";
-          detectiveText.textContent = "Detective";
-          wordBox.appendChild(detectiveText);
+          const roleText = document.createElement("div");
+          roleText.className = "detective-role";
+          roleText.textContent = "Detective";
+          wordBox.appendChild(roleText);
         } else if (word === "Jester") {
-          // For jester, show the subject word in black
           wordBox.textContent = secretItem;
-          
-          // Add "Jester" text underneath in orange
-          const jesterText = document.createElement("div");
-          jesterText.className = "jester-role";
-          jesterText.textContent = "Jester";
-          wordBox.appendChild(jesterText);
+          const roleText = document.createElement("div");
+          roleText.className = "jester-role";
+          roleText.textContent = "Jester";
+          wordBox.appendChild(roleText);
         } else if (word === "Assassin") {
-          // For assassin, show the subject word in black
           wordBox.textContent = secretItem;
-          
-          // Add "Assassin" text underneath in purple
-          const assassinText = document.createElement("div");
-          assassinText.className = "assassin-role";
-          assassinText.textContent = "Assassin";
-          wordBox.appendChild(assassinText);
+          const roleText = document.createElement("div");
+          roleText.className = "assassin-role";
+          roleText.textContent = "Assassin";
+          wordBox.appendChild(roleText);
         } else if (word === "Clueless") {
-          // Clueless player sees the WRONG word, but no special role text
           wordBox.textContent = cluelessWord;
         } else {
-          wordBox.textContent = word; // This is the secret item
+          wordBox.textContent = word; 
         }
         
-        // Add Pregnant text if this player is pregnant
         if (pregnantPlayer === i) {
           const pregnantText = document.createElement("div");
           pregnantText.className = "pregnant-role";
@@ -3269,80 +3288,49 @@ function generateCards() {
         }
         
         wordBox.classList.add("word-revealed");
-
-        // Everyone sees the category
         categoryBox.textContent = "Category: " + secretCategory;
         categoryBox.classList.add("category-shown");
 
-        // Show mission hint based on role
+        // Hints
         specialHint = document.createElement("div");
         
         if (word === "Detective") {
-          // Detective ability: show random player peek hint
-          // Create list of possible players to peek at (everyone except self)
-          const possiblePlayers = [];
-          for (let j = 0; j < playerCount; j++) {
-            if (j !== i) {
-              possiblePlayers.push(j);
-            }
-          }
-          
-          // If there are any other players, peek at one
-          if (possiblePlayers.length > 0) {
-            const otherPlayer = possiblePlayers[Math.floor(Math.random() * possiblePlayers.length)];
-            const otherWord = words[otherPlayer];
-            const otherRole = otherWord === "Imposter" ? "Imposter" : 
-                              otherWord === "Detective" ? "Detective" : 
-                              otherWord === "Jester" ? "Jester" : 
-                              otherWord === "Assassin" ? "Assassin" : 
-                              otherWord === "Clueless" ? "Clueless" :
-                              "Non-Imposter";
-            const otherPlayerName = playerNames[otherPlayer] || `Player ${otherPlayer + 1}`;
+          // --- DETECTIVE ACTIVATION LOGIC ---
+          isDetectiveChoosing = true;
+          activeDetectiveCardElement = card;
+          card.classList.add('detective-active-card');
+          document.body.classList.add('detective-mode');
 
-            specialHint.className = "detective-hint";
-            specialHint.innerHTML = `<strong>Your Mission:</strong><br>Find imposters!<br><br><strong>You peeked at ${otherPlayerName}:</strong><br>Their role: ${otherRole}`;
-          } else {
-            // Edge case: only one player
-            specialHint.className = "detective-hint";
-            specialHint.innerHTML = `<strong>Your Mission:</strong><br>Find imposters!<br><br><strong>No other players to peek at!</strong>`;
-          }
+          specialHint.className = "detective-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Find imposters!<br><br><strong>ACTION REQUIRED:</strong><br>Tap another player's card to investigate them!`;
+          
+          activeDetectiveHintElement = specialHint; // Store ref to update later
+
         } else if (word === "Assassin" && assassinTarget) {
-          // Assassin ability: show target player
           const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
           specialHint.className = "assassin-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
         } else if (word === "Jester") {
-          // Jester ability: show mission
           specialHint.className = "jester-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get voted out!`;
         }
         
-        // Pregnant hint (can stack with other roles)
         if (pregnantPlayer === i) {
           const pregnantHint = document.createElement("div");
           pregnantHint.className = "pregnant-hint";
           pregnantHint.innerHTML = `<strong>You're Pregnant!</strong><br>You get 2 votes!`;
           card.appendChild(pregnantHint);
-          
-          // Show the hint with animation
-          setTimeout(() => {
-            pregnantHint.classList.add('show');
-          }, 10);
+          setTimeout(() => pregnantHint.classList.add('show'), 10);
         }
 
         if (specialHint.textContent) {
           card.appendChild(specialHint);
-          
-          // Show the hint with animation
-          setTimeout(() => {
-            specialHint.classList.add('show');
-          }, 10);
+          setTimeout(() => specialHint.classList.add('show'), 10);
         }
 
         btn.textContent = "Close";
         statusLabel.textContent = "Revealed";
         
-        // Track reveal
         if (!revealed) {
           revealed = true;
           revealedCards++;
@@ -3351,49 +3339,37 @@ function generateCards() {
         return;
       }
 
-      // Close + lock
+      // Close Logic
       if (btn.textContent === "Close") {
         viewed = true;
 
-        // Hide special hints if they exist
-        if (specialHint) {
-          specialHint.classList.remove('show');
+        // If detective closes card without choosing, cancel the mode
+        if (word === "Detective" && isDetectiveChoosing) {
+          isDetectiveChoosing = false;
+          document.body.classList.remove('detective-mode');
+          card.classList.remove('detective-active-card');
         }
-        
-        // Hide pregnant hint if it exists
+
+        if (specialHint) specialHint.classList.remove('show');
         const pregnantHint = card.querySelector('.pregnant-hint');
-        if (pregnantHint) {
-          pregnantHint.classList.remove('show');
-        }
+        if (pregnantHint) pregnantHint.classList.remove('show');
 
         wordBox.classList.remove("word-revealed");
         categoryBox.classList.remove("category-shown");
 
         setTimeout(() => {
-          // Remove special hints completely when closing
-          if (specialHint && specialHint.parentNode) {
-            specialHint.parentNode.removeChild(specialHint);
-            specialHint = null;
-          }
+          if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
+          if (pregnantHint && pregnantHint.parentNode) pregnantHint.parentNode.removeChild(pregnantHint);
           
-          if (pregnantHint && pregnantHint.parentNode) {
-            pregnantHint.parentNode.removeChild(pregnantHint);
-          }
-          
-          // Clear the word box content and reset
-          while (wordBox.firstChild) {
-            wordBox.removeChild(wordBox.firstChild);
-          }
+          while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
           
           wordBox.textContent = "Locked";
           wordBox.className = "word-box word-locked";
-
           btn.textContent = "Locked";
           btn.classList.add("locked");
           btn.disabled = true;
           statusLabel.textContent = "Locked";
           
-          // Track lock
           lockedCards++;
           updateTracker();
         }, 250);
