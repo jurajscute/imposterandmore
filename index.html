@@ -2158,7 +2158,7 @@ function generateCards() {
           specialHint.className = "assassin-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
         } else if (word === "Maniac" && maniacTarget) {
-          const targetName = playerNames[imposterIndex + 1];
+          const targetName = playerNames[imposterIndex];
           specialHint.className = "maniac-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} out! They're the Impostor!`;
         } else if (word === "Jester") {
