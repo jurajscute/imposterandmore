@@ -2159,7 +2159,7 @@ function generateCards() {
           const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
           specialHint.className = "assassin-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
-        } else if (word === "Maniac") {
+        } else if (word === "Maniac" && maniacTarget) {
          const targetName = playerNames[realImposterIndex];
           specialHint.className = "maniac-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} out! They're the Impostor!`;
