@@ -1921,7 +1921,7 @@ function generateCards() {
     }
   }
 
-  // Maniac
+    // Maniac
   let maniacIndex = null;
   maniacTarget = null;
   if (useManiac) {
@@ -1931,13 +1931,18 @@ function generateCards() {
       if (words[idx] === "Civilian") {
         words[idx] = "Maniac";
         maniacIndex = idx;
-        let imposterIndex = words.indexOf("Imposter");
-        if (imposterIndex !== -1 && imposterIndex !== idx) {
-        maniacTarget = imposterIndex + 1;
-        assigned = true;
-        } else {
-        words[idx] = "Civilian";
+        const possibleTargets = [];
+        for (let i = 0; i < playerCount; i++) {
+          if (i !== idx && words[i] !== "Imposter") {
+            possibleTargets.push(i);
+          }
         }
+        if (possibleTargets.length > 0) {
+          const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+          maniacTarget = targetIdx + 1;
+          assigned = true;
+        } else {
+          words[idx] = "Civilian"; 
         }
       }
     }
@@ -2225,7 +2230,7 @@ function generateCards() {
 
     cardsContainer.appendChild(card);
   });
-
+}
 /* ===== TOGGLE RANDOMIZE CHECKBOXES ===== */
 randomizeToggle.addEventListener('change', () => {
   const isDisabled = randomizeToggle.checked;
