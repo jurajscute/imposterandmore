@@ -92,7 +92,6 @@
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
     .role-card.jester { border-left-color: #f59e0b; } .jester .role-icon { background: #f59e0b; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
-    .role-card.maniac { border-left-color: #5f0000; } .maniac .role-icon { background: #5f0000; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
     .role-card.clueless { border-left-color: #06b6d4; } .clueless .role-icon { background: #06b6d4; }
 	  .role-card.echo { border-left-color: #6368ba; } .echo .role-icon { background: #6368ba; }
@@ -208,7 +207,6 @@
     .detective-role { color: #10b981; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jester-role { color: #f59e0b; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .maniac-role { color: #5f0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
 	  .echo-role { color: #6368ba; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     
@@ -223,11 +221,10 @@
     .detective-hint, .assassin-hint, .jester-hint, .king-hint, .echo-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
-    .maniac-hint { color: #5f0000; background: #ffe8e8; border-color: #ffeaea; }
     .jester-hint { color: #f59e0b; background: #fef3c7; border-color: #fde68a; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
-    .detective-hint.show, .assassin-hint.show, .jester-hint.show, .king-hint.show, .echo-hint.show, .maniac-hint.show { opacity: 1; transform: translateY(0); }
+    .detective-hint.show, .assassin-hint.show, .jester-hint.show, .king-hint.show, .echo-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -255,14 +252,12 @@
     .role-list .civilian-role { background: #e0e7ff; color: #3b82f6; border-left-color: #3b82f6; }
     .role-list .imposter-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
-    .role-list .jester-role { background: #fef3c7; color: #f7dcff; border-left-color: #ff4fe2; }
+    .role-list .jester-role { background: #fef3c7; color: #f59e0b; border-left-color: #f59e0b; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
-    .role-list .maniac-role { background: #ffe8e8; color: #5f0000; border-left-color: #5f0000; }
-    .role-list .king-role { background: #fefce8; color: #fff67c; border-left-color: #fff2cb; }
+    .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
     .role-list .clueless-role { background: #ecfeff; color: #0891b2; border-left-color: #0891b2; }
     .role-list .echo-role { background: #d0cbff; color: #6368ba; border-left-color: #6368ba; }
     .assassin-target { font-size: 12px; color: #8b5cf6; font-weight: 600; margin-top: 4px; background: rgba(139, 92, 246, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
-    .maniac { font-size: 12px; color: #5f0000; font-weight: 600; margin-top: 4px; background: rgba(246, 92, 92, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .king-badge { font-size: 12px; color: #d97706; font-weight: 600; margin-top: 4px; background: rgba(234, 179, 8, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .clueless-word-display { font-size: 12px; color: #0891b2; font-weight: 600; margin-top: 4px; background: rgba(6, 182, 212, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .footer-note { margin-top: 24px; text-align: center; font-size: 13px; color: #666; padding: 0 12px; line-height: 1.5; max-width: 500px; width: 100%; }
@@ -313,7 +308,7 @@
             <li><strong>Imposters:</strong> Some players are imposters - they DON'T know the secret word!</li>
             <li><strong>Discussion:</strong> Players discuss to figure out who the imposters are by saying a word related to the secret word they got</li>
             <li><strong>Voting:</strong> Vote to eliminate suspected imposters</li>
-            <li><strong>Winning:</strong> Civilians win if all imposters are eliminated. Imposters win if they survive, if they win so does the Maniac. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes.</li>
+            <li><strong>Winning:</strong> Civilians win if all imposters are eliminated. Imposters win if they survive. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes.</li>
           </ol>
         </div>
         
@@ -325,7 +320,6 @@
             <div class="role-card detective"><h4><span class="role-icon">D</span>Detective</h4><p>You can peek at one random player's role.</p><div class="goal">Goal: Help civilians</div></div>
             <div class="role-card jester"><h4><span class="role-icon">J</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
             <div class="role-card assassin"><h4><span class="role-icon">A</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
-            <div class="role-card maniac"><h4><span class="role-icon">M</span>Maniac</h4><p>Help the impostor.</p><div class="goal">Goal: Win with the impostor.</div></div>
             <div class="role-card king"><h4><span class="role-icon">K</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">E</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
@@ -505,13 +499,6 @@
           </label>
         </div>
 
-        <div class="role-pill maniac-toggle" id="maniacContainer">
-          <label>
-            <input id="maniacToggle" type="checkbox">
-            Maniac
-          </label>
-        </div>
-
         <div class="role-pill king-toggle" id="kingContainer">
           <label>
             <input id="kingToggle" type="checkbox">
@@ -580,8 +567,7 @@ let playerNumbers = [];
 let words = []; // Store words globally for detective peek
 let secretItem = ""; // Store secret item globally for detective
 let secretCategory = ""; // Store secret category globally for detective
-let assassinTarget = null;
-let maniacTarget = null; // Store assassin's target
+let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let kingPlayer = null; // Store which player is king (index)
 let cluelessWord = ""; // Store the wrong word given to the clueless player
@@ -635,7 +621,6 @@ const randomizeToggle = document.getElementById("randomizeToggle");
 const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const assassinToggle = document.getElementById("assassinToggle");
-const maniacToggle = document.getElementById("maniacToggle");
 const kingToggle = document.getElementById("kingToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
@@ -644,7 +629,6 @@ const echoToggle = document.getElementById("echoToggle");
 const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
 const assassinContainer = document.getElementById("assassinContainer");
-const maniacContainer = document.getElementById("maniacContainer");
 const kingContainer = document.getElementById("kingContainer");
 const cluelessContainer = document.getElementById("cluelessContainer");
 const echoContainer = document.getElementById("echoContainer");
@@ -970,7 +954,6 @@ customItems = JSON.parse(localStorage.getItem("customItems")) || [];
 detectiveToggle.checked = JSON.parse(localStorage.getItem("detectiveEnabled")) || false;
 jesterToggle.checked = JSON.parse(localStorage.getItem("jesterEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
-maniacToggle.checked = JSON.parse(localStorage.getItem("maniacEnabled")) || false;
 kingToggle.checked = JSON.parse(localStorage.getItem("kingEnabled")) || false;
 cluelessToggle.checked = JSON.parse(localStorage.getItem("cluelessEnabled")) || false;
 echoToggle.checked = JSON.parse(localStorage.getItem("echoEnabled")) || false;
@@ -1600,14 +1583,6 @@ function revealAllRoles() {
         const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
         specialNote = `<div class="assassin-target">Target: ${targetName}</div>`;
       }
-    
-    } else if (word === "Maniac") {
-      roleName = "Maniac";
-      roleClass = "maniac-role";
-      if (maniacTarget) {
-        const targetName = playerNames[maniacTarget - 1] || `Player ${maniacTarget}`;
-        specialNote = `<div class="maniac-target">Target: ${targetName}</div>`;
-      }
     }
     
     if (isKing) {
@@ -1743,7 +1718,6 @@ function generateCards() {
   let useDetective = detectiveToggle.checked;
   let useJester = jesterToggle.checked;
   let useAssassin = assassinToggle.checked;
-  let useManiac = maniacToggle.checked;
   let useClueless = cluelessToggle.checked;
   let useEcho = echoToggle.checked;
   let useKing = kingToggle.checked;
@@ -1754,7 +1728,6 @@ function generateCards() {
       useDetective = false;
       useJester = false;
       useAssassin = false;
-      useManiac = false;
       useClueless = false;
       useEcho = false;
       useKing = false;
@@ -1778,7 +1751,7 @@ function generateCards() {
       }
 
       // 3. Define pool of roles that consume a slot
-      let rolePool = ['detective', 'jester', 'assassin', 'echo', 'maniac'];
+      let rolePool = ['detective', 'jester', 'assassin', 'echo'];
       
       // Only add clueless if valid (enough words)
       if (categoryItems.length >= 2) {
@@ -1798,7 +1771,6 @@ function generateCards() {
              if (role === 'detective') useDetective = true;
              if (role === 'jester') useJester = true;
              if (role === 'assassin') useAssassin = true;
-             if (role === 'maniac') useManiac = true;
              if (role === 'clueless') useClueless = true;
              if (role === 'echo') useEcho = true;
          }
@@ -1815,7 +1787,6 @@ function generateCards() {
       if (useDetective) specialRolesCount++;
       if (useJester) specialRolesCount++;
       if (useAssassin) specialRolesCount++;
-      if (useManiac) specialRolesCount++;
       if (useClueless) specialRolesCount++;
       if (useEcho) specialRolesCount++;
       
@@ -1835,15 +1806,11 @@ function generateCards() {
 
   // Imposters
   let imposters = 0;
-  let imposterIndex = null;
   while (imposters < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
     if (words[idx] === "Civilian") {
       words[idx] = "Imposter";
-      imposterIndex = idx
       imposters++;
-      const realImposterIndex = words.indexOf("Imposter");
-
     }
   }
 
@@ -1917,33 +1884,6 @@ function generateCards() {
         if (possibleTargets.length > 0) {
           const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
           assassinTarget = targetIdx + 1;
-          assigned = true;
-        } else {
-          words[idx] = "Civilian"; 
-        }
-      }
-    }
-  }
-
-    // Maniac
-  let maniacIndex = null;
-  maniacTarget = null;
-  if (useManiac) {
-    let assigned = false;
-    while (!assigned) {
-      const idx = Math.floor(Math.random() * playerCount);
-      if (words[idx] === "Civilian") {
-        words[idx] = "Maniac";
-        maniacIndex = idx;
-        const possibleTargets = [];
-        for (let i = 0; i < playerCount; i++) {
-          if ((i !== idx && words[i] !== "Imposter")) {
-            possibleTargets.push(i);
-          }
-        }
-        if (possibleTargets.length > 0) {
-          const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
-          maniacTarget = targetIdx + 1;
           assigned = true;
         } else {
           words[idx] = "Civilian"; 
@@ -2052,7 +1992,6 @@ function generateCards() {
         if (targetWord === "Imposter") roleReveal = "Evil";
         else if (targetWord === "Jester") roleReveal = "Evil";
         else if (targetWord === "Assassin") roleReveal = "Evil";
-        else if (targetWord === "Maniac") roleReveal = "Evil";
         else if (targetWord === "Clueless") roleReveal = "Crew";
         else if (targetWord === "Echo") roleReveal = "Echo";
         else if (targetWord === "Detective") roleReveal = "Detective"; // Should be impossible if logic holds
@@ -2116,12 +2055,6 @@ function generateCards() {
           roleText.className = "assassin-role";
           roleText.textContent = "Assassin";
           wordBox.appendChild(roleText);
-          } else if (word === "Maniac") {
-          wordBox.textContent = secretItem;
-          const roleText = document.createElement("div");
-          roleText.className = "maniac-role";
-          roleText.textContent = "Maniac";
-          wordBox.appendChild(roleText);
         } else if (word === "Clueless") {
           wordBox.textContent = cluelessWord;
         } else {
@@ -2159,10 +2092,6 @@ function generateCards() {
           const targetName = playerNames[assassinTarget - 1] || `Player ${assassinTarget}`;
           specialHint.className = "assassin-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
-        } else if (word === "Maniac" && maniacTarget) {
-         const targetName = playerNames[realImposterIndex];
-          specialHint.className = "maniac-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} out! They're the Impostor!`;
         } else if (word === "Jester") {
           specialHint.className = "jester-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get voted out!`;
@@ -2235,6 +2164,7 @@ function generateCards() {
     cardsContainer.appendChild(card);
   });
 }
+
 /* ===== TOGGLE RANDOMIZE CHECKBOXES ===== */
 randomizeToggle.addEventListener('change', () => {
   const isDisabled = randomizeToggle.checked;
@@ -2242,7 +2172,6 @@ randomizeToggle.addEventListener('change', () => {
   detectiveToggle.disabled = isDisabled;
   jesterToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
-  maniacToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
   cluelessToggle.disabled = isDisabled;
   echoToggle.disabled = isDisabled;
@@ -2318,10 +2247,6 @@ assassinToggle.addEventListener("change", () => {
   localStorage.setItem("assassinEnabled", assassinToggle.checked);
 });
 
-maniacToggle.addEventListener("change", () => {
-  localStorage.setItem("maniacEnabled", maniacToggle.checked);
-});
-
 kingToggle.addEventListener("change", () => {
   localStorage.setItem("kingEnabled", kingToggle.checked);
 });
@@ -2388,4 +2313,3 @@ aiModalOverlay.addEventListener('click', (e) => {
 </script>
 </body>
 </html>
-
