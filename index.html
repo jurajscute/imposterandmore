@@ -1933,7 +1933,7 @@ function generateCards() {
         maniacIndex = idx;
         const possibleTargets = [];
         for (let i = 0; i < playerCount; i++) {
-          if (i !== idx && words[i] !== "Imposter") {
+          if (targetWord === "Imposter") {
             possibleTargets.push(i);
           }
         }
