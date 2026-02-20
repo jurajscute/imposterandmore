@@ -1835,10 +1835,12 @@ function generateCards() {
 
   // Imposters
   let imposters = 0;
+  let imposterIndex = null;
   while (imposters < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
     if (words[idx] === "Civilian") {
       words[idx] = "Imposter";
+      imposterIndex = idx
       imposters++;
     }
   }
@@ -1931,18 +1933,10 @@ function generateCards() {
       if (words[idx] === "Civilian") {
         words[idx] = "Maniac";
         maniacIndex = idx;
-        const possibleTargets = [];
-        for (let i = 0; i < playerCount; i++) {
-          if (targetWord === "Imposter") {
-            possibleTargets.push(i);
+        {maniacTarget = imposterIndex
+           {
+          
           }
-        }
-        if (possibleTargets.length > 0) {
-          const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
-          maniacTarget = targetIdx + 1;
-          assigned = true;
-        } else {
-          words[idx] = "Civilian"; 
         }
       }
     }
@@ -2156,7 +2150,7 @@ function generateCards() {
           specialHint.className = "assassin-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get ${targetName} voted out!`;
         } else if (word === "Maniac" && maniacTarget) {
-          const targetName = playerNames[maniacTarget - 1] || `Player ${maniacTarget}`;
+          const targetName = playerNames[imposterIndex + 1];
           specialHint.className = "maniac-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} out! They're the Impostor!`;
         } else if (word === "Jester") {
