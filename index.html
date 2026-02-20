@@ -1933,10 +1933,18 @@ function generateCards() {
       if (words[idx] === "Civilian") {
         words[idx] = "Maniac";
         maniacIndex = idx;
-        {maniacTarget = imposterIndex
-           {
-          
+        const possibleTargets = [];
+        for (let i = 0; i < playerCount; i++) {
+          if ((i !== idx && words[i] !== "Imposter")) {
+            possibleTargets.push(i);
           }
+        }
+        if (possibleTargets.length > 0) {
+          const targetIdx = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
+          maniacTarget = targetIdx + 1;
+          assigned = true;
+        } else {
+          words[idx] = "Civilian"; 
         }
       }
     }
