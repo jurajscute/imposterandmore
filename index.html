@@ -583,6 +583,7 @@ let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let kingPlayer = null; // Store which player is king (index)
 let cluelessWord = ""; // Store the wrong word given to the clueless player
+let imposterIndex = null;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -1827,7 +1828,6 @@ function generateCards() {
   words = Array(playerCount).fill("Civilian");
 
   // Imposters
-  let imposterIndex = null;
   let imposters = 0;
   while (imposters < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
