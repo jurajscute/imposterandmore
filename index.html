@@ -2191,7 +2191,7 @@ while (loverIndexes.length < 2){
 
   const loverText = document.createElement("div");
   loverText.className = "lovers-role";
-  loverText.textContent = `With a Lover!<br><br> <strong>${playerNames[partnerIndex]}</strong> is your soulmate!`;
+  loverText.innerHTML = `With a Lover!<br><strong>${playerNames[partnerIndex]}</strong><br>is your soulmate!`;
 
   wordBox.appendChild(loverText);
 }
