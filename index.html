@@ -90,9 +90,10 @@
     .role-card.civilian { border-left-color: #3b82f6; } .civilian .role-icon { background: #3b82f6; }
     .role-card.imposter { border-left-color: #dc2626; } .imposter .role-icon { background: #dc2626; }
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
-    .role-card.jester { border-left-color: #ff60e5; } .jester .role-icon { background: #ff60e5; }
+    .role-card.jester { border-left-color: #610099; } .jester .role-icon { background: #00a008; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
+    .role-card.lovers { border-left-color: #ff7abc; } .lovers .role-icon { background: linear-gradient(135deg, #e874ff, #fdb4ff); }
     .role-card.clueless { border-left-color: #06b6d4; } .clueless .role-icon { background: #06b6d4; }
 	  .role-card.echo { border-left-color: #6368ba; } .echo .role-icon { background: #6368ba; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
@@ -206,9 +207,10 @@
     .word-locked { color: #999; font-style: italic; opacity: 1; transform: scale(1); font-size: 18px; }
     
     .detective-role { color: #10b981; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .jester-role { color: #ff0bd6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .jester-role { color: #00b436; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .lovers-role { color: #ff78b7; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
 	  .echo-role { color: #6368ba; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .maniac-role { color: #530000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     
@@ -220,14 +222,15 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .detective-hint, .assassin-hint, .jester-hint, .king-hint, .echo-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .detective-hint, .assassin-hint, .jester-hint, .king-hint, .lovers-hint, .echo-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
-    .jester-hint { color: #ff00f2; background: #ffd5fd; border-color: #ff09f3; }
+    .jester-hint { color: #009726; background: #e1adff; border-color: #4f00aa; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
+    .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
-    .detective-hint.show, .assassin-hint.show, .jester-hint.show, .king-hint.show, .echo-hint.show, .maniac-hint.show { opacity: 1; transform: translateY(0); }
+    .detective-hint.show, .assassin-hint.show, .jester-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .maniac-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -240,6 +243,9 @@
     
     .king-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #eab308, #ca8a04); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
     .king-announcement.show { opacity: 1; transform: translateY(0); }
+
+    .lovers-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #ff3d87, #ff78b7); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 8, 121, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
+    .lovers-announcement.show { opacity: 1; transform: translateY(0); }
     
     .roles-reveal-box { text-align: center; padding: 0; background: #fff; color: #222; border-radius: 16px; font-size: clamp(16px, 4vw, 18px); font-weight: 600; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; line-height: 1.4; margin-bottom: 16px; max-height: 0; overflow: hidden; border: 2px solid #4f46e5; }
     /* FIXED SCROLLING HERE */
@@ -258,11 +264,13 @@
     .role-list .jester-role { background: #fef3c7; color: #f59e0b; border-left-color: #f59e0b; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
     .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
+    .role-list .lovers-role { background: #fee8f2; color: #ff78b7; border-left-color: #ff3d87; }
     .role-list .clueless-role { background: #ecfeff; color: #0891b2; border-left-color: #0891b2; }
     .role-list .echo-role { background: #d0cbff; color: #6368ba; border-left-color: #6368ba; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
     .assassin-target { font-size: 12px; color: #8b5cf6; font-weight: 600; margin-top: 4px; background: rgba(139, 92, 246, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .king-badge { font-size: 12px; color: #d97706; font-weight: 600; margin-top: 4px; background: rgba(234, 179, 8, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
+    .lovers-badge { font-size: 12px; color: #ff78b7; font-weight: 600; margin-top: 4px; background: rgba(234, 8, 147, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .clueless-word-display { font-size: 12px; color: #0891b2; font-weight: 600; margin-top: 4px; background: rgba(6, 182, 212, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .footer-note { margin-top: 24px; text-align: center; font-size: 13px; color: #666; padding: 0 12px; line-height: 1.5; max-width: 500px; width: 100%; }
   /* AI Button Style */
@@ -312,7 +320,7 @@
             <li><strong>Imposters:</strong> Some players are imposters - they DON'T know the secret word!</li>
             <li><strong>Discussion:</strong> Players discuss to figure out who the imposters are by saying a word related to the secret word they got</li>
             <li><strong>Voting:</strong> Vote to eliminate suspected imposters</li>
-            <li><strong>Winning:</strong> Civilians win if all imposters are eliminated. Imposters win if they survive. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes.</li>
+            <li><strong>Winning:</strong> Civilians win if all imposters are eliminated. Imposters win if they survive. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
           </ol>
         </div>
         
@@ -324,7 +332,8 @@
             <div class="role-card detective"><h4><span class="role-icon">D</span>Detective</h4><p>You can peek at one random player's role.</p><div class="goal">Goal: Help civilians</div></div>
             <div class="role-card jester"><h4><span class="role-icon">J</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
             <div class="role-card assassin"><h4><span class="role-icon">A</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
-            <div class="role-card king"><h4><span class="role-icon">K</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Use extra vote wisely</div></div>
+            <div class="role-card king"><h4><span class="role-icon">K</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
+            <div class="role-card lovers"><h4><span class="role-icon">K</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">E</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
             <div class="role-card maniac"><h4><span class="role-icon">M</span>Maniac</h4><p>Help the impostor win!</p><div class="goal">Goal: Win with the Impostor.</div></div>
@@ -511,6 +520,13 @@
           </label>
         </div>
 
+        <div class="role-pill lovers-toggle" id="loversContainer">
+          <label>
+            <input id="loversToggle" type="checkbox">
+            Lovers
+          </label>
+        </div>
+
         <div class="role-pill clueless-toggle" id="cluelessContainer">
           <label>
             <input id="cluelessToggle" type="checkbox">
@@ -545,6 +561,7 @@
   <div class="status-section">
     <div id="revealTracker" class="reveal-tracker"></div>
     <div id="kingAnnouncement" class="king-announcement"></div>
+    <div id="loversAnnouncement" class="lovers-announcement"></div>
     <div id="firstPlayer" class="first-player"></div>
     <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
     <div id="rolesRevealBox" class="roles-reveal-box"></div>
@@ -582,6 +599,7 @@ let secretCategory = ""; // Store secret category globally for detective
 let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let kingPlayer = null; // Store which player is king (index)
+let loversPlayers = null;
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
 
@@ -610,6 +628,7 @@ const changeSubjectBtn = document.getElementById("changeSubjectBtn");
 const customSubjectInput = document.getElementById("customSubjectInput");
 const customSubjectBtn = document.getElementById("customSubjectBtn");
 const kingAnnouncement = document.getElementById("kingAnnouncement");
+const loversAnnouncement = document.getElementById("loversAnnouncement");
 
 // Slider elements
 const playerSlider = document.getElementById("playerSlider");
@@ -635,6 +654,7 @@ const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
+const loversToggle = document.getElementById("loversToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
 const maniacToggle = document.getElementById("maniacToggle");
@@ -644,6 +664,7 @@ const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
 const assassinContainer = document.getElementById("assassinContainer");
 const kingContainer = document.getElementById("kingContainer");
+const loversContainer = document.getElementById("loversContainer");
 const cluelessContainer = document.getElementById("cluelessContainer");
 const echoContainer = document.getElementById("echoContainer");
 const maniacContainer = document.getElementById("maniacContainer");
@@ -970,6 +991,7 @@ detectiveToggle.checked = JSON.parse(localStorage.getItem("detectiveEnabled")) |
 jesterToggle.checked = JSON.parse(localStorage.getItem("jesterEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
 kingToggle.checked = JSON.parse(localStorage.getItem("kingEnabled")) || false;
+loversToggle.checked = JSON.parse(localStorage.getItem("loversEnabled")) || false;
 cluelessToggle.checked = JSON.parse(localStorage.getItem("cluelessEnabled")) || false;
 echoToggle.checked = JSON.parse(localStorage.getItem("echoEnabled")) || false;
 maniacToggle.checked = JSON.parse(localStorage.getItem("maniacEnabled")) || false;
@@ -1372,6 +1394,8 @@ function changeSubject() {
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  loversAnnouncement.classList.remove('show');
+  loversAnnouncement.textContent = '';
 }
 
 function enableGenerateButton() {
@@ -1514,8 +1538,16 @@ function updateTracker() {
       selectFirstPlayer();
     }, 500);
   }
+  
+  if (lockedCards === totalCards && totalCards > 0) {
+    // Announce lovers player after all cards are locked
+    announceLoversPlayer();
+    // Then select first player
+    setTimeout(() => {
+      selectFirstPlayer();
+    }, 500);
+  }
 }
-
 /* ===== ANNOUNCE KING PLAYER ===== */
 function announceKingPlayer() {
   // Check the global flags (set during generation) instead of current toggle state
@@ -1529,6 +1561,20 @@ function announceKingPlayer() {
       kingAnnouncement.textContent = `${playerName} is the King!\nThey get 2 votes!`;
       kingAnnouncement.classList.add('show');
       kingAnnouncement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
+  }
+}function announceLoversPlayer() {
+  // Check the global flags (set during generation) instead of current toggle state
+  // because randomizer might have enabled it internally for this round
+  const isLoversActive = words.some((_, i) => i === loversPlayers);
+  
+  if (loversPlayers !== null) {
+    const playerName = playerNames[loversPlayers] || `Player ${loversPlayers + 1}`;
+    
+    setTimeout(() => {
+      loversAnnouncement.textContent = `Love is in the air!`;
+      loversAnnouncement.classList.add('show');
+      loversAnnouncement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 500);
   }
 }
@@ -1571,6 +1617,7 @@ function revealAllRoles() {
     let roleClass = "";
     let specialNote = "";
     let isKing = (i === kingPlayer);
+    let isLovers = (i === loversPlayers);
     
     if (word === secretItem) {
       roleName = "Civilian";
@@ -1610,6 +1657,12 @@ function revealAllRoles() {
       } else {
         roleClass = "king-role";
       }
+    }    if (isLovers) {
+      if (roleClass) {
+        roleClass += " lovers-role";
+      } else {
+        roleClass = "lovers-role";
+      }
     }
     
     const li = document.createElement('li');
@@ -1622,7 +1675,18 @@ function revealAllRoles() {
           ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
         </div>
       </div>
+    `;    const lovertext = document.createElement('tovertext');
+    lovertext.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <span class="player-number">${playerName}</span>
+        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+          <span class="role-name ${roleClass}">${roleName}${isLovers ? ' (Lovers)' : ''}</span>
+          ${specialNote}
+          ${isLovers ? '<div class="lovers-badge">Has a lover!</div>' : ''}
+        </div>
+      </div>
     `;
+    
     
     listContainer.appendChild(li);
   });
@@ -1664,8 +1728,11 @@ function generateCards() {
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  loversAnnouncement.classList.remove('show');
+  loversAnnouncement.textContent = '';
   errorBox.textContent = "";
   kingPlayer = null;
+  loversPlayers = null;
   cluelessWord = "";
 
   const playerCount = parseInt(playerSlider.value, 10);
@@ -1741,6 +1808,7 @@ function generateCards() {
   let useEcho = echoToggle.checked;
   let useManiac = maniacToggle.checked;
   let useKing = kingToggle.checked;
+  let useLovers = loversToggle.checked;
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
@@ -1752,6 +1820,7 @@ function generateCards() {
       useEcho = false;
       useManiac = false;
       useKing = false;
+      useLovers = false;
 
       // 2. Calculate available slots for civilian roles
       // We generally want to leave at least 1 "plain" civilian in play.
@@ -1801,6 +1870,7 @@ function generateCards() {
       // 4. Handle King (doesn't take a slot, stackable)
       // Give it a 50% chance to appear
       useKing = Math.random() < 0.5;
+      useLovers = Math.random() < 2;
 
   } else {
       // Manual mode validation
@@ -1933,6 +2003,12 @@ function generateCards() {
     kingPlayer = Math.floor(Math.random() * playerCount);
   }
 
+    // Lovers
+  if (useLovers) {
+    loversPlayers = Math.floor(Math.random() * playerCount + 1);
+  }
+  
+
   // Fill Civilians
   for (let i = 0; i < words.length; i++) {
     if (words[i] === "Civilian") {
@@ -1981,6 +2057,15 @@ function generateCards() {
     }
     kingPlayer = newKingIndex;
   }
+
+    if (useLovers && loversPlayers !== null) {
+    let newLoversIndex = null + 1;
+    for (let i = 0; i < indices.length; i++) {
+      if (indices[i] === loversPlayers) { newLoversIndex = i; break; }
+    }
+    loversPlayers = newLoversIndex;
+  }
+
 
   // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
@@ -2111,6 +2196,13 @@ function generateCards() {
           kingText.textContent = "King";
           wordBox.appendChild(kingText);
         }
+
+          if (loversPlayers === i) {
+          const loversText = document.createElement("div");
+          loversText.className = "lovers-role";
+          loversText.textContent = "Lovers";
+          wordBox.appendChild(loversText);
+        }
         
         wordBox.classList.add("word-revealed");
         categoryBox.textContent = "Category: " + secretCategory;
@@ -2156,6 +2248,14 @@ function generateCards() {
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
 
+        if (loversPlayers === i) {
+          const loversHint = document.createElement("div");
+          loversHint.className = "lovers-hint";
+          loversHint.innerHTML = `<strong>You are the Lover!</strong><br>You have significant other!`;
+          card.appendChild(loversHint);
+          setTimeout(() => loversHint.classList.add('show'), 10);
+        }
+
         if (specialHint.textContent) {
           card.appendChild(specialHint);
           setTimeout(() => specialHint.classList.add('show'), 10);
@@ -2187,12 +2287,32 @@ function generateCards() {
         const kingHint = card.querySelector('.king-hint');
         if (kingHint) kingHint.classList.remove('show');
 
+        if (specialHint) specialHint.classList.remove('show');
+        const loversHint = card.querySelector('.lovers-hint');
+        if (loversHint) loversHint.classList.remove('show');
+
         wordBox.classList.remove("word-revealed");
         categoryBox.classList.remove("category-shown");
 
         setTimeout(() => {
           if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
           if (kingHint && kingHint.parentNode) kingHint.parentNode.removeChild(kingHint);
+          
+          while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
+          
+          wordBox.textContent = "Locked";
+          wordBox.className = "word-box word-locked";
+          btn.textContent = "Locked";
+          btn.classList.add("locked");
+          btn.disabled = true;
+          statusLabel.textContent = "Locked";
+          
+          lockedCards++;
+          updateTracker();
+        }, 250);
+        setTimeout(() => {
+          if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
+          if (loversHint && loversHint.parentNode) loversHint.parentNode.removeChild(loversHint);
           
           while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
           
@@ -2221,12 +2341,13 @@ randomizeToggle.addEventListener('change', () => {
   jesterToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
+  loversToggle.disabled = isDisabled;
   cluelessToggle.disabled = isDisabled;
   echoToggle.disabled = isDisabled;
   maniacToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterontainer, assassinContainer, kingContainer, cluelessContainer, echoContainer, maniacContainer];
+  const containers = [detectiveContainer, jesterontainer, assassinContainer, kingContainer, loversContainer cluelessContainer, echoContainer, maniacContainer];
   containers.forEach(container => {
     if (isDisabled) {
       container.classList.add('disabled');
@@ -2298,6 +2419,10 @@ assassinToggle.addEventListener("change", () => {
 
 kingToggle.addEventListener("change", () => {
   localStorage.setItem("kingEnabled", kingToggle.checked);
+});
+
+loversToggle.addEventListener("change", () => {
+  localStorage.setItem("loversEnabled", loversToggle.checked);
 });
 
 cluelessToggle.addEventListener("change", () => {
