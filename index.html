@@ -1617,7 +1617,6 @@ function revealAllRoles() {
     let roleClass = "";
     let specialNote = "";
     let isKing = (i === kingPlayer);
-    let isLovers = (i === loversPlayers);
     
     if (word === secretItem) {
       roleName = "Civilian";
@@ -1657,12 +1656,6 @@ function revealAllRoles() {
       } else {
         roleClass = "king-role";
       }
-    }    if (isLovers) {
-      if (roleClass) {
-        roleClass += " lovers-role";
-      } else {
-        roleClass = "lovers-role";
-      }
     }
     
     const li = document.createElement('li');
@@ -1675,18 +1668,7 @@ function revealAllRoles() {
           ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
         </div>
       </div>
-    `;    const lovertext = document.createElement('tovertext');
-    lovertext.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <span class="player-number">${playerName}</span>
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-          <span class="role-name ${roleClass}">${roleName}${isLovers ? ' (Lovers)' : ''}</span>
-          ${specialNote}
-          ${isLovers ? '<div class="lovers-badge">Has a lover!</div>' : ''}
-        </div>
-      </div>
     `;
-    
     
     listContainer.appendChild(li);
   });
@@ -1728,11 +1710,8 @@ function generateCards() {
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
-  loversAnnouncement.classList.remove('show');
-  loversAnnouncement.textContent = '';
   errorBox.textContent = "";
   kingPlayer = null;
-  loversPlayers = null;
   cluelessWord = "";
 
   const playerCount = parseInt(playerSlider.value, 10);
@@ -1870,7 +1849,6 @@ function generateCards() {
       // 4. Handle King (doesn't take a slot, stackable)
       // Give it a 50% chance to appear
       useKing = Math.random() < 0.5;
-      useLovers = Math.random() < 2;
 
   } else {
       // Manual mode validation
@@ -2003,11 +1981,17 @@ function generateCards() {
     kingPlayer = Math.floor(Math.random() * playerCount);
   }
 
-    // Lovers
-  if (useLovers) {
-    loversPlayers = Math.floor(Math.random() * playerCount + 1);
+  let loverIndexes = [];
+
+if (useLovers) {
+  // pick two unique lovers
+  while (loverIndexes.length < 2) {
+    const idx = Math.floor(Math.random() * playerCount);
+    if (!loverIndexes.includes(idx)) {
+      loverIndexes.push(idx);
+    }
   }
-  
+}
 
   // Fill Civilians
   for (let i = 0; i < words.length; i++) {
@@ -2057,15 +2041,6 @@ function generateCards() {
     }
     kingPlayer = newKingIndex;
   }
-
-    if (useLovers && loversPlayers !== null) {
-    let newLoversIndex = null + 1;
-    for (let i = 0; i < indices.length; i++) {
-      if (indices[i] === loversPlayers) { newLoversIndex = i; break; }
-    }
-    loversPlayers = newLoversIndex;
-  }
-
 
   // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
@@ -2197,7 +2172,9 @@ function generateCards() {
           wordBox.appendChild(kingText);
         }
 
-          if (loversPlayers === i) {
+        if (loverIndexes.includes(currentPlayerIndex)) {
+          const partnerIndex = loverIndexes.find(i => i !== currentPlayerIndex);
+          const partnerName = playerNames[partnerIndex];
           const loversText = document.createElement("div");
           loversText.className = "lovers-role";
           loversText.textContent = "Lovers";
@@ -2247,11 +2224,13 @@ function generateCards() {
           card.appendChild(kingHint);
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
-
-        if (loversPlayers === i) {
-          const loversHint = document.createElement("div");
+        
+        if (loverIndexes.includes(currentPlayerIndex)) {
+         const partnerIndex = loverIndexes.find(i => i !== currentPlayerIndex);
+         const partnerName = playerNames[partnerIndex];
+         const loversHint = document.createElement("div");
           loversHint.className = "lovers-hint";
-          loversHint.innerHTML = `<strong>You are the Lover!</strong><br>You have significant other!`;
+          loversHint.innerHTML = `<strong>Your soulmates with</strong><br>${partnerName}!`;;
           card.appendChild(loversHint);
           setTimeout(() => loversHint.classList.add('show'), 10);
         }
@@ -2287,32 +2266,12 @@ function generateCards() {
         const kingHint = card.querySelector('.king-hint');
         if (kingHint) kingHint.classList.remove('show');
 
-        if (specialHint) specialHint.classList.remove('show');
-        const loversHint = card.querySelector('.lovers-hint');
-        if (loversHint) loversHint.classList.remove('show');
-
         wordBox.classList.remove("word-revealed");
         categoryBox.classList.remove("category-shown");
 
         setTimeout(() => {
           if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
           if (kingHint && kingHint.parentNode) kingHint.parentNode.removeChild(kingHint);
-          
-          while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
-          
-          wordBox.textContent = "Locked";
-          wordBox.className = "word-box word-locked";
-          btn.textContent = "Locked";
-          btn.classList.add("locked");
-          btn.disabled = true;
-          statusLabel.textContent = "Locked";
-          
-          lockedCards++;
-          updateTracker();
-        }, 250);
-        setTimeout(() => {
-          if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
-          if (loversHint && loversHint.parentNode) loversHint.parentNode.removeChild(loversHint);
           
           while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
           
@@ -2341,13 +2300,12 @@ randomizeToggle.addEventListener('change', () => {
   jesterToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
-  loversToggle.disabled = isDisabled;
   cluelessToggle.disabled = isDisabled;
   echoToggle.disabled = isDisabled;
   maniacToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterontainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, maniacContainer];
+  const containers = [detectiveContainer, jesterontainer, assassinContainer, kingContainer, cluelessContainer, echoContainer, maniacContainer];
   containers.forEach(container => {
     if (isDisabled) {
       container.classList.add('disabled');
@@ -2419,10 +2377,6 @@ assassinToggle.addEventListener("change", () => {
 
 kingToggle.addEventListener("change", () => {
   localStorage.setItem("kingEnabled", kingToggle.checked);
-});
-
-loversToggle.addEventListener("change", () => {
-  localStorage.setItem("loversEnabled", loversToggle.checked);
 });
 
 cluelessToggle.addEventListener("change", () => {
