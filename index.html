@@ -2142,7 +2142,8 @@ function generateCards() {
           specialHint.className = "echo-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Copy the person behind you! Eliminate impostor!`;
         } else if (word === "Maniac") {
-          const targetName = playerNames[imposterIndex];
+          const realImposterIndex = words.indexOf("Imposter");
+          const targetName = playerNames[realImposterIndex];
           specialHint.className = "maniac-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} win, at all costs!`;
         }
