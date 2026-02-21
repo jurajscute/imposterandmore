@@ -654,7 +654,7 @@ const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
-const useLovers = document.getElementById("loversToggle").checked;
+const loversToggle = document.getElementById("loversToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
 const maniacToggle = document.getElementById("maniacToggle");
@@ -1808,6 +1808,7 @@ function generateCards() {
   let useEcho = echoToggle.checked;
   let useManiac = maniacToggle.checked;
   let useKing = kingToggle.checked;
+  let useLovers = loversToggle.checked;
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
@@ -1819,6 +1820,7 @@ function generateCards() {
       useEcho = false;
       useManiac = false;
       useKing = false;
+      useLovers = false;
 
       // 2. Calculate available slots for civilian roles
       // We generally want to leave at least 1 "plain" civilian in play.
@@ -2001,6 +2003,7 @@ function generateCards() {
   }
 
     // Lovers
+loverIndexes = [];
 let loverIndexes = [];
 
 if (useLovers) {
@@ -2013,6 +2016,7 @@ if (useLovers) {
     }
   }
 }
+  
 
   // Fill Civilians
   for (let i = 0; i < words.length; i++) {
