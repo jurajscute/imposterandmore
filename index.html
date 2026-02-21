@@ -654,7 +654,6 @@ const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
-const loversToggle = document.getElementById("loversToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
 const maniacToggle = document.getElementById("maniacToggle");
@@ -1808,7 +1807,7 @@ function generateCards() {
   let useEcho = echoToggle.checked;
   let useManiac = maniacToggle.checked;
   let useKing = kingToggle.checked;
-  let useLovers = loversToggle.checked;
+ const useLovers = document.getElementById("loversToggle").checked;
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
@@ -2004,16 +2003,12 @@ function generateCards() {
 
     // Lovers
 loverIndexes = [];
-let loverIndexes = [];
+if (useLovers)
+while (loverIndexes.length < 2){ 
+  const randomIndex = Math.floor(Math.random() * playerCount);
 
-if (useLovers) {
-
-  while (loverIndexes.length < 2) {
-    const randomIndex = Math.floor(Math.random() * playerCount);
-
-    if (!loverIndexes.includes(randomIndex)) {
-      loverIndexes.push(randomIndex);
-    }
+  if (!loverIndexes.includes(randomIndex)) {
+    loverIndexes.push(randomIndex);
   }
 }
   
