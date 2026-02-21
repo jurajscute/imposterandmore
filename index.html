@@ -599,7 +599,7 @@ let secretCategory = ""; // Store secret category globally for detective
 let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let kingPlayer = null; // Store which player is king (index)
-let loversPlayers = null;
+let loverIndexes = [];
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
 
@@ -1981,7 +1981,6 @@ function generateCards() {
     kingPlayer = Math.floor(Math.random() * playerCount);
   }
 
-  let loverIndexes = [];
 
 if (useLovers) {
   // pick two unique lovers
