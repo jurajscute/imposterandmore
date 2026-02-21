@@ -2171,8 +2171,8 @@ if (useLovers) {
           wordBox.appendChild(kingText);
         }
 
-        if (loverIndexes.includes(currentPlayerIndex)) {
-          const partnerIndex = loverIndexes.find(i => i !== currentPlayerIndex);
+        if (loverIndexes.includes(index)) {
+          const partnerIndex = loverIndexes.find(i => i !== index);
           const partnerName = playerNames[partnerIndex];
           const loversText = document.createElement("div");
           loversText.className = "lovers-role";
@@ -2224,8 +2224,8 @@ if (useLovers) {
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
         
-        if (loverIndexes.includes(currentPlayerIndex)) {
-         const partnerIndex = loverIndexes.find(i => i !== currentPlayerIndex);
+        if (loverIndexes.includes(index)) {
+         const partnerIndex = loverIndexes.find(i => i !== index);
          const partnerName = playerNames[partnerIndex];
          const loversHint = document.createElement("div");
           loversHint.className = "lovers-hint";
@@ -2299,6 +2299,7 @@ randomizeToggle.addEventListener('change', () => {
   jesterToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
+  loversToggle.disabled = isDisabled;
   cluelessToggle.disabled = isDisabled;
   echoToggle.disabled = isDisabled;
   maniacToggle.disabled = isDisabled;
