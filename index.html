@@ -2227,15 +2227,19 @@ if (useLovers) {
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
         
-        if (loverIndexes.includes(index)) {
-         const partnerIndex = loverIndexes.find(i => i !== index);
-         const partnerName = playerNames[partnerIndex];
-         const loversHint = document.createElement("div");
-          loversHint.className = "lovers-hint";
-          loversHint.innerHTML = `<strong>Your soulmates with</strong><br>${partnerName}!`;;
-          card.appendChild(loversHint);
-          setTimeout(() => loversHint.classList.add('show'), 10);
-        }
+        if (loverIndexes.includes(playerName)) {
+
+    const partnerIndex =
+        loverIndexes.find(i => i !== playerName);
+
+    const partnerName = playerNames[partnerIndex];
+
+    const loverText = document.createElement("div");
+    loverText.className = "lover-role";
+    loverText.textContent = `Lover: ${partnerName}`;
+
+    wordBox.appendChild(loverText);
+}
 
         if (specialHint.textContent) {
           card.appendChild(specialHint);
