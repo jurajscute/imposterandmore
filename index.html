@@ -1616,7 +1616,7 @@ function revealAllRoles() {
     let roleClass = "";
     let specialNote = "";
     let isKing = (i === kingPlayer);
-    let isLovers = (i === loverIndexes);
+    let isLovers = loverIndexes.includes(i);
     
     if (word === secretItem) {
       roleName = "Civilian";
