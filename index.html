@@ -1827,11 +1827,13 @@ function generateCards() {
   words = Array(playerCount).fill("Civilian");
 
   // Imposters
+  let imposterIndex = null;
   let imposters = 0;
   while (imposters < imposterCount) {
     const idx = Math.floor(Math.random() * playerCount);
     if (words[idx] === "Civilian") {
       words[idx] = "Imposter";
+      imposterIndex = idx;
       imposters++;
     }
   }
@@ -2140,6 +2142,7 @@ function generateCards() {
           specialHint.className = "echo-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Copy the person behind you! Eliminate impostor!`;
         } else if (word === "Maniac") {
+          const targetName = playerName[imposterIndex];
           specialHint.className = "maniac-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} win, at all costs!`;
         }
