@@ -220,7 +220,7 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .detective-hint, .assassin-hint, .jester-hint, .king-hint, .echo-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .detective-hint, .assassin-hint, .jester-hint, .king-hint, .echo-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
     .jester-hint { color: #ff00f2; background: #ffd5fd; border-color: #ff09f3; }
@@ -636,7 +636,7 @@ const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
-const ManiacToggle = document.getElementById("maniacToggle");
+const maniacToggle = document.getElementById("maniacToggle");
 
 // Containers for visual disabling
 const detectiveContainer = document.getElementById("detectiveContainer");
