@@ -1664,32 +1664,23 @@ function revealAllRoles() {
       }
     }
     
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <span class="player-number">${playerName}</span>
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-          <span class="role-name ${roleClass}">${roleName}${isKing ? ' (King)' : ''}</span>
-          ${specialNote}
-          ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
-        </div>
-      </div>
-    `;
-    const lovertext = document.createElement('div');
-    lovertext.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <span class="player-number">${playerName}</span>
-        <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
-          <span class="role-name ${roleClass}">${roleName}${isLovers ? ' (Lovers)' : ''}</span>
-          ${specialNote}
-          ${isLovers ? '<div class="lovers-badge">Has a lover!</div>' : ''}
-        </div>
-      </div>
-    `;
-    
-    
-    listContainer.appendChild(lovertext);
-    listContainer.appendChild(li);
+li.innerHTML = `
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <span class="player-number">${playerName}</span>
+    <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
+      <span class="role-name ${roleClass}">
+        ${roleName}
+        ${isKing ? ' (King)' : ''}
+        ${isLovers ? ' (Lovers)' : ''}
+      </span>
+
+      ${specialNote}
+
+      ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
+      ${isLovers ? '<div class="lovers-badge">Has a lover!</div>' : ''}
+    </div>
+  </div>
+`;
   });
   
   roleList.appendChild(header);
