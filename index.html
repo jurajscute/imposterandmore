@@ -2171,16 +2171,14 @@ if (useLovers) {
           wordBox.appendChild(kingText);
         }
 
-        if (btn.textContent === "Reveal") {
-
-if (loverIndexes.includes(idx)) {
+        if (loverIndexes.includes(idx)) {
 
     const partnerIndex = loverIndexes.find(i => i !== idx);
     const partnerName = playerNames[partnerIndex];
 
     const loverText = document.createElement("div");
     loverText.className = "lover-role";
-    loverText.textContent = `<strong> You are a LOVER!</strong><br><br><strong> Your partner is<br>${partnerName}`;
+    loverText.textContent = `<strong>You are a Lover!<br>Your magnificent partner is:<br><br>${partnerName}`;
 
     wordBox.appendChild(loverText);
 }
