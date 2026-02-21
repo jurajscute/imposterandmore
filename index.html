@@ -1664,6 +1664,7 @@ function revealAllRoles() {
       }
     }
     
+    const li = document.createElement('li');
 li.innerHTML = `
   <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
     <span class="player-number">${playerName}</span>
@@ -1681,6 +1682,8 @@ li.innerHTML = `
     </div>
   </div>
 `;
+    
+    listContainer.appendChild(li);
   });
   
   roleList.appendChild(header);
