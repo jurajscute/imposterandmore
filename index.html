@@ -1566,10 +1566,10 @@ function announceKingPlayer() {
 }function announceLoversPlayer() {
   // Check the global flags (set during generation) instead of current toggle state
   // because randomizer might have enabled it internally for this round
-  const isLoversActive = words.some((_, i) => i === loversPlayers);
+  const isLoversActive = words.some((_, i) => i === loverIndexes);
   
-  if (loversPlayers !== null) {
-    const playerName = playerNames[loversPlayers] || `Player ${loversPlayers + 1}`;
+  if (loverIndexes !== null) {
+    const playerName = playerNames[loverIndexes] || `Player ${loverIndexes + 1}`;
     
     setTimeout(() => {
       loversAnnouncement.textContent = `Love is in the air!`;
@@ -1617,7 +1617,7 @@ function revealAllRoles() {
     let roleClass = "";
     let specialNote = "";
     let isKing = (i === kingPlayer);
-    let isLovers = (i === loversPlayers);
+    let isLovers = (i === loverIndexes);
     
     if (word === secretItem) {
       roleName = "Civilian";
@@ -1732,7 +1732,7 @@ function generateCards() {
   loversAnnouncement.textContent = '';
   errorBox.textContent = "";
   kingPlayer = null;
-  loversPlayers = null;
+  loverIndexes = null;
   cluelessWord = "";
 
   const playerCount = parseInt(playerSlider.value, 10);
@@ -2064,14 +2064,6 @@ while (loverIndexes.length < 2) {
     kingPlayer = newKingIndex;
   }
 
-    if (useLovers && loversPlayers !== null) {
-    let newLoversIndex = null + 1;
-    for (let i = 0; i < indices.length; i++) {
-      if (indices[i] === loversPlayers) { newLoversIndex = i; break; }
-    }
-    loversPlayers = newLoversIndex;
-  }
-
 
   // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
@@ -2201,7 +2193,7 @@ while (loverIndexes.length < 2) {
 
   const loverText = document.createElement("div");
   loverText.className = "lover-role";
-  loverText.textContent = `Lover: ${playerNames[partnerIndex]}`;
+  loverText.textContent = "With a Lover!<br><br>${playerNames[partnerIndex]} is your soulmate!";
 
   wordBox.appendChild(loverText);
 }
@@ -2258,11 +2250,10 @@ while (loverIndexes.length < 2) {
           card.appendChild(kingHint);
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
-
-        if (loversPlayers === i) {
+if (loverIndexes.includes(i)) {
           const loversHint = document.createElement("div");
           loversHint.className = "lovers-hint";
-          loversHint.innerHTML = `<strong>You are the Lover!</strong><br>You have significant other!`;
+          loversHint.innerHTML = `<strong>You are the Lover!</strong><br>You have a significant other!`;
           card.appendChild(loversHint);
           setTimeout(() => loversHint.classList.add('show'), 10);
         }
