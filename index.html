@@ -2171,14 +2171,19 @@ if (useLovers) {
           wordBox.appendChild(kingText);
         }
 
-        if (loverIndexes.includes(index)) {
-          const partnerIndex = loverIndexes.find(i => i !== index);
-          const partnerName = playerNames[partnerIndex];
-          const loversText = document.createElement("div");
-          loversText.className = "lovers-role";
-          loversText.textContent = "Lovers";
-          wordBox.appendChild(loversText);
-        }
+        if (btn.textContent === "Reveal") {
+
+if (loverIndexes.includes(idx)) {
+
+    const partnerIndex = loverIndexes.find(i => i !== idx);
+    const partnerName = playerNames[partnerIndex];
+
+    const loverText = document.createElement("div");
+    loverText.className = "lover-role";
+    loverText.textContent = `<strong> You are a LOVER!</strong><br><br><strong> Your partner is<br>${partnerName}`;
+
+    wordBox.appendChild(loverText);
+}
         
         wordBox.classList.add("word-revealed");
         categoryBox.textContent = "Category: " + secretCategory;
