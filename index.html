@@ -333,7 +333,7 @@
             <div class="role-card jester"><h4><span class="role-icon">J</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
             <div class="role-card assassin"><h4><span class="role-icon">A</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
             <div class="role-card king"><h4><span class="role-icon">K</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
-            <div class="role-card lovers"><h4><span class="role-icon">K</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
+            <div class="role-card lovers"><h4><span class="role-icon">L</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">E</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
             <div class="role-card maniac"><h4><span class="role-icon">M</span>Maniac</h4><p>Help the impostor win!</p><div class="goal">Goal: Win with the Impostor.</div></div>
@@ -1870,7 +1870,6 @@ function generateCards() {
       // 4. Handle King (doesn't take a slot, stackable)
       // Give it a 50% chance to appear
       useKing = Math.random() < 0.5;
-      useLovers = Math.random() < 2;
 
   } else {
       // Manual mode validation
@@ -2005,8 +2004,8 @@ function generateCards() {
 
     // Lovers
 loverIndexes = [];
-
-while (loverIndexes.length < 2) {
+if (useLovers)
+while (loverIndexes.length < 2){ 
   const randomIndex = Math.floor(Math.random() * playerCount);
 
   if (!loverIndexes.includes(randomIndex)) {
@@ -2193,7 +2192,7 @@ while (loverIndexes.length < 2) {
 
   const loverText = document.createElement("div");
   loverText.className = "lover-role";
-  loverText.textContent = "With a Lover!<br><br>${playerNames[partnerIndex]} is your soulmate!";
+  loverText.textContent = "With a Lover!<br><br> ${playerNames[partnerIndex]} is your soulmate!";
 
   wordBox.appendChild(loverText);
 }
