@@ -90,7 +90,7 @@
     .role-card.civilian { border-left-color: #3b82f6; } .civilian .role-icon { background: #3b82f6; }
     .role-card.imposter { border-left-color: #dc2626; } .imposter .role-icon { background: #dc2626; }
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
-    .role-card.jester { border-left-color: #610099; } .jester .role-icon { background: #00a008; }
+    .role-card.jester { border-left-color: #00a008; } .jester .role-icon { background: #00a008; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
     .role-card.lovers { border-left-color: #ff7abc; } .lovers .role-icon { background: linear-gradient(135deg, #e874ff, #fdb4ff); }
@@ -207,7 +207,7 @@
     .word-locked { color: #999; font-style: italic; opacity: 1; transform: scale(1); font-size: 18px; }
     
     .detective-role { color: #10b981; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .jester-role { color: #00b436; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .jester-role { color: #00a008; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .lovers-role { color: #ff78b7; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -225,7 +225,7 @@
     .detective-hint, .assassin-hint, .jester-hint, .king-hint, .lovers-hint, .echo-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
-    .jester-hint { color: #009726; background: #e1adff; border-color: #4f00aa; }
+    .jester-hint { color: #00a008; background: #d7ffd4; border-color: #00a008; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
     .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
@@ -261,7 +261,7 @@
     .role-list .civilian-role { background: #e0e7ff; color: #3b82f6; border-left-color: #3b82f6; }
     .role-list .imposter-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
-    .role-list .jester-role { background: #fef3c7; color: #f59e0b; border-left-color: #f59e0b; }
+    .role-list .jester-role { background: #caffcd; color: #00a008; border-left-color: #00a008; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
     .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
     .role-list .lovers-role { background: #fee8f2; color: #ff78b7; border-left-color: #ff3d87; }
@@ -1674,7 +1674,8 @@ function revealAllRoles() {
           ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
         </div>
       </div>
-    `;    const lovertext = document.createElement('tovertext');
+    `;
+    const lovertext = document.createElement('div');
     lovertext.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <span class="player-number">${playerName}</span>
@@ -1687,6 +1688,7 @@ function revealAllRoles() {
     `;
     
     
+    listContainer.appendChild(lovertext);
     listContainer.appendChild(li);
   });
   
@@ -2341,7 +2343,6 @@ randomizeToggle.addEventListener('change', () => {
   jesterToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
-  loversToggle.disabled = isDisabled;
   cluelessToggle.disabled = isDisabled;
   echoToggle.disabled = isDisabled;
   maniacToggle.disabled = isDisabled;
