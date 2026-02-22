@@ -187,6 +187,33 @@
     .role-pill:hover { background: #f3f4f6; }
     .role-pill.disabled { opacity: 0.5; pointer-events: none; background: #f3f4f6; }
 
+    /* --- Role Categories --- */
+
+.role-category {
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.role-category.crew { color: #16a34a; }
+.role-category.neutral { color: #6b7280; }
+.role-category.impostor { color: #dc2626; }
+.role-category.addons { color: #7c3aed; }
+
+/* Section wrapper for grouped pills */
+.role-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
     .btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); margin-top: 4px; }
     .btn:hover { box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
     .btn:active { transform: scale(0.96); }
@@ -510,7 +537,6 @@
 
     <div class="roles-section">
       <h3>Special Roles</h3>
-      
 <div class="roles-grid">
 
   <!-- CREW ROLES -->
@@ -555,19 +581,12 @@
       <label><input id="maniacToggle" type="checkbox"> Maniac</label>
     </div>
 
-    <div class="role-pill lovers-toggle" id="loversContainer">
-      <label><input id="loversToggle" type="checkbox"> Lovers</label>
-    </div>
-
     <div class="role-pill jackal-toggle" id="jackalContainer">
       <label><input id="jackalToggle" type="checkbox"> Jackal</label>
     </div>
-    
-    <div class="role-pill king-toggle" id="kingContainer">
-      <label><input id="kingToggle" type="checkbox"> King</label>
-    </div>
 
   </div>
+
   <!-- IMPOSTOR TEAM -->
   <h4 class="role-category impostor">Impostor Team</h4>
   <div class="role-section">
@@ -582,7 +601,8 @@
 
   </div>
 
-  <h4 class="role-category addons">Add Ons</h4>
+  <!-- ADD ONS -->
+  <h4 class="role-category addons">Add-Ons</h4>
   <div class="role-section">
 
     <div class="role-pill king-toggle" id="kingContainer">
@@ -592,6 +612,8 @@
     <div class="role-pill lovers-toggle" id="loversContainer">
       <label><input id="loversToggle" type="checkbox"> Lovers</label>
     </div>
+
+  </div>
 
 </div>
 
