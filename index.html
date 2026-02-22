@@ -2333,7 +2333,7 @@ while (loverIndexes.length < 2){
           roleText.textContent = "Echo";
           wordBox.appendChild(roleText);
           } else if (word === "Idiot") {
-          wordBox.textContent = secretItem.trim().charAt(0).toUpperCase();
+          wordBox.textContent = secretItem.trim().charAt(0).toUpperCase() + "...";
           const roleText = document.createElement("div");
           roleText.className = "idiot-role";
           roleText.textContent = "Idiot";
