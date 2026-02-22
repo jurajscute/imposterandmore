@@ -1903,8 +1903,7 @@ function generateCards() {
   let useManiac = maniacToggle.checked;
   let useShadow = shadowToggle.checked;
   let useKing = kingToggle.checked;
-  let useLover = loversToggle.checked;
- const useLovers = document.getElementById("loversToggle").checked;
+  let useLovers = loversToggle.checked;
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
@@ -1921,7 +1920,7 @@ function generateCards() {
       useManiac = false;
       useShadow = false;
       useKing = false;
-      useLover = false;
+      useLovers = false;
 
       // 2. Calculate available slots for civilian roles
       // We generally want to leave at least 1 "plain" civilian in play.
@@ -1975,10 +1974,12 @@ function generateCards() {
 
       // 4. Handle King (doesn't take a slot, stackable)
       // Give it a 50% chance to appear
-      useKing = Math.random() < 0.5;
-      if (selectedRoles.includes('lover')) {
-   assignLovers();
+      // Randomize Add-ons separately
+if (playerCount >= 2) {
+  useLovers = Math.random() < 0.5;  // 50% chance
 }
+
+useKing = Math.random() < 0.5;
 
   } else {
       // Manual mode validation
@@ -2173,14 +2174,15 @@ function generateCards() {
     kingPlayer = Math.floor(Math.random() * playerCount);
   }
 
-    // Lovers
-loverIndexes = [];
-if (useLovers)
-while (loverIndexes.length < 2){ 
-  const randomIndex = Math.floor(Math.random() * playerCount);
+    loverIndexes = [];
 
-  if (!loverIndexes.includes(randomIndex)) {
-    loverIndexes.push(randomIndex);
+if (useLovers && playerCount >= 2) {
+  while (loverIndexes.length < 2) { 
+    const randomIndex = Math.floor(Math.random() * playerCount);
+
+    if (!loverIndexes.includes(randomIndex)) {
+      loverIndexes.push(randomIndex);
+    }
   }
 }
   
