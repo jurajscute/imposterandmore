@@ -2171,14 +2171,13 @@ function generateCards() {
   }
 
     // Lovers
-loverIndexes = [];
-if (useLovers)
-while (loverIndexes.length < 2){ 
-  const randomIndex = Math.floor(Math.random() * playerCount);
+let loverIndexes = [];
 
-  if (!loverIndexes.includes(randomIndex)) {
-    loverIndexes.push(randomIndex);
-  }
+if (useLovers && playerCount >= 2) {
+  const shuffled = [...Array(playerCount).keys()]
+    .sort(() => Math.random() - 0.5);
+
+  loverIndexes = shuffled.slice(0, 2);
 }
   
 
