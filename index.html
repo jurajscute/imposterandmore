@@ -200,9 +200,9 @@
   text-align: left;
 }
 
-.role-category.crew { color: #16a34a; }
-.role-category.neutral { color: #6b7280; }
-.role-category.impostor { color: #dc2626; }
+.role-category.crew { color: #3c597a; }
+.role-category.neutral { color: #bfc237; }
+.role-category.impostor { color: #792626; }
 .role-category.addons { color: #7c3aed; }
 
 /* Section wrapper for grouped pills */
@@ -2559,14 +2559,31 @@ randomizeToggle.addEventListener('change', () => {
   shadowToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterContainer, jackalContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, philosopherContainer, maniacContainer, shadowContainer];
-  containers.forEach(container => {
-    if (isDisabled) {
-      container.classList.add('disabled');
-    } else {
-      container.classList.remove('disabled');
-    }
-  });
+  const containers = [
+  detectiveContainer,
+  jesterContainer,
+  jackalContainer,
+  shieldContainer,
+  assassinContainer,
+  kingContainer,
+  loversContainer,
+  cluelessContainer,
+  echoContainer,
+  idiotContainer,
+  philosopherContainer,
+  maniacContainer,
+  shadowContainer
+];
+
+containers.forEach(container => {
+  if (!container) return; // 👈 prevents crashes
+
+  if (isDisabled) {
+    container.classList.add('disabled');
+  } else {
+    container.classList.remove('disabled');
+  }
+});
 });
 
 /* ===== EVENT LISTENERS ===== */
