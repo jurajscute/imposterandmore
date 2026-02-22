@@ -91,6 +91,7 @@
     .role-card.imposter { border-left-color: #dc2626; } .imposter .role-icon { background: #dc2626; }
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
     .role-card.jester { border-left-color: #00a008; } .jester .role-icon { background: #00a008; }
+    .role-card.jackal { border-left-color: #ff6600; } .jackal .role-icon { background: #ff6600; }
     .role-card.shield { border-left-color: #0025a0; } .shield .role-icon { background: #0025a0; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
@@ -209,7 +210,9 @@
     .word-locked { color: #999; font-style: italic; opacity: 1; transform: scale(1); font-size: 18px; }
     
     .detective-role { color: #10b981; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .imposter-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jester-role { color: #00a008; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .jackal-role { color: #ff6600; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shield-role { color: #0025a0; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -226,17 +229,19 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .detective-hint, .assassin-hint, .jester-hint, .shield-hint, .king-hint, .lovers-hint, .echo-hint, .philosopher-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .shield-hint, .king-hint, .lovers-hint, .echo-hint, .philosopher-hint, .maniac-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
+    .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
     .jester-hint { color: #00a008; background: #d7ffd4; border-color: #00a008; }
+    .jackal-hint { color: #ff6600; background: #ffe5d4; border-color: #ff6600; }
     .shield-hint { color: #0025a0; background: #e0e0ff; border-color: #0025a0; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
     .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
-    .detective-hint.show, .assassin-hint.show, .jester-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .philosopher-hint.show, .maniac-hint.show { opacity: 1; transform: translateY(0); }
+    .imposter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .philosopher-hint.show, .maniac-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -268,6 +273,7 @@
     .role-list .imposter-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
     .role-list .jester-role { background: #caffcd; color: #00a008; border-left-color: #00a008; }
+    .role-list .jackal-role { background: #ffe5d4; color: #ff6600; border-left-color: #ff6600; }
     .role-list .shield-role { background: #e0e0ff; color: #0025a0; border-left-color: #0025a0; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
     .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
@@ -328,25 +334,26 @@
             <li><strong>Imposters:</strong> Some players are imposters - they DON'T know the secret word!</li>
             <li><strong>Discussion:</strong> Players discuss to figure out who the imposters are by saying a word related to the secret word they got</li>
             <li><strong>Voting:</strong> Vote to eliminate suspected imposters</li>
-            <li><strong>Winning:</strong> Civilians win if all imposters are eliminated. Imposters win if they survive. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
+            <li><strong>Winning:</strong> Civilians win if all impostors and the jackal are eliminated. Impostors win if they survive, same with Jackal. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
           </ol>
         </div>
         
         <div class="modal-section">
           <h3>Cards</h3>
           <div class="role-grid">
-            <div class="role-card civilian"><h4><span class="role-icon">C</span>Civilian</h4><p>You know the secret word. Goal: Eliminate imposters.</p><div class="goal">Goal: Eliminate imposters</div></div>
-            <div class="role-card imposter"><h4><span class="role-icon">I</span>Imposter</h4><p>You DON'T know the secret word! Pretend you know it.</p><div class="goal">Goal: Don't get eliminated</div></div>
-            <div class="role-card detective"><h4><span class="role-icon">D</span>Detective</h4><p>You can peek at one random player's role.</p><div class="goal">Goal: Help civilians</div></div>
-            <div class="role-card jester"><h4><span class="role-icon">J</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
-            <div class="role-card shield"><h4><span class="role-icon">S</span>Shield</h4><p>Defend yourself if you're being voted! You can choose to vote out 1 person who voted for you.</p><div class="goal">Goal: Eliminate impostors, defend yourself!</div></div>
-            <div class="role-card assassin"><h4><span class="role-icon">A</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
-            <div class="role-card king"><h4><span class="role-icon">K</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
-            <div class="role-card lovers"><h4><span class="role-icon">L</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
+            <div class="role-card civilian"><h4><span class="role-icon">😇</span>Civilian</h4><p>You know the secret word. Goal: Eliminate imposters.</p><div class="goal">Goal: Eliminate imposters</div></div>
+            <div class="role-card imposter"><h4><span class="role-icon">😈</span>Imposter</h4><p>You DON'T know the secret word! Pretend you know it.</p><div class="goal">Goal: Don't get eliminated</div></div>
+            <div class="role-card detective"><h4><span class="role-icon">🕵️</span>Detective</h4><p>You can peek at one random player's role.</p><div class="goal">Goal: Help civilians</div></div>
+            <div class="role-card jester"><h4><span class="role-icon">🤡</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
+            <div class="role-card jackal"><h4><span class="role-icon">🦹🏻‍♀️</span>Jackal</h4><p>You DON'T know the secret word! Pretend you know it and outlive the impostor.</p><div class="goal">Goal: Don't get eliminated</div></div>
+            <div class="role-card shield"><h4><span class="role-icon">🛡️</span>Shield</h4><p>Defend yourself if you're being voted! You can choose to vote out 1 person who voted for you.</p><div class="goal">Goal: Eliminate impostors, defend yourself!</div></div>
+            <div class="role-card assassin"><h4><span class="role-icon">🗡️</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
+            <div class="role-card king"><h4><span class="role-icon">👑</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
+            <div class="role-card lovers"><h4><span class="role-icon">🩷</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
-            <div class="role-card echo"><h4><span class="role-icon">E</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
-            <div class="role-card philosopher"><h4><span class="role-icon">P</span>Philosopher</h4><p>You are able to ask a single Yes or No question, the target must answer it honestly (Unless they're a jester!).</p><div class="goal">Goal: Eliminate impostors, question your enemies.</div></div>
-            <div class="role-card maniac"><h4><span class="role-icon">M</span>Maniac</h4><p>Help the impostor win!</p><div class="goal">Goal: Win with the Impostor.</div></div>
+            <div class="role-card echo"><h4><span class="role-icon">🔊</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
+            <div class="role-card philosopher"><h4><span class="role-icon">💭</span>Philosopher</h4><p>You are able to ask a single Yes or No question, the target must answer it honestly (Unless they're a jester!).</p><div class="goal">Goal: Eliminate impostors, question your enemies.</div></div>
+            <div class="role-card maniac"><h4><span class="role-icon">💢</span>Maniac</h4><p>Help the impostor win!</p><div class="goal">Goal: Win with the Impostor.</div></div>
           </div>
         </div>
 
@@ -516,6 +523,13 @@
           </label>
         </div>
 
+        <div class="role-pill jackal-toggle" id="jackalContainer">
+          <label>
+            <input id="jackalToggle" type="checkbox">
+            Jackal
+          </label>
+        </div>
+
         <div class="role-pill shield-toggle" id="shieldContainer">
           <label>
             <input id="shieldToggle" type="checkbox">
@@ -675,6 +689,7 @@ const playerCountDisplay = document.getElementById("playerCountDisplay");
 const randomizeToggle = document.getElementById("randomizeToggle");
 const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
+const jackalToggle = document.getElementById("jackalToggle");
 const shieldToggle = document.getElementById("shieldToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
@@ -686,6 +701,7 @@ const maniacToggle = document.getElementById("maniacToggle");
 // Containers for visual disabling
 const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
+const jackalContainer = document.getElementById("jackalContainer");
 const shieldContainer = document.getElementById("shieldContainer");
 const assassinContainer = document.getElementById("assassinContainer");
 const kingContainer = document.getElementById("kingContainer");
@@ -1015,6 +1031,7 @@ customItems = JSON.parse(localStorage.getItem("customItems")) || [];
 // Load toggle states
 detectiveToggle.checked = JSON.parse(localStorage.getItem("detectiveEnabled")) || false;
 jesterToggle.checked = JSON.parse(localStorage.getItem("jesterEnabled")) || false;
+jackalToggle.checked = JSON.parse(localStorage.getItem("jackalEnabled")) || false;
 shieldToggle.checked = JSON.parse(localStorage.getItem("shieldEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
 kingToggle.checked = JSON.parse(localStorage.getItem("kingEnabled")) || false;
@@ -1642,6 +1659,9 @@ function revealAllRoles() {
     } else if (word === "Jester") {
       roleName = "Jester";
       roleClass = "jester-role";
+    } else if (word === "Jackal") {
+      roleName = "Jackal";
+      roleClass = "jackal-role";
     } else if (word === "Shield") {
       roleName = "Shield";
       roleClass = "shield-role";
@@ -1813,6 +1833,7 @@ function generateCards() {
   // Determine active roles
   let useDetective = detectiveToggle.checked;
   let useJester = jesterToggle.checked;
+  let useJackal = jackalToggle.checked;
   let useShield = shieldToggle.checked;
   let useAssassin = assassinToggle.checked;
   let useClueless = cluelessToggle.checked;
@@ -1827,6 +1848,7 @@ function generateCards() {
       // 1. Reset all
       useDetective = false;
       useJester = false;
+      useJackal = false;
       useShield = false;
       useAssassin = false;
       useClueless = false;
@@ -1855,7 +1877,7 @@ function generateCards() {
       }
 
       // 3. Define pool of roles that consume a slot
-      let rolePool = ['detective', 'jester', 'assassin', 'echo', 'maniac', 'philosopher', 'shield'];
+      let rolePool = ['detective', 'jester', 'jackal', 'assassin', 'echo', 'maniac', 'philosopher', 'shield'];
       
       // Only add clueless if valid (enough words)
       if (categoryItems.length >= 2) {
@@ -1874,6 +1896,7 @@ function generateCards() {
              const role = rolePool[i];
              if (role === 'detective') useDetective = true;
              if (role === 'jester') useJester = true;
+             if (role === 'jackal') useJackal = true;
              if (role === 'shield') useShield = true;
              if (role === 'assassin') useAssassin = true;
              if (role === 'clueless') useClueless = true;
@@ -1893,6 +1916,7 @@ function generateCards() {
       let specialRolesCount = 0;
       if (useDetective) specialRolesCount++;
       if (useJester) specialRolesCount++;
+      if (useJackal) specialRolesCount++;
       if (useShield) specialRolesCount++;
       if (useAssassin) specialRolesCount++;
       if (useClueless) specialRolesCount++;
@@ -1946,6 +1970,18 @@ function generateCards() {
       const idx = Math.floor(Math.random() * playerCount);
       if (words[idx] === "Civilian") {
         words[idx] = "Jester";
+        assigned = true;
+      }
+    }
+  }
+
+  // Jackal
+  if (useJackal) {
+    let assigned = false;
+    while (!assigned) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (words[idx] === "Civilian") {
+        words[idx] = "Jackal";
         assigned = true;
       }
     }
@@ -2084,7 +2120,7 @@ while (loverIndexes.length < 2){
     
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
       for (let i = 0; i < words.length; i++) {
-        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Philosopher" && words[i] !== "Maniac" ) {
+        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Jackal" && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Philosopher" && words[i] !== "Maniac" ) {
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
           assassinTarget = i + 1;
           break;
@@ -2149,6 +2185,7 @@ while (loverIndexes.length < 2){
         
         if (targetWord === "Imposter") roleReveal = "Evil";
         else if (targetWord === "Jester") roleReveal = "Mentally ill";
+        else if (targetWord === "Jackal") roleReveal = "Evil";
         else if (targetWord === "Shield") roleReveal = "a Shield";
         else if (targetWord === "Assassin") roleReveal = "Evil";
         else if (targetWord === "Clueless") roleReveal = "Crew";
@@ -2191,7 +2228,10 @@ while (loverIndexes.length < 2){
         
         // Render Role Text
         if (word === "Imposter") {
-          wordBox.textContent = "Imposter";
+          wordBox.textContent = "???";
+          const roleText = document.createElement("div");
+          roleText.className = "imposter-role";
+          roleText.textContent = "Impostor";
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
@@ -2203,6 +2243,12 @@ while (loverIndexes.length < 2){
           const roleText = document.createElement("div");
           roleText.className = "jester-role";
           roleText.textContent = "Jester";
+          wordBox.appendChild(roleText);
+          } else if (word === "Jackal") {
+          wordBox.textContent = "???";
+          const roleText = document.createElement("div");
+          roleText.className = "jackal-role";
+          roleText.textContent = "Jackal";
           wordBox.appendChild(roleText);
         } else if (word === "Shield") {
           wordBox.textContent = secretItem;
@@ -2286,6 +2332,12 @@ while (loverIndexes.length < 2){
         } else if (word === "Jester") {
           specialHint.className = "jester-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Get voted out!<br><br><strong>You can lie to the Philosopher.</strong>`;
+        } else if (word === "Imposter") {
+          specialHint.className = "imposter-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
+        } else if (word === "Jackal") {
+          specialHint.className = "jackal-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive the impostor!`;
         } else if (word === "Shield") {
           specialHint.className = "shield-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Deflect your voters! Eliminate Impostor!`;
@@ -2400,6 +2452,7 @@ randomizeToggle.addEventListener('change', () => {
   
   detectiveToggle.disabled = isDisabled;
   jesterToggle.disabled = isDisabled;
+  jackalToggle.disabled = isDisabled;
   shieldToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
@@ -2409,7 +2462,7 @@ randomizeToggle.addEventListener('change', () => {
   maniacToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, philosopherContainer, maniacContainer];
+  const containers = [detectiveContainer, jesterContainer, jackalContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, philosopherContainer, maniacContainer];
   containers.forEach(container => {
     if (isDisabled) {
       container.classList.add('disabled');
@@ -2473,6 +2526,10 @@ detectiveToggle.addEventListener("change", () => {
 
 jesterToggle.addEventListener("change", () => {
   localStorage.setItem("jesterEnabled", jesterToggle.checked);
+});
+
+jackalToggle.addEventListener("change", () => {
+  localStorage.setItem("jackalEnabled", jackalToggle.checked);
 });
 
 shieldToggle.addEventListener("change", () => {
