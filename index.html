@@ -1839,17 +1839,7 @@ function showNextVoter() {
   }
 
 function startVotingPhase() {
-
-  votes = {};
-
-  // Build list of alive voters
-  aliveVoters = players
-    .map((p, i) => p.alive ? i : null)
-    .filter(i => i !== null);
-
-  currentVoterIndex = 0;
-
-  showNextVoter();
+  console.log("START VOTING CLICKED");
 }
 
 function showNextVoter() {
