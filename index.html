@@ -1893,16 +1893,18 @@ function finishVoting() {
     }
   }
 
-if (eliminatedIndex !== null) {
+  if (eliminatedIndex === null) {
+    console.log("No one was voted.");
+    return;
+  }
 
   const eliminatedPlayer = players[eliminatedIndex];
   eliminatedPlayer.alive = false;
 
   // ❤️ Lovers die together
   if (eliminatedPlayer.isLover) {
-
-    const otherLover = players.find((p, index) =>
-      p.isLover && index !== eliminatedIndex && p.alive
+    const otherLover = players.find((p, i) =>
+      p.isLover && i !== eliminatedIndex && p.alive
     );
 
     if (otherLover) {
@@ -1910,51 +1912,38 @@ if (eliminatedIndex !== null) {
     }
   }
 
-  // Recalculate alive players AFTER lover chain death
-  const alivePlayers = players.filter(p => p.alive);
+  // 🎭 + 🗡 Combo win
+  if (useAssassin && assassinTarget !== null) {
 
-  // ❤️ Lovers win (only 2 alive and both lovers)
-  const loversAlive = alivePlayers.filter(p => p.isLover);
-  if (loversAlive.length === 2 && alivePlayers.length === 2) {
-    endGame("The Lovers win together!");
-    return;
-  }
-
-// 🎭 + 🗡 Jester & Assassin combo win
-if (useAssassin && assassinTarget !== null) {
-
-  const targetIndex = assassinTarget - 1;
-  const assassinPlayer = players.find(p => p.role === "Assassin");
-
-  if (eliminatedPlayer.role === "Jester" && eliminatedIndex === targetIndex && assassinPlayer) {
-    endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
-    return;
-  }
-}
-
-// 🎭 Jester solo win
-if (eliminatedPlayer.role === "Jester") {
-  endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
-  return;
-}
-
-// 🗡 Assassin solo win
-if (useAssassin && assassinTarget !== null) {
-
-  const targetIndex = assassinTarget - 1;
-  const assassinAlive = players.some(p =>
-    p.role === "Assassin" && p.alive
-  );
-
-  if (eliminatedIndex === targetIndex && assassinAlive) {
+    const targetIndex = assassinTarget - 1;
     const assassinPlayer = players.find(p => p.role === "Assassin");
-    endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+
+    if (
+      eliminatedPlayer.role === "Jester" &&
+      eliminatedIndex === targetIndex &&
+      assassinPlayer
+    ) {
+      endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
+      return;
+    }
+
+    // 🗡 Assassin solo
+    if (eliminatedIndex === targetIndex && assassinPlayer && assassinPlayer.alive) {
+      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+      return;
+    }
+  }
+
+  // 🎭 Jester solo
+  if (eliminatedPlayer.role === "Jester") {
+    endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
     return;
   }
-}
-}
+
+  // Otherwise continue game
   showVotingResults(eliminatedIndex);
 }
+
 function showVotingResults(eliminatedIndex) {
 
   let resultsHTML = `
