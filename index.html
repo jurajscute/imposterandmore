@@ -324,6 +324,11 @@
   border-radius: 0 0 20px 20px;
 }
 
+.role-reveal {
+  font-weight: bold;
+  text-shadow: 0 0 8px currentColor;
+}
+
 /* ===== Glow Pulse ===== */
 @keyframes glowPulse {
   0% { box-shadow: 0 0 10px currentColor; }
@@ -2063,10 +2068,19 @@ function showVotingResults(eliminatedIndex) {
   }
 
   if (eliminatedIndex !== null) {
+
+    const role = players[eliminatedIndex].role;
+    const roleColor = roleColors[role] || "#ffffff";
+
     resultsHTML += `
       <hr>
       <h3>${players[eliminatedIndex].name} has been eliminated!</h3>
-      <p>They were the ${players[eliminatedIndex].role}!</p>
+      <p>
+        They were the 
+        <span class="role-reveal" style="color:${roleColor};">
+  ${role}
+</span>
+      </p>
     `;
   }
 
