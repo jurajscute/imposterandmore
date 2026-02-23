@@ -2320,6 +2320,10 @@ function endGame(message, winningRole = null) {
   `;
   header.style.backgroundSize = "400% 400%";
   header.style.animation = "gradientShift 10s linear infinite";
+  const revealBtn = document.getElementById("revealRolesBtn");
+  if (revealBtn) {
+    revealBtn.style.display = "block";
+  }
 }
 /* ===== HELPER FUNCTIONS ===== */
 function getRandomItemFromArray(arr) {
@@ -2766,11 +2770,7 @@ if (useLovers && playerCount >= 2) {
     kingPlayer = newKingIndex;
   }
 
-  initializePlayers();
-const revealBtn = document.getElementById("revealRolesBtn");
-if (revealBtn) {
-  revealBtn.style.display = "block";
-}
+  
 
 function initializePlayers() {
   players = [];
