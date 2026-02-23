@@ -1816,27 +1816,20 @@ const votingBox = document.getElementById("votingBox");
 startVotingBtn.addEventListener("click", startVotingPhase);
 
 function startVotingPhase() {
-  startVotingBtn.style.display = "none";
 
-  if (players.length === 0) {
-    initializePlayers();
-  }
+  currentVoterIndex = 0;   
+  votes = {};              
 
-  currentVoterIndex = 0;
-  votes = {};
   showNextVoter();
 }
+
 function showNextVoter() {
 
-  // Find next alive voter
-  while (
-    currentVoterIndex < players.length &&
-    !players[currentVoterIndex].alive
-  ) {
+  // Skip dead players
+  while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
     currentVoterIndex++;
   }
 
-  // If we've passed the last index → finish voting
   if (currentVoterIndex >= players.length) {
     finishVoting();
     return;
@@ -1851,6 +1844,8 @@ function showNextVoter() {
     <div class="roles-reveal-content" id="voteOptions"></div>
   `;
 
+  votingBox.classList.add("show");
+
   const voteOptions = document.getElementById("voteOptions");
 
   players.forEach((player, index) => {
@@ -1858,6 +1853,7 @@ function showNextVoter() {
       const btn = document.createElement("button");
       btn.textContent = player.name;
       btn.className = "reveal-roles-btn";
+      btn.style.marginBottom = "8px";
 
       btn.onclick = () => castVote(index);
 
@@ -1866,19 +1862,22 @@ function showNextVoter() {
   });
 }
 function castVote(targetIndex) {
+  const voter = players[currentVoterIndex];
 
-  const voterIndex = currentVoterIndex;
+  players[currentVoterIndex].vote = targetIndex;
+
+  // King gets 2 votes
+  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
 
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
   }
 
-  votes[targetIndex]++;
+  votes[targetIndex] += voteWeight;
 
-  currentVoterIndex++;   // CRITICAL
-  showNextVoter();       // CRITICAL
+  currentVoterIndex++;
+  showNextVoter();
 }
-
 function finishVoting() {
 
   let maxVotes = 0;
@@ -1918,38 +1917,26 @@ if (eliminatedIndex !== null) {
     return;
   }
 
-// 🎭 + 🗡 Jester & Assassin combo win
-if (useAssassin && assassinTarget !== null) {
-
-  const targetIndex = assassinTarget - 1;
-  const assassinPlayer = players.find(p => p.role === "Assassin");
-
-  if (eliminatedPlayer.role === "Jester" && eliminatedIndex === targetIndex && assassinPlayer) {
-    endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
+  // 🎭 Jester wins
+  if (eliminatedPlayer.role === "Jester") {
+    endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
     return;
   }
-}
 
-// 🎭 Jester solo win
-if (eliminatedPlayer.role === "Jester") {
-  endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
-  return;
-}
+  // 🗡 Assassin wins (target voted out)
+  if (useAssassin && assassinTarget !== null) {
 
-// 🗡 Assassin solo win
-if (useAssassin && assassinTarget !== null) {
+    const targetIndex = assassinTarget - 1;
+    const assassinAlive = players.some(p =>
+      p.role === "Assassin" && p.alive
+    );
 
-  const targetIndex = assassinTarget - 1;
-  const assassinAlive = players.some(p =>
-    p.role === "Assassin" && p.alive
-  );
-
-  if (eliminatedIndex === targetIndex && assassinAlive) {
-    const assassinPlayer = players.find(p => p.role === "Assassin");
-    endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
-    return;
+    if (eliminatedIndex === targetIndex && assassinAlive) {
+      const assassinPlayer = players.find(p => p.role === "Assassin");
+      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+      return;
+    }
   }
-}
 }
   showVotingResults(eliminatedIndex);
 }
@@ -1988,19 +1975,17 @@ function showVotingResults(eliminatedIndex) {
 
   document.getElementById("continueBtn").onclick = nextRound;
 }
+
 function nextRound() {
 
-  if (checkWinCondition()) {
-    return; // game ended
-  }
+  if (checkWinCondition()) return;
 
-  // Reset votes
-  players.forEach(p => p.vote = null);
-  votes = {};
   currentVoterIndex = 0;
+  votes = {};
 
-  showNextVoter(); // start new voting round
+  showNextVoter();
 }
+
 function checkWinCondition() {
 
   const alivePlayers = players.filter(p => p.alive);
