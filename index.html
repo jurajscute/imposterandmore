@@ -1880,8 +1880,6 @@ function castVote(targetIndex) {
 }
 function finishVoting() {
 
-  console.log("finishVoting triggered");
-
   let maxVotes = 0;
   let eliminatedIndex = null;
 
@@ -1892,13 +1890,10 @@ function finishVoting() {
     }
   }
 
-  if (eliminatedIndex === null) {
-    showVotingResults(null);
-    return;
-  }
+if (eliminatedIndex !== null) {
 
-  // rest of your elimination logic...
-
+  const eliminatedPlayer = players[eliminatedIndex];
+  eliminatedPlayer.alive = false;
 
   // ❤️ Lovers die together
   if (eliminatedPlayer.isLover) {
@@ -1944,7 +1939,7 @@ function finishVoting() {
   }
 }
   showVotingResults(eliminatedIndex);
-
+}
 function showVotingResults(eliminatedIndex) {
 
   let resultsHTML = `
@@ -1985,7 +1980,7 @@ function nextRound() {
 
   if (checkWinCondition()) return;
 
-  currentVoterIndex = 0;
+  currentVoterIndex = 0;  
   votes = {};
 
   showNextVoter();
