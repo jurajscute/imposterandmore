@@ -2066,7 +2066,50 @@ function finishVoting() {
 if (eliminatedIndex !== null) {
 
   const eliminatedPlayer = players[eliminatedIndex];
-  eliminatedPlayer.alive = false;
+
+  // 🛡️ Shield special ability
+if (eliminatedPlayer.role === "Shield") {
+
+  // Get all alive players who voted for the Shield
+  const voters = players
+    .map((player, index) => ({ player, index }))
+    .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
+
+  // If no one voted for Shield (edge case)
+  if (voters.length === 0) {
+    showVotingResults(null);
+    return;
+  }
+
+  // Show choice screen
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Shield"]}">
+        ${eliminatedPlayer.name}'s Shield activates!
+      </h2>
+      <p>Choose one player to eliminate:</p>
+    </div>
+    <div class="roles-reveal-content" id="shieldOptions"></div>
+  `;
+
+  const shieldOptions = document.getElementById("shieldOptions");
+
+  voters.forEach(obj => {
+    const btn = document.createElement("button");
+    btn.textContent = obj.player.name;
+    btn.className = "reveal-roles-btn";
+    btn.style.marginBottom = "8px";
+
+    btn.onclick = () => {
+      obj.player.alive = false;
+      nextRound();
+    };
+
+    shieldOptions.appendChild(btn);
+  });
+
+  return; // STOP normal elimination
+}
 
   // ❤️ Lovers die together
   if (eliminatedPlayer.isLover) {
