@@ -1958,7 +1958,7 @@ function checkWinCondition() {
   );
 
   const crewAlive = alivePlayers.filter(p =>
-    !["Imposter","Maniac","Shadow"].includes(p.role)
+    !["Imposter","Maniac","Shadow, Jackal"].includes(p.role)
   );
 
   // Impostors win
@@ -2440,16 +2440,29 @@ function initializePlayers() {
   players = [];
 
   for (let i = 0; i < playerCount; i++) {
+
+    let roleName = words[i];
+
+    // If it's not a special role, it's Civilian
+    const specialRoles = [
+      "Imposter","Detective","Jester","Jackal","Shield",
+      "Assassin","Clueless","Echo","Idiot","Philosopher",
+      "Maniac","Shadow"
+    ];
+
+    if (!specialRoles.includes(roleName)) {
+      roleName = "Civilian";
+    }
+
     players.push({
       name: playerNames[i] || `Player ${i + 1}`,
-      role: words[i],
+      role: roleName,
+      word: words[i],   // what they actually see
       alive: true,
       vote: null,
       isLover: loverIndexes.includes(i)
     });
   }
-
-  console.log("Players initialized:", players);
 }
 
 
