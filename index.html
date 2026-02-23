@@ -1917,25 +1917,39 @@ if (eliminatedIndex !== null) {
     return;
   }
 
-  // 🎭 Jester wins
-  if (eliminatedPlayer.role === "Jester") {
-    endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
-    return;
-  }
+// 🗡 Assassin
+const assassinEnabled = document.getElementById("assassinToggle").checked;
+let assassinPlayer = players.find(p => p.role === "Assassin");
 
-  // 🗡 Assassin wins (target voted out)
-  if (useAssassin && assassinTarget !== null) {
+// 🎭 + 🗡 Combo win
+if (
+  assassinEnabled &&
+  assassinPlayer &&
+  assassinTarget !== null &&
+  eliminatedPlayer.role === "Jester" &&
+  eliminatedIndex === assassinTarget - 1
+) {
+  endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
+  return;
+}
 
-    const targetIndex = assassinTarget - 1;
-    const assassinAlive = players.some(p =>
-      p.role === "Assassin" && p.alive
-    );
+// 🎭 Jester solo
+if (eliminatedPlayer.role === "Jester") {
+  endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
+  return;
+}
 
-    if (eliminatedIndex === targetIndex && assassinAlive) {
-      const assassinPlayer = players.find(p => p.role === "Assassin");
-      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
-      return;
-    }
+// 🗡 Assassin solo
+if (
+  assassinEnabled &&
+  assassinPlayer &&
+  assassinTarget !== null &&
+  eliminatedIndex === assassinTarget - 1 &&
+  assassinPlayer.alive
+) {
+  endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+  return;
+
   }
 }
   showVotingResults(eliminatedIndex);
