@@ -2024,7 +2024,17 @@ function castVote(targetIndex) {
 
   players[currentVoterIndex].vote = targetIndex;
 
-  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
+ let voteWeight = 1;
+
+// 👑 King double vote
+if (currentVoterIndex === kingPlayer) {
+  voteWeight = 2;
+}
+
+// 😈 Maniac vote doesn't count
+if (players[currentVoterIndex].role === "Maniac") {
+  voteWeight = 0;
+}
 
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
