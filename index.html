@@ -329,6 +329,48 @@
   text-shadow: 0 0 8px currentColor;
 }
 
+/* Continue Button Press */
+@keyframes continuePress {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.continue-animate {
+  animation: continuePress 0.25s ease;
+}
+
+/* Fade Results Out */
+@keyframes resultsFade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-results {
+  animation: resultsFade 0.3s ease forwards;
+}
+
+/* Vote Click Pop */
+@keyframes votePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+.vote-locked {
+  animation: votePop 0.25s ease forwards;
+}
+
+/* Fade Between Voters */
+@keyframes fadeSlideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-15px); }
+}
+
+.fade-out-vote {
+  animation: fadeSlideOut 0.25s ease forwards;
+}
+
 /* Fade Out Animation */
 @keyframes fadeOutBtn {
   from { opacity: 1; transform: scale(1); }
@@ -1949,11 +1991,12 @@ function showNextVoter() {
   });
 }
 function castVote(targetIndex) {
+
   const voter = players[currentVoterIndex];
+  if (!voter || !voter.alive) return;
 
   players[currentVoterIndex].vote = targetIndex;
 
-  // King gets 2 votes
   const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
 
   if (!votes[targetIndex]) {
@@ -1962,8 +2005,14 @@ function castVote(targetIndex) {
 
   votes[targetIndex] += voteWeight;
 
-  currentVoterIndex++;
-  showNextVoter();
+  // Animate whole voting box out
+  votingBox.classList.add("fade-out-vote");
+
+  setTimeout(() => {
+    currentVoterIndex++;
+    votingBox.classList.remove("fade-out-vote");
+    showNextVoter();
+  }, 250);
 }
 function finishVoting() {
 
@@ -2112,7 +2161,16 @@ function showVotingResults(eliminatedIndex) {
 
   votingBox.innerHTML = resultsHTML;
 
-  document.getElementById("continueBtn").onclick = nextRound;
+  document.getElementById("continueBtn").onclick = function() {
+
+  this.classList.add("continue-animate");
+  votingBox.classList.add("fade-results");
+
+  setTimeout(() => {
+    nextRound();
+    votingBox.classList.remove("fade-results");
+  }, 300);
+};
 }
 
 function nextRound() {
