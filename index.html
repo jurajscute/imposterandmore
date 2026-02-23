@@ -333,9 +333,22 @@
 
 /* ===== Gradient Shift ===== */
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+.animated-win {
+  background: linear-gradient(
+    270deg,
+    #ff3c3c,
+    #8b0000,
+    #ff0000,
+    #5c0000
+  );
+
+  background-size: 400% 400%;
+  animation: gradientShift 12s linear infinite;
 }
 
 /* ===== Fade In ===== */
@@ -2171,28 +2184,25 @@ function shadeColor(color, percent) {
 
 function endGame(message, winningRole = null) {
 
-  let headerStyle = `
-    background: linear-gradient(135deg, #444, #222);
-    color: white;
-  `;
+  // Remove old classes (optional but cleaner)
+  votingBox.className = "";
+
+  // Add animated background
+  votingBox.classList.add("animated-win");
+
+  let color = "#ffffff";
 
   if (winningRole && roleColors[winningRole]) {
-
-    const base = roleColors[winningRole];
-
-    headerStyle = `
-      background: linear-gradient(135deg, ${base}, ${shadeColor(base, -30)});
-      background-size: 200% 200%;
-      animation: gradientShift 10s ease infinite;
-      color: white;
-    `;
+    color = roleColors[winningRole];
   }
 
   votingBox.innerHTML = `
-    <div class="win-header" style="${headerStyle}">
-      <h2>${message}</h2>
+    <div class="roles-reveal-header">
+      <h2 style="color:${color}; text-shadow: 0 0 12px ${color};">
+        ${message}
+      </h2>
     </div>
-    <div class="win-content" style="background:#f4f4f4;">
+    <div class="roles-reveal-content">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
