@@ -651,6 +651,12 @@
     <div id="rolesRevealBox" class="roles-reveal-box"></div>
   </div>
 
+<button id="startVotingBtn" class="reveal-roles-btn" style="display:none;">
+  Start Voting
+</button>
+
+<div id="votingBox" class="roles-reveal-box"></div>
+
   <div class="footer-note">
     Close your card before passing the device.
   </div>
@@ -686,6 +692,9 @@ let kingPlayer = null; // Store which player is king (index)
 let loverIndexes = [];
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
+let players = [];
+let currentVoterIndex = 0;
+let votes = {};
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -1792,6 +1801,119 @@ listContainer.appendChild(li);
   revealRolesBtn.style.display = 'none';
   rolesRevealBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+/* ===== VOTING FEATURE ===== */
+document.getElementById("startVotingBtn").style.display = "block";
+const startVotingBtn = document.getElementById("startVotingBtn");
+const votingBox = document.getElementById("votingBox");
+
+startVotingBtn.addEventListener("click", startVotingPhase);
+
+function startVotingPhase() {
+  startVotingBtn.style.display = "none";
+  currentVoterIndex = 0;
+  votes = {};
+  showNextVoter();
+}
+function showNextVoter() {
+
+  // Skip dead players
+  while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
+    currentVoterIndex++;
+  }
+
+  if (currentVoterIndex >= players.length) {
+    finishVoting();
+    return;
+  }
+
+  const voter = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>${voter.name}, it's your turn to vote</h3>
+    </div>
+    <div class="roles-reveal-content" id="voteOptions"></div>
+  `;
+
+  votingBox.classList.add("show");
+
+  const voteOptions = document.getElementById("voteOptions");
+
+  players.forEach((player, index) => {
+    if (player.alive && index !== currentVoterIndex) {
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn";
+      btn.style.marginBottom = "8px";
+
+      btn.onclick = () => castVote(index);
+
+      voteOptions.appendChild(btn);
+    }
+  });
+}
+function castVote(targetIndex) {
+  const voter = players[currentVoterIndex];
+
+  players[currentVoterIndex].vote = targetIndex;
+
+  // King gets 2 votes
+  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
+
+  if (!votes[targetIndex]) {
+    votes[targetIndex] = 0;
+  }
+
+  votes[targetIndex] += voteWeight;
+
+  currentVoterIndex++;
+  showNextVoter();
+}
+function finishVoting() {
+
+  let maxVotes = 0;
+  let eliminatedIndex = null;
+
+  for (let index in votes) {
+    if (votes[index] > maxVotes) {
+      maxVotes = votes[index];
+      eliminatedIndex = index;
+    }
+  }
+
+  if (eliminatedIndex !== null) {
+    players[eliminatedIndex].alive = false;
+  }
+
+  showVotingResults(eliminatedIndex);
+}
+function showVotingResults(eliminatedIndex) {
+
+  let resultsHTML = `
+    <div class="roles-reveal-header">
+      <h3>Voting Results</h3>
+    </div>
+    <div class="roles-reveal-content">
+  `;
+
+  for (let index in votes) {
+    resultsHTML += `
+      <p>${players[index].name}: ${votes[index]} votes</p>
+    `;
+  }
+
+  if (eliminatedIndex !== null) {
+    resultsHTML += `
+      <hr>
+      <h3>${players[eliminatedIndex].name} has been eliminated!</h3>
+      <p>They were: ${players[eliminatedIndex].role}</p>
+    `;
+  }
+
+  resultsHTML += "</div>";
+
+  votingBox.innerHTML = resultsHTML;
+}
 
 /* ===== HELPER FUNCTIONS ===== */
 function getRandomItemFromArray(arr) {
@@ -2236,6 +2358,20 @@ if (useLovers && playerCount >= 2) {
     kingPlayer = newKingIndex;
   }
 
+function initializePlayers() {
+  players = [];
+
+  for (let i = 0; i < totalCards; i++) {
+    players.push({
+      name: playerNames[i] || `Player ${i + 1}`,
+      role: words[i],   // your role storage
+      alive: true,
+      vote: null
+    });
+  }
+}
+
+initializePlayers();
 
   // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
