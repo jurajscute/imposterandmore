@@ -415,6 +415,31 @@
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
+
+/* ===== Shield Activation Transition ===== */
+
+@keyframes shieldFlash {
+  0% {
+    background-color: rgba(0, 150, 255, 0);
+    transform: scale(0.97);
+    opacity: 0;
+  }
+
+  40% {
+    background-color: rgba(0, 150, 255, 0.35);
+    transform: scale(1.02);
+    opacity: 1;
+  }
+
+  100% {
+    background-color: rgba(0, 150, 255, 0);
+    transform: scale(1);
+  }
+}
+
+.shield-transition {
+  animation: shieldFlash 0.9s ease-out forwards;
+}
   </style>
 </head>
 
@@ -2105,11 +2130,14 @@ if (eliminatedPlayer.role === "Shield") {
   const killedPlayer = obj.player;
   killedPlayer.alive = false;
 
-  // Clear votes
   players.forEach(p => p.vote = null);
   votes = {};
 
-  // Show Shield kill result screen
+  // 🔥 Blue flash animation
+  votingBox.classList.remove("shield-transition");
+  void votingBox.offsetWidth;
+  votingBox.classList.add("shield-transition");
+
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
       <h3 style="color:${roleColors["Shield"]}; text-shadow:0 0 10px ${roleColors["Shield"]};">
@@ -2119,7 +2147,7 @@ if (eliminatedPlayer.role === "Shield") {
 
     <div class="roles-reveal-content">
       <hr>
-      <h3>${killedPlayer.name} has been brutally smashed with a shield!</h3>
+      <h3>${killedPlayer.name} has been eliminated!</h3>
       <p>
         They were the 
         <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
