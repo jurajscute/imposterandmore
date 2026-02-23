@@ -1,4 +1,4 @@
-      <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -693,10 +693,8 @@ let loverIndexes = [];
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
 let players = [];
-let votes = {};
 let currentVoterIndex = 0;
-let aliveVoters = [];
-
+let votes = {};
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -1819,38 +1817,25 @@ startVotingBtn.addEventListener("click", startVotingPhase);
 
 function startVotingPhase() {
 
-  votes = {};
-
-  // Build list of alive voters
-  aliveVoters = players
-    .map((p, i) => p.alive ? i : null)
-    .filter(i => i !== null);
-
-  currentVoterIndex = 0;
+  currentVoterIndex = 0;   
+  votes = {};              
 
   showNextVoter();
 }
 
 function showNextVoter() {
 
-  if (currentVoterIndex >= aliveVoters.length) {
+  // Skip dead players
+  while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
+    currentVoterIndex++;
+  }
+
+  if (currentVoterIndex >= players.length) {
     finishVoting();
     return;
   }
 
-function startVotingPhase() {
-  console.log("START VOTING CLICKED");
-}
-
-function showNextVoter() {
-
-  if (currentVoterIndex >= aliveVoters.length) {
-    finishVoting();
-    return;
-  }
-
-  const voterIndex = aliveVoters[currentVoterIndex];
-  const voter = players[voterIndex];
+  const voter = players[currentVoterIndex];
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
@@ -1858,6 +1843,8 @@ function showNextVoter() {
     </div>
     <div class="roles-reveal-content" id="voteOptions"></div>
   `;
+
+  votingBox.classList.add("show");
 
   const voteOptions = document.getElementById("voteOptions");
 
@@ -1874,12 +1861,13 @@ function showNextVoter() {
     }
   });
 }
-
 function castVote(targetIndex) {
+  const voter = players[currentVoterIndex];
 
-  const voterIndex = aliveVoters[currentVoterIndex];
+  players[currentVoterIndex].vote = targetIndex;
 
-  const voteWeight = (voterIndex === kingPlayer) ? 2 : 1;
+  // King gets 2 votes
+  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
 
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
@@ -1888,106 +1876,69 @@ function castVote(targetIndex) {
   votes[targetIndex] += voteWeight;
 
   currentVoterIndex++;
-
-  setTimeout(() => {
-    showNextVoter();
-  }, 100);
-}
+  showNextVoter();
 }
 function finishVoting() {
 
   let maxVotes = 0;
   let eliminatedIndex = null;
-  let tie = false;
 
-  // Count votes + detect tie
   for (let index in votes) {
     if (votes[index] > maxVotes) {
       maxVotes = votes[index];
       eliminatedIndex = parseInt(index);
-      tie = false;
-    } else if (votes[index] === maxVotes) {
-      tie = true;
     }
   }
 
-  // Tie or no votes
-  if (tie || maxVotes === 0) {
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h3>No one was eliminated (Tie)</h3>
-        <button id="continueBtn" class="reveal-roles-btn">Continue</button>
-      </div>
-    `;
-
-    document.getElementById("continueBtn").onclick = () => {
-      startVotingPhase();
-    };
-
-    return;
-  }
+if (eliminatedIndex !== null) {
 
   const eliminatedPlayer = players[eliminatedIndex];
   eliminatedPlayer.alive = false;
 
   // ❤️ Lovers die together
   if (eliminatedPlayer.isLover) {
-    const otherLoverIndex = players.findIndex((p, index) =>
+
+    const otherLover = players.find((p, index) =>
       p.isLover && index !== eliminatedIndex && p.alive
     );
 
-    if (otherLoverIndex !== -1) {
-      players[otherLoverIndex].alive = false;
+    if (otherLover) {
+      otherLover.alive = false;
     }
   }
 
   // Recalculate alive players AFTER lover chain death
   const alivePlayers = players.filter(p => p.alive);
 
-  // ❤️ Lovers win condition
+  // ❤️ Lovers win (only 2 alive and both lovers)
   const loversAlive = alivePlayers.filter(p => p.isLover);
   if (loversAlive.length === 2 && alivePlayers.length === 2) {
     endGame("The Lovers win together!");
     return;
   }
 
-  // 🗡 Assassin target index
-  let assassinPlayer = null;
-  let targetIndex = null;
-
-  if (useAssassin && assassinTarget !== null) {
-    assassinPlayer = players.find(p => p.role === "Assassin");
-    targetIndex = assassinTarget - 1;
-  }
-
-  // 🎭 + 🗡 Jester & Assassin combo win
-  if (
-    eliminatedPlayer.role === "Jester" &&
-    assassinPlayer &&
-    eliminatedIndex === targetIndex
-  ) {
-    endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
-    return;
-  }
-
-  // 🎭 Jester solo win
+  // 🎭 Jester wins
   if (eliminatedPlayer.role === "Jester") {
     endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
     return;
   }
 
-  // 🗡 Assassin solo win
-  if (
-    assassinPlayer &&
-    eliminatedIndex === targetIndex &&
-    assassinPlayer.alive
-  ) {
-    endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
-    return;
-  }
+  // 🗡 Assassin wins (target voted out)
+  if (useAssassin && assassinTarget !== null) {
 
-  // No special win → show normal elimination
-    showVotingResults(eliminatedIndex);
+    const targetIndex = assassinTarget - 1;
+    const assassinAlive = players.some(p =>
+      p.role === "Assassin" && p.alive
+    );
+
+    if (eliminatedIndex === targetIndex && assassinAlive) {
+      const assassinPlayer = players.find(p => p.role === "Assassin");
+      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+      return;
+    }
+  }
+}
+  showVotingResults(eliminatedIndex);
 }
 function showVotingResults(eliminatedIndex) {
 
@@ -2029,12 +1980,10 @@ function nextRound() {
 
   if (checkWinCondition()) return;
 
+  currentVoterIndex = 0;  
   votes = {};
-  currentVoterIndex = 0;
 
-  setTimeout(() => {
-    showNextVoter();
-  }, 100);
+  showNextVoter();
 }
 
 function checkWinCondition() {
@@ -2056,7 +2005,7 @@ function checkWinCondition() {
   );
 
   const crewAlive = alivePlayers.filter(p =>
-    !["Imposter","Maniac","Shadow"].includes(p.role)
+    !["Imposter","Maniac","Shadow, Jackal"].includes(p.role)
   );
 
   // Impostors win
