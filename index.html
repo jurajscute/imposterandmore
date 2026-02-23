@@ -1984,7 +1984,11 @@ function finishVoting() {
   }
 
   // No special win → show normal elimination
-  showVotingResults(eliminatedIndex);
+    showVotingResults(eliminatedIndex);
+
+  // Reset votes for next round automatically
+  votes = {};
+  currentVoterIndex = 0;
 }
 function showVotingResults(eliminatedIndex) {
 
@@ -2026,10 +2030,12 @@ function nextRound() {
 
   if (checkWinCondition()) return;
 
-  currentVoterIndex = 0;  
   votes = {};
+  currentVoterIndex = 0;
 
-  showNextVoter();
+  setTimeout(() => {
+    showNextVoter();
+  }, 100);
 }
 
 function checkWinCondition() {
@@ -2051,7 +2057,7 @@ function checkWinCondition() {
   );
 
   const crewAlive = alivePlayers.filter(p =>
-    !["Imposter","Maniac","Shadow, Jackal"].includes(p.role)
+    !["Imposter","Maniac","Shadow"].includes(p.role)
   );
 
   // Impostors win
