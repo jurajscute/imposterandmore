@@ -2170,28 +2170,17 @@ function shadeColor(color, percent) {
 
 function endGame(message, winningRole = null) {
 
-  // Reset classes but keep base layout class if you have one
-  votingBox.className = "voting-box";
-
   let color = "#ffffff";
 
   if (winningRole && roleColors[winningRole]) {
     color = roleColors[winningRole];
   }
 
-  // Create lighter + darker shades
   const darker = shadeColor(color, -40);
   const lighter = shadeColor(color, 40);
 
-  // Apply animated gradient dynamically
-  votingBox.style.background = `
-    linear-gradient(270deg, ${color}, ${darker}, ${lighter}, ${color})
-  `;
-  votingBox.style.backgroundSize = "400% 400%";
-  votingBox.style.animation = "gradientShift 12s linear infinite";
-
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
+    <div class="roles-reveal-header win-header">
       <h2 style="color:white; text-shadow: 0 0 12px ${color};">
         ${message}
       </h2>
@@ -2202,6 +2191,14 @@ function endGame(message, winningRole = null) {
       </button>
     </div>
   `;
+
+  const header = votingBox.querySelector(".win-header");
+
+  header.style.background = `
+    linear-gradient(270deg, ${color}, ${darker}, ${lighter}, ${color})
+  `;
+  header.style.backgroundSize = "400% 400%";
+  header.style.animation = "gradientShift 12s linear infinite";
 }
 /* ===== HELPER FUNCTIONS ===== */
 function getRandomItemFromArray(arr) {
