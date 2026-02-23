@@ -2415,7 +2415,9 @@ function generateCards() {
   if (rolesRevealBox) {
   rolesRevealBox.classList.remove('show');
 }
-  rolesRevealBox.innerHTML = '';
+ if (rolesRevealBox) {
+  rolesRevealBox.innerHTML = "...";
+}
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
   errorBox.textContent = "";
