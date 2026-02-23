@@ -2412,7 +2412,9 @@ function generateCards() {
   firstPlayerBox.classList.remove('show');
   firstPlayerBox.textContent = '';
   revealRolesBtn.style.display = 'none';
+  if (rolesRevealBox) {
   rolesRevealBox.classList.remove('show');
+}
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
