@@ -1825,11 +1825,15 @@ function startVotingPhase() {
 
 function showNextVoter() {
 
-  // Skip dead players
-  while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
+  // Find next alive voter
+  while (
+    currentVoterIndex < players.length &&
+    !players[currentVoterIndex].alive
+  ) {
     currentVoterIndex++;
   }
 
+  // If we reached end → finish voting
   if (currentVoterIndex >= players.length) {
     finishVoting();
     return;
@@ -1855,18 +1859,23 @@ function showNextVoter() {
       btn.className = "reveal-roles-btn";
       btn.style.marginBottom = "8px";
 
-      btn.onclick = () => castVote(index);
+      btn.onclick = () => {
+        castVote(index);
+      };
 
       voteOptions.appendChild(btn);
     }
   });
 }
+
 function castVote(targetIndex) {
+
   const voter = players[currentVoterIndex];
+
+  if (!voter || !voter.alive) return;
 
   players[currentVoterIndex].vote = targetIndex;
 
-  // King gets 2 votes
   const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
 
   if (!votes[targetIndex]) {
@@ -1876,7 +1885,11 @@ function castVote(targetIndex) {
   votes[targetIndex] += voteWeight;
 
   currentVoterIndex++;
-  showNextVoter();
+
+  // Small delay makes flow smoother and prevents UI glitch
+  setTimeout(() => {
+    showNextVoter();
+  }, 100);
 }
 function finishVoting() {
 
