@@ -2095,17 +2095,27 @@ function nextRound() {
 
 function checkWinCondition() {
 
-  const alivePlayers = players.filter(p => p.alive);
+const alivePlayers = players.filter(p => p.alive);
 
-  const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
+const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
 
-  const impostorsAlive = alivePlayers.filter(p =>
-    ["Imposter"].includes(p.role)
-  );
+const impostorsAlive = alivePlayers.filter(p =>
+  ["Imposter","Maniac","Shadow"].includes(p.role)
+);
 
-  const crewAlive = alivePlayers.filter(p =>
-    !["Imposter","Maniac","Shadow","Jackal","Assassin","Jester"].includes(p.role)
-  );
+const crewAlive = alivePlayers.filter(p =>
+  !["Imposter","Maniac","Shadow","Jackal","Assassin","Jester"].includes(p.role)
+);
+
+// Impostors win ONLY if Jackal is dead
+if (
+  !jackalAlive &&
+  impostorsAlive.length > 0 &&
+  impostorsAlive.length >= crewAlive.length
+) {
+  endGame(`<strong>Impostors win!</strong>`, "Imposter");
+  return true;
+}
 
  // Jackal win condition
 if (jackalAlive) {
@@ -2127,12 +2137,6 @@ if (jackalAlive) {
     return true;
   }
 }
-
-  // Impostors win
-  if (impostorsAlive.length > 0 && impostorsAlive.length >= crewAlive.length) {
-    endGame(`<strong>Impostors win!</strong>`,"Imposter");
-    return true;
-  }
 
   // Crew wins ONLY if:
   // - No impostors
