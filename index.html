@@ -329,6 +329,22 @@
   text-shadow: 0 0 8px currentColor;
 }
 
+/* Smooth reappear animation */
+@keyframes voteFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.vote-fade-in {
+  animation: voteFadeIn 0.35s ease;
+}
+
 /* Continue Button Press */
 @keyframes continuePress {
   0% { transform: scale(1); }
@@ -1974,6 +1990,10 @@ function showNextVoter() {
   `;
 
   votingBox.classList.add("show");
+
+  votingBox.classList.remove("vote-fade-in"); // reset if already present
+void votingBox.offsetWidth; // force reflow (important!)
+votingBox.classList.add("vote-fade-in");
 
   const voteOptions = document.getElementById("voteOptions");
 
