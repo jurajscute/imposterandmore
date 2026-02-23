@@ -311,10 +311,37 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
 }
+/* ===== WIN SCREEN BASE ===== */
+.win-header {
+  padding: 30px;
+  border-radius: 20px 20px 0 0;
+  font-weight: bold;
+  animation: fadeIn 0.6s ease;
+}
+
+.win-content {
+  padding: 25px;
+  border-radius: 0 0 20px 20px;
+}
+
+/* ===== Glow Pulse ===== */
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 10px currentColor; }
+  50% { box-shadow: 0 0 30px currentColor; }
+  100% { box-shadow: 0 0 10px currentColor; }
+}
+
+/* ===== Gradient Shift ===== */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* ===== Fade In ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
   </style>
 </head>
@@ -1968,53 +1995,41 @@ if (
   eliminatedIndex === assassinTarget - 1
 ) {
 
-  const jesterColor = roleColors["Jester"];
-  const assassinColor = roleColors["Assassin"];
+const jesterColor = roleColors["Jester"];
+const assassinColor = roleColors["Assassin"];
 
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header"
-         style="
-           background: linear-gradient(-45deg, ${jesterColor}, ${assassinColor}, ${jesterColor});
-background-size: 400% 400%;
-animation: gradientShift 6s ease infinite;
-           color: black;
-         ">
-      <h2 style="font-weight: bold;">
-
-        <span style="
-          color:${jesterColor};
-          text-shadow:0 0 12px ${jesterColor};
-        ">
-          ${eliminatedPlayer.name} the Jester
-        </span>
-
-        <span style="color:black;"> AND </span>
-
-        <span style="
-          color:${assassinColor};
-          text-shadow:0 0 12px ${assassinColor};
-        ">
-          ${assassinPlayer.name} the Assassin
-        </span>
-
-        both win!
-      </h2>
-    </div>
-
-    <div class="roles-reveal-content"
-         style="background:#f4f4f4;">
-      <button onclick="location.reload()" class="reveal-roles-btn">
-        New Game
-      </button>
-    </div>
-  `;
+votingBox.innerHTML = `
+  <div class="win-header"
+       style="
+         background: linear-gradient(-45deg, ${jesterColor}, ${assassinColor}, ${jesterColor});
+         background-size: 400% 400%;
+         animation: gradientShift 6s ease infinite;
+         color: white;
+       ">
+    <h2>
+      <span style="text-shadow:0 0 12px ;">
+        ${eliminatedPlayer.name} the Jester
+      </span>
+      AND
+      <span style="text-shadow:0 0 12px ;">
+        ${assassinPlayer.name} the Assassin
+      </span>
+      both win!
+    </h2>
+  </div>
+  <div class="win-content" style="background:#f4f4f4;">
+    <button onclick="location.reload()" class="reveal-roles-btn">
+      New Game
+    </button>
+  </div>
+`;
 
   return;
 }
 
 // 🎭 Jester solo
 if (eliminatedPlayer.role === "Jester") {
-  endGame(`<strong>${eliminatedPlayer.name}the Jester</strong> wins by getting voted out!`,"Jester");
+  endGame(`<strong>${eliminatedPlayer.name} the Jester</strong> wins by getting voted out!`,"Jester");
   return;
 }
 
@@ -2136,31 +2151,32 @@ if (jackalAlive) {
 
 function endGame(message, winningRole = null) {
 
-  let themeColor = "#444"; // default
+  let headerStyle = "";
+  let textStyle = "color: black;";
 
-  if (winningRole && roleThemes[winningRole]) {
-    themeColor = roleThemes[winningRole];
+  if (winningRole && roleColors[winningRole]) {
+
+    const color = roleColors[winningRole];
+
+    headerStyle = `
+      background: ${color};
+      color: white;
+      animation: glowPulse 2s infinite;
+    `;
+
   }
 
   votingBox.innerHTML = `
-    <div class="roles-reveal-header" 
-         style="
-           background: linear-gradient(135deg, ${themeColor}, black);
-           color: white;
-         ">
-      <h2 style="text-shadow: 0 0 15px ${themeColor};">
-        ${message}
-      </h2>
+    <div class="win-header" style="${headerStyle}">
+      <h2>${message}</h2>
     </div>
-    <div class="roles-reveal-content" 
-         style="background:${themeColor}22;">
+    <div class="win-content" style="background:#f4f4f4;">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
     </div>
   `;
 }
-
 /* ===== HELPER FUNCTIONS ===== */
 function getRandomItemFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
