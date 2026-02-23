@@ -744,6 +744,10 @@
     <button class="toggle-player-names" id="showPlayerNamesBtn">Customize Player Names</button>
   </div>
 
+  <button id="revealAllBtn" class="reveal-roles-btn">
+  Reveal All Roles
+</button>
+
   <div id="error" class="error"></div>
   
   <div id="cardsContainer" class="cards"></div>
@@ -752,8 +756,6 @@
     <div id="revealTracker" class="reveal-tracker"></div>
     <div id="kingAnnouncement" class="king-announcement"></div>
     <div id="firstPlayer" class="first-player"></div>
-    <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
-    <div id="rolesRevealBox" class="roles-reveal-box"></div>
   </div>
 
 <button id="startVotingBtn" class="reveal-roles-btn" style="display:none;">
@@ -1946,6 +1948,51 @@ listContainer.appendChild(li);
   revealRolesBtn.style.display = 'none';
   rolesRevealBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
+// REVEAL BUTTON!
+const revealAllBtn = document.getElementById("revealAllBtn");
+revealAllBtn.style.display = "none";
+
+revealAllBtn.addEventListener("click", revealAllRoles);
+
+function revealAllRoles() {
+
+  let revealHTML = `
+    <div class="roles-reveal-header">
+      <h3>All Roles</h3>
+    </div>
+    <div class="roles-reveal-content">
+  `;
+
+  players.forEach(player => {
+
+    const roleColor = roleColors[player.role] || "#ffffff";
+
+    revealHTML += `
+      <p>
+        <strong>${player.name}</strong> — 
+        <span style="
+          color:${roleColor};
+          font-weight:bold;
+          text-shadow:0 0 6px ${roleColor};
+        ">
+          ${player.role}
+        </span>
+      </p>
+    `;
+  });
+
+  revealHTML += `
+      <br>
+      <button onclick="location.reload()" class="reveal-roles-btn">
+        New Game
+      </button>
+    </div>
+  `;
+
+  votingBox.innerHTML = revealHTML;
+}
+
 /* ===== VOTING FEATURE ===== */
 const startVotingBtn = document.getElementById("startVotingBtn");
 const votingBox = document.getElementById("votingBox");
@@ -2017,15 +2064,20 @@ function castVote(targetIndex) {
 
   players[currentVoterIndex].vote = targetIndex;
 
-  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
+  // 🧠 Maniac vote does NOT count
+  if (voter.role !== "Maniac") {
 
-  if (!votes[targetIndex]) {
-    votes[targetIndex] = 0;
+    const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
+
+    if (!votes[targetIndex]) {
+      votes[targetIndex] = 0;
+    }
+
+    votes[targetIndex] += voteWeight;
+
   }
 
-  votes[targetIndex] += voteWeight;
-
-  // Animate whole voting box out
+  // Smooth transition
   votingBox.classList.add("fade-out-vote");
 
   setTimeout(() => {
@@ -2283,6 +2335,7 @@ function shadeColor(color, percent) {
 }
 
 function endGame(message, winningRole = null) {
+  revealAllBtn.style.display = "block";
 
   let color = "#ffffff";
 
