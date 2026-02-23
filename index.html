@@ -2099,7 +2099,7 @@ if (jackalAlive) {
 }
 function endGame(message, winningRole = null) {
 
-  let color = "#ffffff"; // default white
+  let color = "#ffffff";
 
   if (winningRole && roleColors[winningRole]) {
     color = roleColors[winningRole];
@@ -2108,6 +2108,8 @@ function endGame(message, winningRole = null) {
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
       <h2 style="color:${color}; text-shadow: 0 0 10px ${color};">
+        ${message}
+      </h2>
     </div>
     <div class="roles-reveal-content">
       <button onclick="location.reload()" class="reveal-roles-btn">
