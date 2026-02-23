@@ -1956,7 +1956,26 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
 });
-revealAllBtn.addEventListener("click", revealAllRoles);
+document.addEventListener("DOMContentLoaded", function() {
+
+  const changeSubjectBtn = document.getElementById("changeSubjectBtn");
+  const generateBtn = document.getElementById("generateBtn");
+  const revealRolesBtn = document.getElementById("revealRolesBtn");
+  const revealAllBtn = document.getElementById("revealAllBtn");
+
+  if (changeSubjectBtn)
+    changeSubjectBtn.addEventListener("click", changeSubject);
+
+  if (generateBtn)
+    generateBtn.addEventListener("click", generateCards);
+
+  if (revealRolesBtn)
+    revealRolesBtn.addEventListener("click", revealAllRoles);
+
+  if (revealAllBtn)
+    revealAllBtn.addEventListener("click", revealAllRoles);
+
+});
 
 function revealAllRoles() {
 
