@@ -1889,7 +1889,7 @@ function finishVoting() {
   for (let index in votes) {
     if (votes[index] > maxVotes) {
       maxVotes = votes[index];
-      eliminatedIndex = index;
+      eliminatedIndex = parseInt(index);
     }
   }
 
@@ -1922,9 +1922,71 @@ function showVotingResults(eliminatedIndex) {
     `;
   }
 
-  resultsHTML += "</div>";
+  resultsHTML += `
+      <br><br>
+      <button id="continueBtn" class="reveal-roles-btn">
+        Continue
+      </button>
+    </div>
+  `;
 
   votingBox.innerHTML = resultsHTML;
+
+  document.getElementById("continueBtn").onclick = nextRound;
+}
+function nextRound() {
+
+  if (checkWinCondition()) {
+    return; // game ended
+  }
+
+  // Reset votes
+  players.forEach(p => p.vote = null);
+  votes = {};
+  currentVoterIndex = 0;
+
+  showNextVoter(); // start new voting round
+}
+function checkWinCondition() {
+
+  const alivePlayers = players.filter(p => p.alive);
+
+  const impostorsAlive = alivePlayers.filter(p =>
+    p.role === "Imposter" ||
+    p.role === "Maniac" ||
+    p.role === "Shadow"
+  );
+
+  const crewAlive = alivePlayers.filter(p =>
+    !["Imposter","Maniac","Shadow"].includes(p.role)
+  );
+
+  // Impostors win
+  if (impostorsAlive.length >= crewAlive.length) {
+    endGame("Impostors win!");
+    return true;
+  }
+
+  // Crew wins
+  if (impostorsAlive.length === 0) {
+    endGame("Crew wins!");
+    return true;
+  }
+
+  return false; // continue game
+}
+function endGame(message) {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>${message}</h2>
+    </div>
+    <div class="roles-reveal-content">
+      <button onclick="location.reload()" class="reveal-roles-btn">
+        New Game
+      </button>
+    </div>
+  `;
 }
 
 /* ===== HELPER FUNCTIONS ===== */
