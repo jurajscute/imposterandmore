@@ -1909,39 +1909,49 @@ if (eliminatedIndex !== null) {
       otherLover.alive = false;
     }
   }
-  const alivePlayers = players.filter(p => p.alive);
-const loversAlive = alivePlayers.filter(p => p.isLover);
 
-if (loversAlive.length === 2 && alivePlayers.length === 2) {
-  endGame("The Lovers win together!");
-  return true;
+  // Recalculate alive players AFTER lover chain death
+  const alivePlayers = players.filter(p => p.alive);
+
+  // ❤️ Lovers win (only 2 alive and both lovers)
+  const loversAlive = alivePlayers.filter(p => p.isLover);
+  if (loversAlive.length === 2 && alivePlayers.length === 2) {
+    endGame("The Lovers win together!");
+    return;
+  }
+
+// 🎭 + 🗡 Jester & Assassin combo win
+if (useAssassin && assassinTarget !== null) {
+
+  const targetIndex = assassinTarget - 1;
+  const assassinPlayer = players.find(p => p.role === "Assassin");
+
+  if (eliminatedPlayer.role === "Jester" && eliminatedIndex === targetIndex && assassinPlayer) {
+    endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
+    return;
+  }
 }
 
-  // 🎭 Jester
-  if (eliminatedPlayer.role === "Jester") {
-    endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
-    return;
-  if (eliminatedPlayer.role === "Jester" && eliminatedIndex === targetIndex) {
-  endGame("Jester AND Assassin both win!");
+// 🎭 Jester solo win
+if (eliminatedPlayer.role === "Jester") {
+  endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
   return;
 }
+
+// 🗡 Assassin solo win
+if (useAssassin && assassinTarget !== null) {
+
+  const targetIndex = assassinTarget - 1;
+  const assassinAlive = players.some(p =>
+    p.role === "Assassin" && p.alive
+  );
+
+  if (eliminatedIndex === targetIndex && assassinAlive) {
+    const assassinPlayer = players.find(p => p.role === "Assassin");
+    endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+    return;
   }
-
-  // 🗡 Assassin
-  if (useAssassin && assassinTarget !== null) {
-
-    const targetIndex = assassinTarget - 1;
-
-    const assassinAlive = players.some(p =>
-      p.role === "Assassin" && p.alive
-    );
-
-    if (eliminatedIndex === targetIndex && assassinAlive) {
-      const assassinPlayer = players.find(p => p.role === "Assassin");
-      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
-      return;
-    }
-  }
+}
 }
   showVotingResults(eliminatedIndex);
 }
