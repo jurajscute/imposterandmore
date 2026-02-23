@@ -693,6 +693,9 @@ let loverIndexes = [];
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
 let players = [];
+let votes = {};
+let currentVoterIndex = 0;
+let aliveVoters = [];
 
 
 // NEW: State for detective interaction
@@ -1814,10 +1817,6 @@ const votingBox = document.getElementById("votingBox");
 
 startVotingBtn.addEventListener("click", startVotingPhase);
 
-let aliveVoters = [];
-let currentVoterIndex = 0;
-let votes = {};
-
 function startVotingPhase() {
 
   votes = {};
@@ -1838,10 +1837,6 @@ function showNextVoter() {
     finishVoting();
     return;
   }
-
-let aliveVoters = [];
-let currentVoterIndex = 0;
-let votes = {};
 
 function startVotingPhase() {
 
