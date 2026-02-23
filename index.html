@@ -92,6 +92,7 @@
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
     .role-card.jester { border-left-color: #00a008; } .jester .role-icon { background: #00a008; }
     .role-card.jackal { border-left-color: #ff6600; } .jackal .role-icon { background: #ff6600; }
+    .role-card.viper { border-left-color: #004b16; } .viper.role-icon { background: #004b16; }
     .role-card.shield { border-left-color: #0025a0; } .shield .role-icon { background: #0025a0; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
@@ -216,6 +217,7 @@
     .imposter-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jester-role { color: #00a008; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jackal-role { color: #ff6600; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .viper-role { color: #004b16; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shield-role { color: #0025a0; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -234,12 +236,13 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .imposter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .shield-hint, .king-hint, .lovers-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .viper-hint, .shield-hint, .king-hint, .lovers-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
     .jester-hint { color: #00a008; background: #d7ffd4; border-color: #00a008; }
     .jackal-hint { color: #ff6600; background: #ffe5d4; border-color: #ff6600; }
+    .viper-hint { color: #004b16; background: #9cc597; border-color: #004b16; }
     .shield-hint { color: #0025a0; background: #e0e0ff; border-color: #0025a0; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
     .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
@@ -248,7 +251,7 @@
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
-    .imposter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
+    .imposter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -281,6 +284,7 @@
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
     .role-list .jester-role { background: #caffcd; color: #00a008; border-left-color: #00a008; }
     .role-list .jackal-role { background: #ffe5d4; color: #ff6600; border-left-color: #ff6600; }
+    .role-list .viper-role { background: #9cc597; color: #004b16; border-left-color: #004b16; }
     .role-list .shield-role { background: #e0e0ff; color: #0025a0; border-left-color: #0025a0; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
     .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
@@ -486,7 +490,7 @@
             <li><strong>Imposters:</strong> Some players are imposters - they DON'T know the secret word!</li>
             <li><strong>Discussion:</strong> Players discuss to figure out who the imposters are by saying a word related to the secret word they got</li>
             <li><strong>Voting:</strong> Vote to eliminate suspected imposters</li>
-            <li><strong>Winning:</strong> Civilians win if all impostors and the jackal are eliminated. Impostors win if they survive, same with Jackal. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
+            <li><strong>Winning:</strong> Civilians win if all impostors, the viper and the jackal are eliminated. Impostors win if they survive, same with Jackal and Viper. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
           </ol>
         </div>
         
@@ -498,6 +502,7 @@
             <div class="role-card detective"><h4><span class="role-icon">🔍</span>Detective</h4><p>You can peek at one random player's role.</p><div class="goal">Goal: Help civilians</div></div>
             <div class="role-card jester"><h4><span class="role-icon">🃏</span>Jester</h4><p>You want to get voted out.</p><div class="goal">Goal: Get voted out</div></div>
             <div class="role-card jackal"><h4><span class="role-icon">🔪</span>Jackal</h4><p>You DON'T know the secret word! Pretend you know it and outlive the impostor.</p><div class="goal">Goal: Don't get eliminated</div></div>
+            <div class="role-card viper"><h4><span class="role-icon">🐍</span>Viper</h4><p>You DON'T know the secret word! Your votes don't count BUT you're able to poison 1 person per meeting and they will die by the next!</p><div class="goal">Goal: Don't get eliminated</div></div>
             <div class="role-card shield"><h4><span class="role-icon">🛡️</span>Shield</h4><p>Defend yourself if you're being voted! You can choose to vote out 1 person who voted for you.</p><div class="goal">Goal: Eliminate impostors, defend yourself!</div></div>
             <div class="role-card assassin"><h4><span class="role-icon">🗡️</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
             <div class="role-card king"><h4><span class="role-icon">👑</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
@@ -748,6 +753,13 @@
       </label>
     </div>
 
+    <div class="role-pill viper-toggle" id="viperContainer">
+      <label>
+        <input id="viperToggle" type="checkbox">
+        Viper
+      </label>
+    </div>
+
     <div class="role-pill assassin-toggle" id="assassinContainer">
       <label>
         <input id="assassinToggle" type="checkbox">
@@ -894,6 +906,7 @@ const randomizeToggle = document.getElementById("randomizeToggle");
 const detectiveToggle = document.getElementById("detectiveToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const jackalToggle = document.getElementById("jackalToggle");
+const viperToggle = document.getElementById("viperToggle");
 const shieldToggle = document.getElementById("shieldToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
@@ -919,6 +932,7 @@ const roleColors = {
   "Shield": "#0025a0",
 
   "Jackal": "#ff6600",
+  "Viper": "#004b16",
   "Jester": "#00a008",
   "Assassin": "#8b5cf6",
 
@@ -932,6 +946,7 @@ const roleThemes = {
   Crew: "#3b82f6",
   Imposter: "#e74c3c",
   Jackal: "#ff6600",
+  Viper: "#004b16",
   Assassin: "#9b59b6",
   Jester: "#00a008",
   Lovers: "#ff7abc"
@@ -941,6 +956,7 @@ const roleThemes = {
 const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
 const jackalContainer = document.getElementById("jackalContainer");
+const viperContainer = document.getElementById("viperContainer");
 const shieldContainer = document.getElementById("shieldContainer");
 const assassinContainer = document.getElementById("assassinContainer");
 const kingContainer = document.getElementById("kingContainer");
@@ -1273,6 +1289,7 @@ customItems = JSON.parse(localStorage.getItem("customItems")) || [];
 detectiveToggle.checked = JSON.parse(localStorage.getItem("detectiveEnabled")) || false;
 jesterToggle.checked = JSON.parse(localStorage.getItem("jesterEnabled")) || false;
 jackalToggle.checked = JSON.parse(localStorage.getItem("jackalEnabled")) || false;
+viperToggle.checked = JSON.parse(localStorage.getItem("viperEnabled")) || false;
 shieldToggle.checked = JSON.parse(localStorage.getItem("shieldEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
 kingToggle.checked = JSON.parse(localStorage.getItem("kingEnabled")) || false;
@@ -1916,6 +1933,9 @@ function revealAllRoles() {
     } else if (word === "Jackal") {
       roleName = "Jackal";
       roleClass = "jackal-role";
+    } else if (word === "Viper") {
+      roleName = "Viper";
+      roleClass = "viper-role";
     } else if (word === "Shield") {
       roleName = "Shield";
       roleClass = "shield-role";
@@ -2163,7 +2183,7 @@ flash.classList.add("shield-flash-active");
 
     <div class="roles-reveal-content">
       <hr>
-      <h3>${killedPlayer.name} has been eliminated!</h3>
+      <h3>${killedPlayer.name} has been splattered by a shield!</h3>
       <p>
         They were the 
         <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
@@ -2345,17 +2365,20 @@ const alivePlayers = players.filter(p => p.alive);
 
 const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
 
+const viperAlive = alivePlayers.find(p => p.role === "Viper");
+
 const impostorsAlive = alivePlayers.filter(p =>
   ["Imposter","Maniac","Shadow"].includes(p.role)
 );
 
 const crewAlive = alivePlayers.filter(p =>
-  !["Imposter","Maniac","Shadow","Jackal","Assassin","Jester"].includes(p.role)
+  !["Imposter","Jackal","Assassin","Viper"].includes(p.role)
 );
 
-// Impostors win ONLY if Jackal is dead
+// Impostors win ONLY if Jackal and Viper is dead
 if (
   !jackalAlive &&
+  !viperAlive &&
   impostorsAlive.length > 0 &&
   impostorsAlive.length >= crewAlive.length
 ) {
@@ -2368,18 +2391,38 @@ if (jackalAlive) {
 
   const nonJackalAlive = alivePlayers.filter(p => p.role !== "Jackal");
 
+}  // Viper win condition
+if (viperAlive) {
+
+  const nonviperAlive = alivePlayers.filter(p => p.role !== "Viper");
+
   // Jackal alone
   if (nonJackalAlive.length === 0) {
     endGame(`<strong>${jackalAlive.name} the Jackal wins alone!</strong>`,"Jackal");
     return true;
   }
 
+  // Viper alone
+  if (nonViperAlive.length === 0) {
+    endGame(`<strong>${viperAlive.name} the Viper wins alone!</strong>`,"Viper");
+    return true;
+  }
+
   // Jackal + 1 crew member
   if (
     nonJackalAlive.length === 1 &&
-    !["Imposter","Maniac","Shadow","Assassin","Jester"].includes(nonJackalAlive[0].role)
+    !["Imposter","Maniac","Shadow","Assassin","Jester", "Viper"].includes(nonJackalAlive[0].role)
   ) {
     endGame(`<strong>${jackalAlive.name}</strong> the Jackal wins!`,"Jackal");
+    return true;
+  }
+
+  // Viper + 1 crew member
+  if (
+    nonViperAlive.length === 1 &&
+    !["Imposter","Maniac","Shadow","Assassin","Jester","Jackal"].includes(nonViperAlive[0].role)
+  ) {
+    endGame(`<strong>${viperAlive.name}</strong> the Viper wins!`,"Viper");
     return true;
   }
 }
@@ -2389,7 +2432,8 @@ if (jackalAlive) {
   // - No jackal
   if (
     impostorsAlive.length === 0 &&
-    !jackalAlive
+    !jackalAlive &&
+    !viperAlive
   ) {
     endGame(`<strong>Crew wins!</strong>`,"Crew");
     return true;
@@ -2555,6 +2599,7 @@ function generateCards() {
   let useDetective = detectiveToggle.checked;
   let useJester = jesterToggle.checked;
   let useJackal = jackalToggle.checked;
+  let useViper = viperToggle.checked;
   let useShield = shieldToggle.checked;
   let useAssassin = assassinToggle.checked;
   let useClueless = cluelessToggle.checked;
@@ -2572,6 +2617,7 @@ function generateCards() {
       useDetective = false;
       useJester = false;
       useJackal = false;
+      useViper = false;
       useShield = false;
       useAssassin = false;
       useClueless = false;
@@ -2602,7 +2648,7 @@ function generateCards() {
       }
 
       // 3. Define pool of roles that consume a slot
-      let rolePool = ['detective', 'jester', 'jackal', 'assassin', 'echo', 'idiot', 'maniac', 'shadow', 'philosopher', 'shield'];
+      let rolePool = ['detective', 'jester', 'jackal', 'viper', 'assassin', 'echo', 'idiot', 'maniac', 'shadow', 'philosopher', 'shield'];
       
       // Only add clueless if valid (enough words)
       if (categoryItems.length >= 2) {
@@ -2622,6 +2668,7 @@ function generateCards() {
              if (role === 'detective') useDetective = true;
              if (role === 'jester') useJester = true;
              if (role === 'jackal') useJackal = true;
+             if (role === 'viper') useViper = true;
              if (role === 'shield') useShield = true;
              if (role === 'assassin') useAssassin = true;
              if (role === 'clueless') useClueless = true;
@@ -2649,6 +2696,7 @@ useKing = Math.random() < 0.5;
       if (useDetective) specialRolesCount++;
       if (useJester) specialRolesCount++;
       if (useJackal) specialRolesCount++;
+      if (useViper) specialRolesCount++;
       if (useShield) specialRolesCount++;
       if (useAssassin) specialRolesCount++;
       if (useClueless) specialRolesCount++;
@@ -2716,6 +2764,18 @@ useKing = Math.random() < 0.5;
       const idx = Math.floor(Math.random() * playerCount);
       if (words[idx] === "Civilian") {
         words[idx] = "Jackal";
+        assigned = true;
+      }
+    }
+  }
+
+  // Viper
+  if (useViper) {
+    let assigned = false;
+    while (!assigned) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (words[idx] === "Civilian") {
+        words[idx] = "Viper";
         assigned = true;
       }
     }
@@ -2880,7 +2940,7 @@ if (useLovers && playerCount >= 2) {
     
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
       for (let i = 0; i < words.length; i++) {
-        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Jackal" && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Maniac" && words[i] !== "Shadow" ) {
+        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Maniac" && words[i] !== "Shadow" ) {
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
           assassinTarget = i + 1;
           break;
@@ -2910,7 +2970,7 @@ function initializePlayers() {
 
     // If it's not a special role, it's Civilian
     const specialRoles = [
-      "Imposter","Detective","Jester","Jackal","Shield",
+      "Imposter","Detective","Jester","Jackal","Viper", "Shield",
       "Assassin","Clueless","Echo","Idiot","Philosopher",
       "Maniac","Shadow"
     ];
@@ -2977,6 +3037,7 @@ function initializePlayers() {
         if (targetWord === "Imposter") roleReveal = "Evil";
         else if (targetWord === "Jester") roleReveal = "Mentally ill";
         else if (targetWord === "Jackal") roleReveal = "Evil";
+        else if (targetWord === "Viper") roleReveal = "Evil";
         else if (targetWord === "Shield") roleReveal = "a Shield";
         else if (targetWord === "Assassin") roleReveal = "Evil";
         else if (targetWord === "Clueless") roleReveal = "Crew";
@@ -3043,6 +3104,12 @@ function initializePlayers() {
           const roleText = document.createElement("div");
           roleText.className = "jackal-role";
           roleText.textContent = "Jackal";
+          wordBox.appendChild(roleText);
+          } else if (word === "Viper") {
+          wordBox.textContent = "???";
+          const roleText = document.createElement("div");
+          roleText.className = "viper-role";
+          roleText.textContent = "Viper";
           wordBox.appendChild(roleText);
         } else if (word === "Shield") {
           wordBox.textContent = secretItem;
@@ -3143,7 +3210,10 @@ function initializePlayers() {
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
         } else if (word === "Jackal") {
           specialHint.className = "jackal-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive the impostor!`;
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
+        } else if (word === "Viper") {
+          specialHint.className = "viper-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone, instead of voting you may <strong>poison</strong> people! They die by the next vote!`;
         } else if (word === "Shield") {
           specialHint.className = "shield-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Deflect your voters! Eliminate Impostor!`;
@@ -3267,6 +3337,7 @@ randomizeToggle.addEventListener('change', () => {
   detectiveToggle.disabled = isDisabled;
   jesterToggle.disabled = isDisabled;
   jackalToggle.disabled = isDisabled;
+  viperToggle.disabled = isDisabled;
   shieldToggle.disabled = isDisabled;
   assassinToggle.disabled = isDisabled;
   kingToggle.disabled = isDisabled;
@@ -3279,7 +3350,7 @@ randomizeToggle.addEventListener('change', () => {
   shadowToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterContainer, jackalContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, philosopherContainer, maniacContainer, shadowContainer];
+  const containers = [detectiveContainer, jesterContainer, jackalContainer, viperContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, philosopherContainer, maniacContainer, shadowContainer];
   containers.forEach(container => {
     if (isDisabled) {
       container.classList.add('disabled');
@@ -3347,6 +3418,10 @@ jesterToggle.addEventListener("change", () => {
 
 jackalToggle.addEventListener("change", () => {
   localStorage.setItem("jackalEnabled", jackalToggle.checked);
+});
+
+viperToggle.addEventListener("change", () => {
+  localStorage.setItem("viperEnabled", viperToggle.checked);
 });
 
 shieldToggle.addEventListener("change", () => {
