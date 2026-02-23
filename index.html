@@ -1810,6 +1810,11 @@ startVotingBtn.addEventListener("click", startVotingPhase);
 
 function startVotingPhase() {
   startVotingBtn.style.display = "none";
+
+  if (players.length === 0) {
+    initializePlayers();
+  }
+
   currentVoterIndex = 0;
   votes = {};
   showNextVoter();
