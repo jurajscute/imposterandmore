@@ -2100,10 +2100,42 @@ if (eliminatedPlayer.role === "Shield") {
     btn.className = "reveal-roles-btn";
     btn.style.marginBottom = "8px";
 
-    btn.onclick = () => {
-      obj.player.alive = false;
-      nextRound();
-    };
+   btn.onclick = () => {
+
+  const killedPlayer = obj.player;
+  killedPlayer.alive = false;
+
+  // Clear votes
+  players.forEach(p => p.vote = null);
+  votes = {};
+
+  // Show Shield kill result screen
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3 style="color:${roleColors["Shield"]}; text-shadow:0 0 10px ${roleColors["Shield"]};">
+        ${eliminatedPlayer.name}'s Shield activates!
+      </h3>
+    </div>
+
+    <div class="roles-reveal-content">
+      <hr>
+      <h3>${killedPlayer.name} has been brutally smashed with a shield!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
+          ${killedPlayer.role}
+        </span>
+      </p>
+
+      <br><br>
+      <button id="continueBtn" class="reveal-roles-btn">
+        Continue
+      </button>
+    </div>
+  `;
+
+  document.getElementById("continueBtn").onclick = nextRound;
+};
 
     shieldOptions.appendChild(btn);
   });
