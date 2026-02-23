@@ -1635,6 +1635,14 @@ function updateTracker() {
   }
   
   revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
+
+  // ✅ When everyone has seen their role
+  if (revealedCards === totalCards) {
+    document.getElementById("startVotingBtn").style.display = "block";
+  }
+}
+  
+  revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
   
   if (lockedCards === totalCards && totalCards > 0) {
     // Announce king player after all cards are locked
@@ -1802,7 +1810,6 @@ listContainer.appendChild(li);
   rolesRevealBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 /* ===== VOTING FEATURE ===== */
-document.getElementById("startVotingBtn").style.display = "block";
 const startVotingBtn = document.getElementById("startVotingBtn");
 const votingBox = document.getElementById("votingBox");
 
@@ -1845,7 +1852,7 @@ function showNextVoter() {
   const voteOptions = document.getElementById("voteOptions");
 
   players.forEach((player, index) => {
-    if (player.alive && index !== currentVoterIndex) {
+    if (player.alive) {
       const btn = document.createElement("button");
       btn.textContent = player.name;
       btn.className = "reveal-roles-btn";
