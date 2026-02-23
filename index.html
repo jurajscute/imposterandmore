@@ -336,21 +336,7 @@
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-.animated-win {
-  background: linear-gradient(
-    270deg,
-    #ff3c3c,
-    #8b0000,
-    #ff0000,
-    #5c0000
-  );
-
-  background-size: 400% 400%;
-  animation: gradientShift 12s linear infinite;
-}
-
+} 
 /* ===== Fade In ===== */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
@@ -2184,11 +2170,8 @@ function shadeColor(color, percent) {
 
 function endGame(message, winningRole = null) {
 
-  // Remove old classes (optional but cleaner)
-  votingBox.className = "";
-
-  // Add animated background
-  votingBox.classList.add("animated-win");
+  // Reset classes but keep base layout class if you have one
+  votingBox.className = "voting-box";
 
   let color = "#ffffff";
 
@@ -2196,9 +2179,20 @@ function endGame(message, winningRole = null) {
     color = roleColors[winningRole];
   }
 
+  // Create lighter + darker shades
+  const darker = shadeColor(color, -40);
+  const lighter = shadeColor(color, 40);
+
+  // Apply animated gradient dynamically
+  votingBox.style.background = `
+    linear-gradient(270deg, ${color}, ${darker}, ${lighter}, ${color})
+  `;
+  votingBox.style.backgroundSize = "400% 400%";
+  votingBox.style.animation = "gradientShift 12s linear infinite";
+
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
-      <h2 style="color:${color}; text-shadow: 0 0 12px ${color};">
+      <h2 style="color:white; text-shadow: 0 0 12px ${color};">
         ${message}
       </h2>
     </div>
