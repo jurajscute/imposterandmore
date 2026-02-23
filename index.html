@@ -744,9 +744,7 @@
     <button class="toggle-player-names" id="showPlayerNamesBtn">Customize Player Names</button>
   </div>
 
-  <button id="revealAllBtn" class="reveal-roles-btn">
-  Reveal All Roles
-</button>
+  <button id="revealRolesBtn">Reveal All Roles</button>
 
   <div id="error" class="error"></div>
   
@@ -3210,9 +3208,17 @@ customSubjectInput.addEventListener("keypress", (e) => {
   }
 });
 
-changeSubjectBtn.addEventListener("click", changeSubject);
-generateBtn.addEventListener("click", generateCards);
-revealRolesBtn.addEventListener("click", revealAllRoles);
+if (changeSubjectBtn) {
+  changeSubjectBtn.addEventListener("click", changeSubject);
+}
+
+if (generateBtn) {
+  generateBtn.addEventListener("click", generateCards);
+}
+
+if (revealRolesBtn) {
+  revealRolesBtn.addEventListener("click", revealAllRoles);
+}
 
 // Player names event listeners
 resetNamesBtn.addEventListener("click", resetPlayerNames);
