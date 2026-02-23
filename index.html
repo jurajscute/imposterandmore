@@ -2767,6 +2767,10 @@ if (useLovers && playerCount >= 2) {
   }
 
   initializePlayers();
+const revealBtn = document.getElementById("revealRolesBtn");
+if (revealBtn) {
+  revealBtn.style.display = "block";
+}
 
 function initializePlayers() {
   players = [];
