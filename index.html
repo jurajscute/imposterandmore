@@ -744,8 +744,6 @@
     <button class="toggle-player-names" id="showPlayerNamesBtn">Customize Player Names</button>
   </div>
 
-  <button id="revealRolesBtn">Reveal All Roles</button>
-
   <div id="error" class="error"></div>
   
   <div id="cardsContainer" class="cards"></div>
@@ -754,6 +752,8 @@
     <div id="revealTracker" class="reveal-tracker"></div>
     <div id="kingAnnouncement" class="king-announcement"></div>
     <div id="firstPlayer" class="first-player"></div>
+    <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
+    <div id="rolesRevealBox" class="roles-reveal-box"></div>
   </div>
 
 <button id="startVotingBtn" class="reveal-roles-btn" style="display:none;">
@@ -1946,75 +1946,6 @@ listContainer.appendChild(li);
   revealRolesBtn.style.display = 'none';
   rolesRevealBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
-
-// REVEAL BUTTON!
-document.addEventListener("DOMContentLoaded", function() {
-
-  const revealAllBtn = document.getElementById("revealAllBtn");
-  if (revealAllBtn) {
-    revealAllBtn.style.display = "none";
-  }
-
-});
-document.addEventListener("DOMContentLoaded", function() {
-
-  const changeSubjectBtn = document.getElementById("changeSubjectBtn");
-  const generateBtn = document.getElementById("generateBtn");
-  const revealRolesBtn = document.getElementById("revealRolesBtn");
-  const revealAllBtn = document.getElementById("revealAllBtn");
-
-  if (changeSubjectBtn)
-    changeSubjectBtn.addEventListener("click", changeSubject);
-
-  if (generateBtn)
-    generateBtn.addEventListener("click", generateCards);
-
-  if (revealRolesBtn)
-    revealRolesBtn.addEventListener("click", revealAllRoles);
-
-  if (revealAllBtn)
-    revealAllBtn.addEventListener("click", revealAllRoles);
-
-});
-
-function revealAllRoles() {
-
-  let revealHTML = `
-    <div class="roles-reveal-header">
-      <h3>All Roles</h3>
-    </div>
-    <div class="roles-reveal-content">
-  `;
-
-  players.forEach(player => {
-
-    const roleColor = roleColors[player.role] || "#ffffff";
-
-    revealHTML += `
-      <p>
-        <strong>${player.name}</strong> — 
-        <span style="
-          color:${roleColor};
-          font-weight:bold;
-          text-shadow:0 0 6px ${roleColor};
-        ">
-          ${player.role}
-        </span>
-      </p>
-    `;
-  });
-
-  revealHTML += `
-      <br>
-      <button onclick="location.reload()" class="reveal-roles-btn">
-        New Game
-      </button>
-    </div>
-  `;
-
-  votingBox.innerHTML = revealHTML;
-}
-
 /* ===== VOTING FEATURE ===== */
 const startVotingBtn = document.getElementById("startVotingBtn");
 const votingBox = document.getElementById("votingBox");
@@ -2086,20 +2017,15 @@ function castVote(targetIndex) {
 
   players[currentVoterIndex].vote = targetIndex;
 
-  // 🧠 Maniac vote does NOT count
-  if (voter.role !== "Maniac") {
+  const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
 
-    const voteWeight = (currentVoterIndex === kingPlayer) ? 2 : 1;
-
-    if (!votes[targetIndex]) {
-      votes[targetIndex] = 0;
-    }
-
-    votes[targetIndex] += voteWeight;
-
+  if (!votes[targetIndex]) {
+    votes[targetIndex] = 0;
   }
 
-  // Smooth transition
+  votes[targetIndex] += voteWeight;
+
+  // Animate whole voting box out
   votingBox.classList.add("fade-out-vote");
 
   setTimeout(() => {
@@ -2357,7 +2283,6 @@ function shadeColor(color, percent) {
 }
 
 function endGame(message, winningRole = null) {
-  revealAllBtn.style.display = "block";
 
   let color = "#ffffff";
 
@@ -2412,12 +2337,8 @@ function generateCards() {
   firstPlayerBox.classList.remove('show');
   firstPlayerBox.textContent = '';
   revealRolesBtn.style.display = 'none';
-  if (rolesRevealBox) {
   rolesRevealBox.classList.remove('show');
-}
- if (rolesRevealBox) {
-  rolesRevealBox.innerHTML = "...";
-}
+  rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
   errorBox.textContent = "";
@@ -3236,17 +3157,9 @@ customSubjectInput.addEventListener("keypress", (e) => {
   }
 });
 
-if (changeSubjectBtn) {
-  changeSubjectBtn.addEventListener("click", changeSubject);
-}
-
-if (generateBtn) {
-  generateBtn.addEventListener("click", generateCards);
-}
-
-if (revealRolesBtn) {
-  revealRolesBtn.addEventListener("click", revealAllRoles);
-}
+changeSubjectBtn.addEventListener("click", changeSubject);
+generateBtn.addEventListener("click", generateCards);
+revealRolesBtn.addEventListener("click", revealAllRoles);
 
 // Player names event listeners
 resetNamesBtn.addEventListener("click", resetPlayerNames);
