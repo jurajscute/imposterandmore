@@ -744,6 +744,10 @@
     <button class="toggle-player-names" id="showPlayerNamesBtn">Customize Player Names</button>
   </div>
 
+  <button id="revealRolesBtn" class="btn" style="display:none;">
+  Reveal All Roles
+</button>
+
   <div id="error" class="error"></div>
   
   <div id="cardsContainer" class="cards"></div>
@@ -1828,7 +1832,10 @@ function selectFirstPlayer() {
     
     firstPlayerBox.textContent = firstPlayerText;
     firstPlayerBox.classList.add('show');
-    revealRolesBtn.style.display = 'block';
+    const revealBtn = document.getElementById("revealRolesBtn");
+if (revealBtn) {
+  revealBtn.style.display = "block";
+}
     firstPlayerBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 }
