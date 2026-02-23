@@ -2330,6 +2330,8 @@ if (useLovers && playerCount >= 2) {
   const shuffledWords = indices.map(i => words[i]);
   words = shuffledWords;
 
+  initializePlayers();
+
   // Re-map Assassin Target & King
   if (useAssassin && assassinIndex !== null && assassinTarget !== null) {
     let newAssassinIndex = null;
@@ -2363,20 +2365,24 @@ if (useLovers && playerCount >= 2) {
     kingPlayer = newKingIndex;
   }
 
+  initializePlayers();
+
 function initializePlayers() {
   players = [];
 
-  for (let i = 0; i < totalCards; i++) {
+  for (let i = 0; i < playerCount; i++) {
     players.push({
       name: playerNames[i] || `Player ${i + 1}`,
-      role: words[i],   // your role storage
+      role: words[i],
       alive: true,
-      vote: null
+      vote: null,
+      isLover: loverIndexes.includes(i)
     });
   }
+
+  console.log("Players initialized:", players);
 }
 
-initializePlayers();
 
   // --- CARD GENERATION ---
   cardsContainer.innerHTML = "";
