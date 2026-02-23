@@ -1948,9 +1948,14 @@ listContainer.appendChild(li);
 }
 
 // REVEAL BUTTON!
-const revealAllBtn = document.getElementById("revealAllBtn");
-revealAllBtn.style.display = "none";
+document.addEventListener("DOMContentLoaded", function() {
 
+  const revealAllBtn = document.getElementById("revealAllBtn");
+  if (revealAllBtn) {
+    revealAllBtn.style.display = "none";
+  }
+
+});
 revealAllBtn.addEventListener("click", revealAllRoles);
 
 function revealAllRoles() {
