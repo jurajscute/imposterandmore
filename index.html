@@ -102,6 +102,7 @@
     .role-card.philosopher { border-left-color: #2b99ff; } .philosopher .role-icon { background: #2b99ff; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
     .role-card.shadow { border-left-color: #2b2b2b; } .shadow .role-icon { background: #2b2b2b; }
+    hellos
     
     .role-card h4 { margin: 0 0 12px; font-size: 18px; font-weight: 700; color: #111; display: flex; align-items: center; gap: 8px; }
     .role-card .role-icon { width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; }
@@ -756,6 +757,28 @@ const idiotToggle = document.getElementById("idiotToggle");
 const philosopherToggle = document.getElementById("philosopherToggle");
 const maniacToggle = document.getElementById("maniacToggle");
 const shadowToggle = document.getElementById("shadowToggle");
+
+// Role colors hellos
+const roleColors = {
+  "Imposter": "#dc2626",
+  "Maniac": "#530000",
+  "Shadow": "2b2b2b",
+
+  "Detective": "#10b981",
+  "Philosopher": "#2b99ff",
+  "Clueless": "#06b6d4",
+  "Echo": "#6368ba",
+  "Idiot": "#d9ff00",
+  "Shield": "#0025a0",
+
+  "Jackal": "#ff6600",
+  "Jester": "#00a008",
+  "Assassin": "#8b5cf6",
+
+  "Lovers": "#ff7abc",
+
+  "Crew": "#3b82f6"
+};
 
 // Containers for visual disabling
 const detectiveContainer = document.getElementById("detectiveContainer");
@@ -1913,7 +1936,7 @@ if (eliminatedIndex !== null) {
   // ❤️ Lovers win (only 2 alive and both lovers)
   const loversAlive = alivePlayers.filter(p => p.isLover);
   if (loversAlive.length === 2 && alivePlayers.length === 2) {
-    endGame("The Lovers win together!");
+    endGame(`<strong>The Lovers win!</strong>`,"Lovers");
     return;
   }
 
@@ -1921,7 +1944,7 @@ if (eliminatedIndex !== null) {
 const assassinEnabled = document.getElementById("assassinToggle").checked;
 let assassinPlayer = players.find(p => p.role === "Assassin");
 
-// 🎭 + 🗡 Combo win
+// 🎭 + 🗡 Jester & Assassin combo win
 if (
   assassinEnabled &&
   assassinPlayer &&
@@ -1929,13 +1952,33 @@ if (
   eliminatedPlayer.role === "Jester" &&
   eliminatedIndex === assassinTarget - 1
 ) {
-  endGame(`${eliminatedPlayer.name} (Jester) AND ${assassinPlayer.name} (Assassin) both win!`);
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>
+        <span style="color:${roleColors["Jester"]}; text-shadow:0 0 8px ${roleColors["Jester"]};">
+          <strong>${eliminatedPlayer.name} the Jester</strong>
+        </span>
+        <span style="color:white;"> AND </span>
+        <span style="color:${roleColors["Assassin"]}; text-shadow:0 0 8px ${roleColors["Assassin"]};">
+          <strong>${assassinPlayer.name} the Assassin</strong>
+        </span>
+        both win!
+      </h2>
+    </div>
+    <div class="roles-reveal-content">
+      <button onclick="location.reload()" class="reveal-roles-btn">
+        New Game
+      </button>
+    </div>
+  `;
+
   return;
 }
 
 // 🎭 Jester solo
 if (eliminatedPlayer.role === "Jester") {
-  endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
+  endGame(`<strong>${eliminatedPlayer.name} Jester</strong> wins by getting voted out!`,"Jester");
   return;
 }
 
@@ -1947,7 +1990,7 @@ if (
   eliminatedIndex === assassinTarget - 1 &&
   assassinPlayer.alive
 ) {
-  endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+  endGame(`<strong>${assassinPlayer.name} the Assassin wins!</strong> Their target was voted out.`,"Assassin");
   return;
 
   }
@@ -1973,7 +2016,7 @@ function showVotingResults(eliminatedIndex) {
     resultsHTML += `
       <hr>
       <h3>${players[eliminatedIndex].name} has been eliminated!</h3>
-      <p>They were: ${players[eliminatedIndex].role}</p>
+      <p>They were the ${players[eliminatedIndex].role}!</p>
     `;
   }
 
@@ -2014,36 +2057,57 @@ function checkWinCondition() {
     !["Imposter","Maniac","Shadow","Jackal","Assassin","Jester"].includes(p.role)
   );
 
-  // 🐺 Jackal solo win
-  if (jackalAlive && alivePlayers.length === 1) {
-    endGame(`${jackalAlive.name} (Jackal) wins alone!`);
+ // Jackal win condition
+if (jackalAlive) {
+
+  const nonJackalAlive = alivePlayers.filter(p => p.role !== "Jackal");
+
+  // Jackal alone
+  if (nonJackalAlive.length === 0) {
+    endGame(`<strong>${jackalAlive.name} the Jackal wins alone!</strong>`,"Jackal");
     return true;
   }
+
+  // Jackal + 1 crew member
+  if (
+    nonJackalAlive.length === 1 &&
+    !["Imposter","Maniac","Shadow","Assassin","Jester"].includes(nonJackalAlive[0].role)
+  ) {
+    endGame(`<strong>${jackalAlive.name}</strong> the Jackal wins!`,"Jackal");
+    return true;
+  }
+}
 
   // Impostors win
   if (impostorsAlive.length > 0 && impostorsAlive.length >= crewAlive.length) {
-    endGame("Impostors win!");
+    endGame(`<strong>Impostors win!</strong>`,"Imposter");
     return true;
   }
 
-  // 🟦 Crew wins ONLY if:
+  // Crew wins ONLY if:
   // - No impostors
   // - No jackal
   if (
     impostorsAlive.length === 0 &&
     !jackalAlive
   ) {
-    endGame("Crew wins!");
+    endGame(`<strong>Crew wins!</strong>`,"Crew");
     return true;
   }
 
   return false;
 }
-function endGame(message) {
+function endGame(message, winningRole = null) {
+
+  let color = "#ffffff"; // default white
+
+  if (winningRole && roleColors[winningRole]) {
+    color = roleColors[winningRole];
+  }
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
-      <h2>${message}</h2>
+      <h2 style="color:${color}; text-shadow: 0 0 10px ${color};">
     </div>
     <div class="roles-reveal-content">
       <button onclick="location.reload()" class="reveal-roles-btn">
