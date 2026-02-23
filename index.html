@@ -329,6 +329,16 @@
   text-shadow: 0 0 8px currentColor;
 }
 
+/* Fade Out Animation */
+@keyframes fadeOutBtn {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.95); }
+}
+
+.fade-out {
+  animation: fadeOutBtn 0.4s ease forwards;
+}
+
 /* ===== Glow Pulse ===== */
 @keyframes glowPulse {
   0% { box-shadow: 0 0 10px currentColor; }
@@ -1886,8 +1896,16 @@ startVotingBtn.addEventListener("click", startVotingPhase);
 
 function startVotingPhase() {
 
-  currentVoterIndex = 0;   
-  votes = {};              
+  // Fade out button
+  startVotingBtn.classList.add("fade-out");
+
+  // After animation finishes, hide it completely
+  setTimeout(() => {
+    startVotingBtn.style.display = "none";
+  }, 400); // match animation duration
+
+  currentVoterIndex = 0;
+  votes = {};
 
   showNextVoter();
 }
