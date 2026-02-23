@@ -416,29 +416,43 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* ===== Shield Activation Transition ===== */
+/* ===== Full Screen Shield Flash ===== */
 
-@keyframes shieldFlash {
+#shieldFlashOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.85) 0%,
+    rgba(120,200,255,0.75) 40%,
+    rgba(0,120,255,0.6) 70%,
+    rgba(0,0,0,0) 100%
+  );
+
+  opacity: 0;
+}
+
+/* Flash animation */
+@keyframes shieldFullFlash {
   0% {
-    background-color: rgba(0, 150, 255, 0);
-    transform: scale(0.97);
     opacity: 0;
   }
-
   40% {
-    background-color: rgba(0, 150, 255, 0.35);
-    transform: scale(1.02);
     opacity: 1;
   }
-
   100% {
-    background-color: rgba(0, 150, 255, 0);
-    transform: scale(1);
+    opacity: 0;
   }
 }
 
-.shield-transition {
-  animation: shieldFlash 0.9s ease-out forwards;
+.shield-flash-active {
+  animation: shieldFullFlash 0.7s ease-out forwards;
 }
   </style>
 </head>
@@ -2134,9 +2148,11 @@ if (eliminatedPlayer.role === "Shield") {
   votes = {};
 
   // 🔥 Blue flash animation
-  votingBox.classList.remove("shield-transition");
-  void votingBox.offsetWidth;
-  votingBox.classList.add("shield-transition");
+const flash = document.getElementById("shieldFlashOverlay");
+
+flash.classList.remove("shield-flash-active");
+void flash.offsetWidth; // restart animation
+flash.classList.add("shield-flash-active");
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
@@ -3425,5 +3441,6 @@ aiModalOverlay.addEventListener('click', (e) => {
   if (e.target === aiModalOverlay) closeAiModal();
 });
 </script>
+<div id="shieldFlashOverlay"></div>
 </body>
 </html>
