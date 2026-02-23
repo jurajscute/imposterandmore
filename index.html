@@ -2006,35 +2006,38 @@ function checkWinCondition() {
 
   const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
 
+  const impostorsAlive = alivePlayers.filter(p =>
+    ["Imposter"].includes(p.role)
+  );
+
+  const crewAlive = alivePlayers.filter(p =>
+    !["Imposter","Maniac","Shadow","Jackal","Assassin","Jester"].includes(p.role)
+  );
+
   // 🐺 Jackal solo win
   if (jackalAlive && alivePlayers.length === 1) {
     endGame(`${jackalAlive.name} (Jackal) wins alone!`);
     return true;
   }
 
-  const impostorsAlive = alivePlayers.filter(p =>
-    p.role === "Imposter" ||
-    p.role === "Maniac" ||
-    p.role === "Shadow"
-  );
-
-  const crewAlive = alivePlayers.filter(p =>
-    !["Imposter","Maniac","Shadow, Jackal"].includes(p.role)
-  );
-
   // Impostors win
-  if (impostorsAlive.length >= crewAlive.length) {
+  if (impostorsAlive.length > 0 && impostorsAlive.length >= crewAlive.length) {
     endGame("Impostors win!");
     return true;
   }
 
-  // Crew wins
-  if (impostorsAlive.length === 0) {
+  // 🟦 Crew wins ONLY if:
+  // - No impostors
+  // - No jackal
+  if (
+    impostorsAlive.length === 0 &&
+    !jackalAlive
+  ) {
     endGame("Crew wins!");
     return true;
   }
 
-  return false; // continue game
+  return false;
 }
 function endGame(message) {
 
@@ -2577,7 +2580,7 @@ function initializePlayers() {
         else if (targetWord === "Assassin") roleReveal = "Evil";
         else if (targetWord === "Clueless") roleReveal = "Crew";
         else if (targetWord === "Echo") roleReveal = "an Echo";
-        else if (targetWord === "Idiot") roleReveal = "an Idiot";
+        else if (targetWord === "Idiot") roleReveal = "Mentally ill";
         else if (targetWord === "Philosopher") roleReveal = "a Philosopher";
         else if (targetWord === "Maniac") roleReveal = "Mentally ill";
         else if (targetWord === "Shadow") roleReveal = "Evil";
