@@ -1893,10 +1893,56 @@ function finishVoting() {
     }
   }
 
-  if (eliminatedIndex !== null) {
-    players[eliminatedIndex].alive = false;
+if (eliminatedIndex !== null) {
+
+  const eliminatedPlayer = players[eliminatedIndex];
+  eliminatedPlayer.alive = false;
+
+  // ❤️ Lovers die together
+  if (eliminatedPlayer.isLover) {
+
+    const otherLover = players.find((p, index) =>
+      p.isLover && index !== eliminatedIndex && p.alive
+    );
+
+    if (otherLover) {
+      otherLover.alive = false;
+    }
+  }
+  const alivePlayers = players.filter(p => p.alive);
+const loversAlive = alivePlayers.filter(p => p.isLover);
+
+if (loversAlive.length === 2 && alivePlayers.length === 2) {
+  endGame("The Lovers win together!");
+  return true;
+}
+
+  // 🎭 Jester
+  if (eliminatedPlayer.role === "Jester") {
+    endGame(`${eliminatedPlayer.name} (Jester) wins by getting voted out!`);
+    return;
+  if (eliminatedPlayer.role === "Jester" && eliminatedIndex === targetIndex) {
+  endGame("Jester AND Assassin both win!");
+  return;
+}
   }
 
+  // 🗡 Assassin
+  if (useAssassin && assassinTarget !== null) {
+
+    const targetIndex = assassinTarget - 1;
+
+    const assassinAlive = players.some(p =>
+      p.role === "Assassin" && p.alive
+    );
+
+    if (eliminatedIndex === targetIndex && assassinAlive) {
+      const assassinPlayer = players.find(p => p.role === "Assassin");
+      endGame(`${assassinPlayer.name} (Assassin) wins! Their target was voted out.`);
+      return;
+    }
+  }
+}
   showVotingResults(eliminatedIndex);
 }
 function showVotingResults(eliminatedIndex) {
@@ -1950,6 +1996,14 @@ function nextRound() {
 function checkWinCondition() {
 
   const alivePlayers = players.filter(p => p.alive);
+
+  const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
+
+  // 🐺 Jackal solo win
+  if (jackalAlive && alivePlayers.length === 1) {
+    endGame(`${jackalAlive.name} (Jackal) wins alone!`);
+    return true;
+  }
 
   const impostorsAlive = alivePlayers.filter(p =>
     p.role === "Imposter" ||
