@@ -311,6 +311,11 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
 }
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
   </style>
 </head>
 
@@ -758,7 +763,7 @@ const philosopherToggle = document.getElementById("philosopherToggle");
 const maniacToggle = document.getElementById("maniacToggle");
 const shadowToggle = document.getElementById("shadowToggle");
 
-// Role colors hellos
+// Role colors
 const roleColors = {
   "Imposter": "#dc2626",
   "Maniac": "#530000",
@@ -778,6 +783,16 @@ const roleColors = {
   "Lovers": "#ff7abc",
 
   "Crew": "#3b82f6"
+};
+
+// Role themes
+const roleThemes = {
+  Crew: "#3b82f6",
+  Imposter: "#e74c3c",
+  Jackal: "#ff6600",
+  Assassin: "#9b59b6",
+  Jester: "#00a008",
+  Lovers: "#ff7abc"
 };
 
 // Containers for visual disabling
@@ -1953,20 +1968,41 @@ if (
   eliminatedIndex === assassinTarget - 1
 ) {
 
+  const jesterColor = roleColors["Jester"];
+  const assassinColor = roleColors["Assassin"];
+
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2>
-        <span style="color:${roleColors["Jester"]}; text-shadow:0 0 8px ${roleColors["Jester"]};">
-          <strong>${eliminatedPlayer.name} the Jester</strong>
+    <div class="roles-reveal-header"
+         style="
+           background: linear-gradient(-45deg, ${jesterColor}, ${assassinColor}, ${jesterColor});
+background-size: 400% 400%;
+animation: gradientShift 6s ease infinite;
+           color: black;
+         ">
+      <h2 style="font-weight: bold;">
+
+        <span style="
+          color:${jesterColor};
+          text-shadow:0 0 12px ${jesterColor};
+        ">
+          ${eliminatedPlayer.name} the Jester
         </span>
-        <span style="color:white;"> AND </span>
-        <span style="color:${roleColors["Assassin"]}; text-shadow:0 0 8px ${roleColors["Assassin"]};">
-          <strong>${assassinPlayer.name} the Assassin</strong>
+
+        <span style="color:black;"> AND </span>
+
+        <span style="
+          color:${assassinColor};
+          text-shadow:0 0 12px ${assassinColor};
+        ">
+          ${assassinPlayer.name} the Assassin
         </span>
+
         both win!
       </h2>
     </div>
-    <div class="roles-reveal-content">
+
+    <div class="roles-reveal-content"
+         style="background:#f4f4f4;">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
@@ -2097,21 +2133,27 @@ if (jackalAlive) {
 
   return false;
 }
+
 function endGame(message, winningRole = null) {
 
-  let color = "#ffffff";
+  let themeColor = "#444"; // default
 
-  if (winningRole && roleColors[winningRole]) {
-    color = roleColors[winningRole];
+  if (winningRole && roleThemes[winningRole]) {
+    themeColor = roleThemes[winningRole];
   }
 
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2 style="color:${color}; text-shadow: 0 0 10px ${color};">
+    <div class="roles-reveal-header" 
+         style="
+           background: linear-gradient(135deg, ${themeColor}, black);
+           color: white;
+         ">
+      <h2 style="text-shadow: 0 0 15px ${themeColor};">
         ${message}
       </h2>
     </div>
-    <div class="roles-reveal-content">
+    <div class="roles-reveal-content" 
+         style="background:${themeColor}22;">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
