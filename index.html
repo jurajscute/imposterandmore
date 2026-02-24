@@ -2079,7 +2079,19 @@ listContainer.appendChild(li);
 const startVotingBtn = document.getElementById("startVotingBtn");
 const votingBox = document.getElementById("votingBox");
 
-startVotingBtn.addEventListener("click", startVotingPhase);
+startVotingBtn.addEventListener("click", () => {
+
+  // Show voting screen
+  votingBox.style.display = "block";
+
+  // Hide the button
+  startVotingBtn.style.display = "none";
+
+  // Generate voting UI
+  votingBox.innerHTML = startVotingPhase(); // or whatever you're using
+
+  votingBox.style.display = "block";
+});
 
 function startVotingPhase() {
 
