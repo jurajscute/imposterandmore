@@ -2129,32 +2129,28 @@ function castVote(targetIndex) {
     voteWeight = 0;
   }
 
-  // Add vote
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
   }
 
   votes[targetIndex] += voteWeight;
 
-  // 🐍 If Viper voted → open poison screen BEFORE continuing
+  // 🐍 VIPER SPECIAL LOGIC
   if (voter.role === "Viper" && !viperChoosingPoison) {
 
     viperChoosingPoison = true;
 
-    // DO NOT fade here
     showPoisonScreen();
-    return;
+
+    return; // STOP here — do NOT increment index yet
   }
 
-  // ✅ Normal voters fade
-  votingBox.classList.add("fade-out-vote");
-
+  // Normal voter flow
   currentVoterIndex++;
 
   setTimeout(() => {
-    votingBox.classList.remove("fade-out-vote"); // reset animation
     showNextVoter();
-  }, 200); // slightly smoother timing
+  }, 150);
 }
 
 function showPoisonScreen() {
@@ -2162,13 +2158,8 @@ function showPoisonScreen() {
   const viper = players[currentVoterIndex];
 
   votingBox.innerHTML = `
-    <div class="roles-reveal-header poison-header">
-      <h3>
-        🐍 ${viper.name}, choose who to <span class="poison-text">POISON</span>
-      </h3>
-      <p class="poison-subtext">
-        This player will die after voting ends.
-      </p>
+    <div class="roles-reveal-header">
+      <h3>🐍 ${viper.name}, choose who to <span class="poison-text">POISON</span></h3>
     </div>
     <div class="roles-reveal-content" id="poisonOptions"></div>
   `;
@@ -2181,38 +2172,24 @@ function showPoisonScreen() {
 
       const btn = document.createElement("button");
       btn.textContent = player.name;
-      btn.className = "reveal-roles-btn poison-btn";
-      btn.style.marginBottom = "8px";
+      btn.className = "reveal-roles-btn";
 
       btn.onclick = () => {
 
         poisonedTarget = index;
-
         viperChoosingPoison = false;
 
-        currentVoterIndex++;
+        currentVoterIndex++; // increment ONLY after poison chosen
 
         setTimeout(() => {
           showNextVoter();
-        }, 200);
+        }, 150);
       };
 
       poisonOptions.appendChild(btn);
     }
   });
 }
-
-function finishVoting() {
-
-  let maxVotes = 0;
-  let eliminatedIndex = null;
-
-  for (let index in votes) {
-    if (votes[index] > maxVotes) {
-      maxVotes = votes[index];
-      eliminatedIndex = parseInt(index);
-    }
-  }
 
 if (eliminatedIndex !== null) {
 
