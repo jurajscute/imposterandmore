@@ -2759,6 +2759,15 @@ function updateRoleVisuals() {
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
 
+// Reset reveal + voting UI
+firstPlayerBox.classList.remove("show");
+firstPlayerBox.textContent = "";
+
+votingBox.innerHTML = "";
+votingBox.style.display = "none";
+
+startVotingBtn.style.display = "none";
+
 revealedCards = 0;
 lockedCards = 0;
 firstPlayerBox.classList.remove("show");
