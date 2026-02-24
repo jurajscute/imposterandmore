@@ -2734,51 +2734,12 @@ function getEnabledRoles() {
 }
 
 function updateRoleAvailability() {
-
   const allToggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
 
-  const civilianRoles = [
-    "detective",
-    "jester",
-    "jackal",
-    "viper",
-    "shield",
-    "assassin",
-    "clueless",
-    "echo",
-    "idiot",
-    "philosopher",
-    "maniac",
-    "shadow"
-  ];
-
-  // Re-enable everything first
+  // Never disable anything
   allToggles.forEach(toggle => {
     toggle.disabled = false;
   });
-
-  const playerCount = parseInt(playerSlider.value, 10);
-  const imposterCount = parseInt(imposterSlider.value, 10);
-
-  const civilianSlots = playerCount - imposterCount;
-  const maxSpecialRoles = Math.max(0, civilianSlots);
-
-  let selectedCivilianRoles = 0;
-
-  allToggles.forEach(toggle => {
-    if (toggle.checked && civilianRoles.includes(toggle.name)) {
-      selectedCivilianRoles++;
-    }
-  });
-
-  if (selectedCivilianRoles >= maxSpecialRoles) {
-    allToggles.forEach(toggle => {
-      if (!toggle.checked && civilianRoles.includes(toggle.name)) {
-        toggle.disabled = true;
-      }
-    });
-  }
-
 }
 
 function updateRoleVisuals() {
