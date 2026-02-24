@@ -1959,6 +1959,11 @@ function selectFirstPlayer() {
     // 👇 SHOW START VOTING BUTTON HERE
     startVotingBtn.style.display = "block";
 startVotingBtn.classList.add("show");
+console.log("Button shown");
+setTimeout(() => {
+  console.log("After 300ms:", window.getComputedStyle(startVotingBtn).opacity);
+  console.log("Parent opacity:", window.getComputedStyle(startVotingBtn.parentElement).opacity);
+}, 300);
 
   }, 500);
 }
