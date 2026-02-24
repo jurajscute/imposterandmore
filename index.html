@@ -333,6 +333,38 @@
   text-shadow: 0 0 8px currentColor;
 }
 
+/* Poison screen header */
+.poison-header {
+  animation: fadeIn 0.4s ease;
+}
+
+/* Green poison word */
+.poison-text {
+  color: #2bff88;
+  text-shadow: 0 0 8px #2bff88;
+  animation: poisonPulse 1.5s infinite;
+}
+
+/* Subtext */
+.poison-subtext {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 6px;
+}
+
+/* Poison buttons slightly tinted */
+.poison-btn {
+  border: 2px solid #2bff88;
+  box-shadow: 0 0 8px rgba(43,255,136,0.4);
+}
+
+/* Glow pulse animation */
+@keyframes poisonPulse {
+  0%   { text-shadow: 0 0 5px #2bff88; }
+  50%  { text-shadow: 0 0 20px #2bff88; }
+  100% { text-shadow: 0 0 5px #2bff88; }
+}
+
 /* Smooth reappear animation */
 @keyframes voteFadeIn {
   from {
@@ -2123,6 +2155,51 @@ function castVote(targetIndex) {
     votingBox.classList.remove("fade-out-vote"); // reset animation
     showNextVoter();
   }, 200); // slightly smoother timing
+}
+
+function showPoisonScreen() {
+
+  const viper = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header poison-header">
+      <h3>
+        🐍 ${viper.name}, choose who to <span class="poison-text">POISON</span>
+      </h3>
+      <p class="poison-subtext">
+        This player will die after voting ends.
+      </p>
+    </div>
+    <div class="roles-reveal-content" id="poisonOptions"></div>
+  `;
+
+  const poisonOptions = document.getElementById("poisonOptions");
+
+  players.forEach((player, index) => {
+
+    if (player.alive && index !== currentVoterIndex) {
+
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn poison-btn";
+      btn.style.marginBottom = "8px";
+
+      btn.onclick = () => {
+
+        poisonedTarget = index;
+
+        viperChoosingPoison = false;
+
+        currentVoterIndex++;
+
+        setTimeout(() => {
+          showNextVoter();
+        }, 200);
+      };
+
+      poisonOptions.appendChild(btn);
+    }
+  });
 }
 
 function finishVoting() {
