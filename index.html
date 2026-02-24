@@ -315,6 +315,33 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
 }
+
+/* Base role pill */
+.role-pill {
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+}
+
+/* ENABLED */
+.role-pill.enabled {
+  opacity: 1;
+  transform: scale(1.03);
+  border: 2px solid #4caf50;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+}
+
+/* DISABLED */
+.role-pill.disabled {
+  opacity: 0.45;
+  filter: grayscale(40%);
+  transform: scale(0.98);
+}
+
+/* Hover effect */
+.role-pill:hover {
+  transform: scale(1.05);
+}
+
 /* ===== WIN SCREEN BASE ===== */
 .win-header {
   padding: 30px;
@@ -336,13 +363,6 @@
 /* Poison screen header */
 .poison-header {
   animation: fadeIn 0.4s ease;
-}
-
-/* Green poison word */
-.poison-text {
-  color: #2bff88;
-  text-shadow: 0 0 8px #2bff88;
-  animation: poisonPulse 1.5s infinite;
 }
 
 /* Subtext */
@@ -2711,6 +2731,43 @@ function getEnabledRoles() {
   return enabledRoles;
 }
 
+function updateRoleVisuals() {
+
+  document.querySelectorAll('.role-pill').forEach(pill => {
+
+    const checkbox = pill.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    // Get role name from label text
+    const roleName = pill.innerText.trim();
+
+    if (checkbox.checked) {
+
+      pill.classList.add("enabled");
+      pill.classList.remove("disabled");
+
+      // 🔥 Glow using role color
+      if (roleColors[roleName]) {
+        pill.style.borderColor = roleColors[roleName];
+        pill.style.boxShadow = `0 0 12px ${roleColors[roleName]}`;
+      }
+
+    } else {
+
+      pill.classList.add("disabled");
+      pill.classList.remove("enabled");
+
+      pill.style.borderColor = "transparent";
+      pill.style.boxShadow = "none";
+    }
+
+  });
+}
+
+document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener("change", updateRoleVisuals);
+});
+
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
   if (!currentSubject || customItems.length === 0) {
@@ -2903,13 +2960,21 @@ if (rolePool.length === 0) {
       }
 
       // 4. Handle King (doesn't take a slot, stackable)
-      // Give it a 50% chance to appear
-      // Randomize Add-ons separately
-if (playerCount >= 2) {
-  useLovers = Math.random() < 0.5;  // 50% chance
+// Randomize Add-ons separately (respect toggles)
+
+// Lovers
+if (loversToggle.checked && playerCount >= 2) {
+  useLovers = Math.random() < 0.33;
+} else {
+  useLovers = false;
 }
 
-useKing = Math.random() < 0.5;
+// King
+if (kingToggle.checked) {
+  useKing = Math.random() < 0.33;
+} else {
+  useKing = false;
+}
 
   } else {
       // Manual mode validation
@@ -3181,7 +3246,7 @@ if (useLovers && playerCount >= 2) {
     kingPlayer = newKingIndex;
   }
 
-  
+
 
 function initializePlayers() {
   players = [];
@@ -3737,6 +3802,7 @@ aiTopicInput.addEventListener('keypress', (e) => {
 aiModalOverlay.addEventListener('click', (e) => {
   if (e.target === aiModalOverlay) closeAiModal();
 });
+updateRoleVisuals();
 </script>
 <div id="shieldFlashOverlay"></div>
 </body>
