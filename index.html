@@ -2674,6 +2674,43 @@ function getRandomItemFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+const roleToggleMap = {
+  Philosopher: "philosopherToggle",
+  Detective: "detectiveToggle",
+  Clueless: "cluelessToggle",
+  Echo: "echoToggle",
+  Idiot: "idiotToggle",
+  Shield: "shieldToggle",
+
+  Shadow: "shadowToggle",
+  Maniac: "maniacToggle",
+
+  Jester: "jesterToggle",
+  Jackal: "jackalToggle",
+  Viper: "viperToggle",
+  Assassin: "assassinToggle",
+
+  King: "kingToggle",
+  Lovers: "loversToggle"
+};
+
+function getEnabledRoles() {
+
+  const enabledRoles = [];
+
+  for (let role in roleToggleMap) {
+
+    const toggleId = roleToggleMap[role];
+    const toggle = document.getElementById(toggleId);
+
+    if (toggle && toggle.checked) {
+      enabledRoles.push(role);
+    }
+  }
+
+  return enabledRoles;
+}
+
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
   if (!currentSubject || customItems.length === 0) {
@@ -2819,13 +2856,27 @@ function generateCards() {
       }
 
       // 3. Define pool of roles that consume a slot
-      let rolePool = ['detective', 'jester', 'jackal', 'viper', 'assassin', 'echo', 'idiot', 'maniac', 'shadow', 'philosopher', 'shield'];
-      
-      // Only add clueless if valid (enough words)
-      if (categoryItems.length >= 2) {
-          rolePool.push('clueless');
-      }
+      let rolePool = [];
 
+if (detectiveToggle.checked) rolePool.push('detective');
+if (jesterToggle.checked) rolePool.push('jester');
+if (jackalToggle.checked) rolePool.push('jackal');
+if (viperToggle.checked) rolePool.push('viper');
+if (assassinToggle.checked) rolePool.push('assassin');
+if (shieldToggle.checked) rolePool.push('shield');
+if (echoToggle.checked) rolePool.push('echo');
+if (idiotToggle.checked) rolePool.push('idiot');
+if (philosopherToggle.checked) rolePool.push('philosopher');
+if (maniacToggle.checked) rolePool.push('maniac');
+if (shadowToggle.checked) rolePool.push('shadow');
+
+if (cluelessToggle.checked && categoryItems.length >= 2) {
+  rolePool.push('clueless');
+}
+
+if (rolePool.length === 0) {
+  targetRoleCount = 0;
+}
       // Shuffle role pool
       for (let i = rolePool.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
