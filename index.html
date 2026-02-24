@@ -1919,15 +1919,6 @@ function updateTracker() {
     document.getElementById("startVotingBtn").style.display = "block";
   }
 }
-
-if (
-  totalCards > 0 &&
-  lockedCards === totalCards &&
-  !firstPlayerBox.classList.contains("show")
-) {
-  console.log("First player function triggered")
-  selectFirstPlayer();
-}
   
   revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
 
@@ -3595,6 +3586,12 @@ if (loverIndexes.includes(i)) {
           statusLabel.textContent = "Locked";
           
           lockedCards++;
+
+if (lockedCards === totalCards) {
+  console.log("Triggering first player...");
+  selectFirstPlayer();
+}
+
           updateTracker();
         }, 250);
         setTimeout(() => {
@@ -3611,6 +3608,12 @@ if (loverIndexes.includes(i)) {
           statusLabel.textContent = "Locked";
           
           lockedCards++;
+          
+          if (lockedCards === totalCards) {
+  setTimeout(() => {
+    selectFirstPlayer();
+  }, 300);
+}
           updateTracker();
         }, 250);
       }
@@ -3619,6 +3622,7 @@ if (loverIndexes.includes(i)) {
     cardsContainer.appendChild(card);
   });
 }
+
 
 /* ===== TOGGLE RANDOMIZE CHECKBOXES ===== */
 randomizeToggle.addEventListener('change', () => {
