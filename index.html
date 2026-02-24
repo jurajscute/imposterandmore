@@ -1915,15 +1915,13 @@ function updateTracker() {
   revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
 
   // ✅ When everyone has seen their role
-  if (revealedCards === totalCards) {
+  if (lockedCards === totalCards) {
     document.getElementById("startVotingBtn").style.display = "block";
   }
 }
 
-if (revealedCards === totalCards) {
-
+if (lockedCards === totalCards) {
   selectFirstPlayer();
-
 }
   
   revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
