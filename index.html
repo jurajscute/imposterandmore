@@ -316,32 +316,33 @@
   box-shadow: 0 4px 12px rgba(244, 63, 94, 0.2);
 }
 
-/* Base role pill */
 .role-pill {
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
 }
 
 /* ENABLED */
 .role-pill.enabled {
   opacity: 1;
-  transform: scale(1.03);
-  border: 2px solid #4caf50;
-  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
 }
 
 /* DISABLED */
 .role-pill.disabled {
   opacity: 0.45;
   filter: grayscale(40%);
-  transform: scale(0.98);
 }
 
-/* Hover effect */
-.role-pill:hover {
-  transform: scale(1.05);
+/* Glow using pseudo element (does NOT affect layout) */
+.role-pill.enabled::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: -1;
 }
-
 /* ===== WIN SCREEN BASE ===== */
 .win-header {
   padding: 30px;
@@ -2738,7 +2739,6 @@ function updateRoleVisuals() {
     const checkbox = pill.querySelector('input[type="checkbox"]');
     if (!checkbox) return;
 
-    // Get role name from label text
     const roleName = pill.innerText.trim();
 
     if (checkbox.checked) {
@@ -2746,19 +2746,16 @@ function updateRoleVisuals() {
       pill.classList.add("enabled");
       pill.classList.remove("disabled");
 
-      // 🔥 Glow using role color
       if (roleColors[roleName]) {
         pill.style.borderColor = roleColors[roleName];
-        pill.style.boxShadow = `0 0 12px ${roleColors[roleName]}`;
       }
 
     } else {
 
-      pill.classList.add("disabled");
       pill.classList.remove("enabled");
+      pill.classList.add("disabled");
 
       pill.style.borderColor = "transparent";
-      pill.style.boxShadow = "none";
     }
 
   });
