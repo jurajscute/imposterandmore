@@ -2742,80 +2742,37 @@ function updateRoleVisuals() {
 
     const roleName = pill.innerText.trim();
 
-    if (checkbox.checked) {
+    // Reset classes first
+    pill.classList.remove("enabled", "disabled");
 
+    if (checkbox.checked) {
       pill.classList.add("enabled");
-      pill.classList.remove("disabled");
 
       if (roleColors[roleName]) {
         pill.style.borderColor = roleColors[roleName];
       }
 
-    } else {
-
-      pill.classList.remove("enabled");
+    } else if (checkbox.disabled) {
+      // ONLY disabled if the checkbox itself is disabled
       pill.classList.add("disabled");
+      pill.style.borderColor = "transparent";
 
+    } else {
+      // Normal unchecked but still clickable
       pill.style.borderColor = "transparent";
     }
 
   });
 }
 
-function updateRoleAvailability() {
-
-  const allToggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
-
-  // Roles that consume civilian slots
-  const civilianRoles = [
-    "detective",
-    "jester",
-    "jackal",
-    "viper",
-    "shield",
-    "assassin",
-    "clueless",
-    "echo",
-    "idiot",
-    "philosopher",
-    "maniac",
-    "shadow"
-  ];
-
-  // Always re-enable first
-  allToggles.forEach(toggle => {
-    toggle.disabled = false;
-  });
-
-  const playerCount = parseInt(playerSlider.value, 10);
-  const imposterCount = parseInt(imposterSlider.value, 10);
-
-  const civilianSlots = playerCount - imposterCount;
-  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
-
-  let selectedCivilianRoles = 0;
-
-  allToggles.forEach(toggle => {
-    if (toggle.checked && civilianRoles.includes(toggle.name)) {
-      selectedCivilianRoles++;
-    }
-  });
-
-  if (selectedCivilianRoles >= maxSpecialRoles) {
-    allToggles.forEach(toggle => {
-      if (
-        !toggle.checked &&
-        civilianRoles.includes(toggle.name)
-      ) {
-        toggle.disabled = true;
-      }
-    });
-  }
-}
-
 document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
-  cb.addEventListener("change", updateRoleVisuals);
+  cb.addEventListener("change", () => {
+    updateRoleAvailability();
+    updateRoleVisuals();
+  });
 });
+updateRoleAvailability();
+updateRoleVisuals();
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
