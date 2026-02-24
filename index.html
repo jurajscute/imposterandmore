@@ -2764,10 +2764,10 @@ function updateRoleVisuals() {
 
 function updateRoleAvailability() {
 
-  const toggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
+  const allToggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
 
-  // Always re-enable first
-  toggles.forEach(toggle => {
+  // Re-enable everything first
+  allToggles.forEach(toggle => {
     toggle.disabled = false;
   });
 
@@ -2775,17 +2775,36 @@ function updateRoleAvailability() {
   const imposterCount = parseInt(imposterSlider.value, 10);
 
   const civilianSlots = playerCount - imposterCount;
-  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
+
+  // These roles DO NOT consume civilian slots
+  const freeRoles = ["king", "lovers"];
 
   let specialRolesCount = 0;
 
-  toggles.forEach(toggle => {
-    if (toggle.checked) specialRolesCount++;
+  allToggles.forEach(toggle => {
+    const roleName = toggle.name?.toLowerCase();
+    if (toggle.checked && !freeRoles.includes(roleName)) {
+      specialRolesCount++;
+    }
   });
 
-  if (specialRolesCount >= maxSpecialRoles && maxSpecialRoles > 0) {
-    toggles.forEach(toggle => {
-      if (!toggle.checked) {
+  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
+
+  if (maxSpecialRoles === 0) {
+    // No special roles allowed
+    allToggles.forEach(toggle => {
+      const roleName = toggle.name?.toLowerCase();
+      if (!freeRoles.includes(roleName)) {
+        toggle.disabled = true;
+      }
+    });
+    return;
+  }
+
+  if (specialRolesCount >= maxSpecialRoles) {
+    allToggles.forEach(toggle => {
+      const roleName = toggle.name?.toLowerCase();
+      if (!toggle.checked && !freeRoles.includes(roleName)) {
         toggle.disabled = true;
       }
     });
