@@ -3757,12 +3757,6 @@ shadowToggle.addEventListener("change", () => {
   localStorage.setItem("shadowEnabled", shadowToggle.checked);
 });
 
-document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(toggle => {
-  toggle.addEventListener("change", () => {
-    updateRoleAvailability();
-    updateRoleVisuals();
-  });
-});
 
 /* ===== INITIALIZATION ===== */
 initializeSubjectOptions();
