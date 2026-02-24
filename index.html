@@ -2766,11 +2766,16 @@ function updateRoleAvailability() {
 
   const toggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
 
+  // Always re-enable first
+  toggles.forEach(toggle => {
+    toggle.disabled = false;
+  });
+
   const playerCount = parseInt(playerSlider.value, 10);
   const imposterCount = parseInt(imposterSlider.value, 10);
 
   const civilianSlots = playerCount - imposterCount;
-  const maxSpecialRoles = civilianSlots - 1;
+  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
 
   let specialRolesCount = 0;
 
@@ -2778,13 +2783,13 @@ function updateRoleAvailability() {
     if (toggle.checked) specialRolesCount++;
   });
 
-  toggles.forEach(toggle => {
-    if (specialRolesCount >= maxSpecialRoles && !toggle.checked) {
-      toggle.disabled = true;
-    } else {
-      toggle.disabled = false; // 🔥 ALWAYS re-enable properly
-    }
-  });
+  if (specialRolesCount >= maxSpecialRoles && maxSpecialRoles > 0) {
+    toggles.forEach(toggle => {
+      if (!toggle.checked) {
+        toggle.disabled = true;
+      }
+    });
+  }
 }
 
 document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
@@ -2917,6 +2922,14 @@ function generateCards() {
       useKing = false;
       useLovers = false;
 
+      // 2. Calculate available slots for civilian roles
+      // We generally want to leave at least 1 "plain" civilian in play.
+      const civilianSlots = playerCount - imposterCount;
+      // If 3 players (1 imp), civilianSlots = 2. Max roles = 1.
+      // If 4 players (1 imp), civilianSlots = 3. Max roles = 2.
+      // If 5 players (1 imp), civilianSlots = 4. Max roles = 3.
+      
+      let maxSpecialRoles = Math.max(0, civilianSlots - 1);
       
       // Determine random count between 0 and maxSpecialRoles
       // (If maxSpecialRoles is 0, count is 0)
@@ -2993,6 +3006,7 @@ if (kingToggle.checked) {
 
   } else {
       // Manual mode validation
+      const civilianSlots = playerCount - imposterCount;
       let specialRolesCount = 0;
       if (useDetective) specialRolesCount++;
       if (useJester) specialRolesCount++;
