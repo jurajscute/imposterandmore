@@ -1920,7 +1920,11 @@ function updateTracker() {
   }
 }
 
-if (lockedCards === totalCards) {
+if (
+  totalCards > 0 &&
+  lockedCards === totalCards &&
+  !firstPlayerBox.classList.contains("show")
+) {
   selectFirstPlayer();
 }
   
