@@ -1959,9 +1959,7 @@ function selectFirstPlayer() {
 
     // 👇 SHOW START VOTING BUTTON HERE
     startVotingBtn.style.display = "block";
-startVotingBtn.style.opacity = "1";
-startVotingBtn.style.visibility = "visible";
-startVotingBtn.style.pointerEvents = "auto";
+startVotingBtn.classList.add("show");
 
   }, 500);
 }
@@ -2771,7 +2769,8 @@ function updateRoleVisuals() {
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
 
-  startVotingBtn.style.display = "none"; // keep hidden initially
+  startVotingBtn.style.display = "none";
+startVotingBtn.classList.remove("show");
 
 // Reset reveal + voting UI
 firstPlayerBox.classList.remove("show");
