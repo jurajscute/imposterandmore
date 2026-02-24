@@ -1919,26 +1919,10 @@ function updateTracker() {
     document.getElementById("startVotingBtn").style.display = "block";
   }
 }
+
+selectFirstPlayer();
   
   revealTracker.textContent = `Revealed: ${revealedCards} / ${totalCards} cards`;
-  
-  if (lockedCards === totalCards && totalCards > 0) {
-    // Announce king player after all cards are locked
-    announceKingPlayer();
-    // Then select first player
-    setTimeout(() => {
-      selectFirstPlayer();
-    }, 500);
-  }
-  
-  if (lockedCards === totalCards && totalCards > 0) {
-    // Announce lovers player after all cards are locked
-    announceLoversPlayer();
-    // Then select first player
-    setTimeout(() => {
-      selectFirstPlayer();
-    }, 500);
-  }
 
 /* ===== ANNOUNCE KING PLAYER ===== */
 function announceKingPlayer() {
@@ -1976,6 +1960,7 @@ if (revealBtn) {
     firstPlayerBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 }
+
 
 /* ===== REVEAL ALL ROLES ===== */
 function revealAllRoles() {
