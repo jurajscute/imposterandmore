@@ -2733,6 +2733,54 @@ function getEnabledRoles() {
   return enabledRoles;
 }
 
+function updateRoleAvailability() {
+
+  const allToggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
+
+  const civilianRoles = [
+    "detective",
+    "jester",
+    "jackal",
+    "viper",
+    "shield",
+    "assassin",
+    "clueless",
+    "echo",
+    "idiot",
+    "philosopher",
+    "maniac",
+    "shadow"
+  ];
+
+  // Re-enable everything first
+  allToggles.forEach(toggle => {
+    toggle.disabled = false;
+  });
+
+  const playerCount = parseInt(playerSlider.value, 10);
+  const imposterCount = parseInt(imposterSlider.value, 10);
+
+  const civilianSlots = playerCount - imposterCount;
+  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
+
+  let selectedCivilianRoles = 0;
+
+  allToggles.forEach(toggle => {
+    if (toggle.checked && civilianRoles.includes(toggle.name)) {
+      selectedCivilianRoles++;
+    }
+  });
+
+  if (selectedCivilianRoles >= maxSpecialRoles) {
+    allToggles.forEach(toggle => {
+      if (!toggle.checked && civilianRoles.includes(toggle.name)) {
+        toggle.disabled = true;
+      }
+    });
+  }
+
+}
+
 function updateRoleVisuals() {
 
   document.querySelectorAll('.role-pill').forEach(pill => {
@@ -3802,20 +3850,16 @@ aiModalOverlay.addEventListener('click', (e) => {
 });
 updateRoleVisuals();
 
-document.addEventListener("DOMContentLoaded", function () {
-
-  document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
-    cb.addEventListener("change", () => {
-      updateRoleAvailability();
-      updateRoleVisuals();
-    });
+document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener("change", () => {
+    updateRoleAvailability();
+    updateRoleVisuals();
   });
-
-  // Initialize on load
-  updateRoleAvailability();
-  updateRoleVisuals();
-
 });
+
+// initialize once
+updateRoleAvailability();
+updateRoleVisuals();
 
 </script>
 <div id="shieldFlashOverlay"></div>
