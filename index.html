@@ -2480,81 +2480,91 @@ function nextRound() {
 
 function checkWinCondition() {
 
-const alivePlayers = players.filter(p => p.alive);
+  const alivePlayers = players.filter(p => p.alive);
 
-const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
+  const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
+  const viperAlive  = alivePlayers.find(p => p.role === "Viper");
 
-const viperAlive = alivePlayers.find(p => p.role === "Viper");
+  const impostorsAlive = alivePlayers.filter(p =>
+    ["Imposter","Maniac","Shadow"].includes(p.role)
+  );
 
-const impostorsAlive = alivePlayers.filter(p =>
-  ["Imposter","Maniac","Shadow"].includes(p.role)
-);
+  const crewAlive = alivePlayers.filter(p =>
+    !["Imposter","Jackal","Assassin","Viper","Maniac","Shadow"].includes(p.role)
+  );
 
-const crewAlive = alivePlayers.filter(p =>
-  !["Imposter","Jackal","Assassin","Viper"].includes(p.role)
-);
+  /* ==============================
+     👹 IMPOSTORS WIN
+     ============================== */
 
-// Impostors win ONLY if Jackal and Viper is dead
-if (
-  !jackalAlive &&
-  !viperAlive &&
-  impostorsAlive.length > 0 &&
-  impostorsAlive.length >= crewAlive.length
-) {
-  endGame(`<strong>Impostors win!</strong>`, "Imposter");
-  return true;
-}
-
- // Jackal win condition
-if (jackalAlive) {
-
-  const nonJackalAlive = alivePlayers.filter(p => p.role !== "Jackal");
-
-}  // Viper win condition
-if (viperAlive) {
-
-  const nonviperAlive = alivePlayers.filter(p => p.role !== "Viper");
-
-  // Jackal alone
-  if (nonJackalAlive.length === 0) {
-    endGame(`<strong>${jackalAlive.name} the Jackal wins alone!</strong>`,"Jackal");
-    return true;
-  }
-
-  // Viper alone
-  if (nonViperAlive.length === 0) {
-    endGame(`<strong>${viperAlive.name} the Viper wins alone!</strong>`,"Viper");
-    return true;
-  }
-
-  // Jackal + 1 crew member
   if (
-    nonJackalAlive.length === 1 &&
-    !["Imposter","Maniac","Shadow","Assassin","Jester", "Viper"].includes(nonJackalAlive[0].role)
+    !jackalAlive &&
+    !viperAlive &&
+    impostorsAlive.length > 0 &&
+    impostorsAlive.length >= crewAlive.length
   ) {
-    endGame(`<strong>${jackalAlive.name}</strong> the Jackal wins!`,"Jackal");
+    endGame(`<strong>Impostors win!</strong>`, "Imposter");
     return true;
   }
 
-  // Viper + 1 crew member
-  if (
-    nonViperAlive.length === 1 &&
-    !["Imposter","Maniac","Shadow","Assassin","Jester","Jackal"].includes(nonViperAlive[0].role)
-  ) {
-    endGame(`<strong>${viperAlive.name}</strong> the Viper wins!`,"Viper");
-    return true;
-  }
-}
+  /* ==============================
+     🐺 JACKAL WIN
+     ============================== */
 
-  // Crew wins ONLY if:
-  // - No impostors
-  // - No jackal
+  if (jackalAlive) {
+
+    const nonJackalAlive = alivePlayers.filter(p => p.role !== "Jackal");
+
+    // Jackal alone
+    if (nonJackalAlive.length === 0) {
+      endGame(`<strong>${jackalAlive.name} the Jackal wins alone!</strong>`, "Jackal");
+      return true;
+    }
+
+    // Jackal + 1 crew
+    if (
+      nonJackalAlive.length === 1 &&
+      !["Imposter","Maniac","Shadow","Assassin","Jester","Viper"].includes(nonJackalAlive[0].role)
+    ) {
+      endGame(`<strong>${jackalAlive.name} the Jackal wins!</strong>`, "Jackal");
+      return true;
+    }
+  }
+
+  /* ==============================
+     🐍 VIPER WIN
+     ============================== */
+
+  if (viperAlive) {
+
+    const nonViperAlive = alivePlayers.filter(p => p.role !== "Viper");
+
+    // Viper alone
+    if (nonViperAlive.length === 0) {
+      endGame(`<strong>${viperAlive.name} the Viper wins alone!</strong>`, "Viper");
+      return true;
+    }
+
+    // Viper + 1 crew
+    if (
+      nonViperAlive.length === 1 &&
+      !["Imposter","Maniac","Shadow","Assassin","Jester","Jackal"].includes(nonViperAlive[0].role)
+    ) {
+      endGame(`<strong>${viperAlive.name} the Viper wins!</strong>`, "Viper");
+      return true;
+    }
+  }
+
+  /* ==============================
+     👥 CREW WIN
+     ============================== */
+
   if (
     impostorsAlive.length === 0 &&
     !jackalAlive &&
     !viperAlive
   ) {
-    endGame(`<strong>Crew wins!</strong>`,"Crew");
+    endGame(`<strong>Crew wins!</strong>`, "Crew");
     return true;
   }
 
