@@ -1938,24 +1938,18 @@ function announceKingPlayer() {
     }, 500);
   }
 }
-/* ===== SELECT FIRST PLAYER ===== */
+// SELECT FIRST PLAYER //
 function selectFirstPlayer() {
   const randomPlayer = Math.floor(Math.random() * totalCards) + 1;
-  
+
   setTimeout(() => {
-    // Use custom player name if available
     const playerName = playerNames[randomPlayer - 1] || `Player ${randomPlayer}`;
-    let firstPlayerText = `${playerName} goes first!`;
-    
-    // Role announcement removed per user request.
-    
-    firstPlayerBox.textContent = firstPlayerText;
+    firstPlayerBox.textContent = `${playerName} goes first!`;
     firstPlayerBox.classList.add('show');
-    const revealBtn = document.getElementById("revealRolesBtn");
-if (revealBtn) {
-  revealBtn.style.display = "block";
-}
-    firstPlayerBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // 👇 SHOW START VOTING BUTTON HERE
+    startVotingBtn.style.display = "block";
+
   }, 500);
 }
 
@@ -2763,6 +2757,8 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+
+  startVotingBtn.style.display = "none"; // keep hidden initially
 
 // Reset reveal + voting UI
 firstPlayerBox.classList.remove("show");
