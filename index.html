@@ -2085,82 +2085,44 @@ function castVote(targetIndex) {
 
   players[currentVoterIndex].vote = targetIndex;
 
- let voteWeight = 1;
+  let voteWeight = 1;
 
-// 👑 King double vote
-if (currentVoterIndex === kingPlayer) {
-  voteWeight = 2;
-}
+  // 👑 King double vote
+  if (currentVoterIndex === kingPlayer) {
+    voteWeight = 2;
+  }
 
-// 😈 Maniac vote doesn't count
-if (players[currentVoterIndex].role === "Maniac") {
-  voteWeight = 0;
-}
+  // 😈 Maniac vote doesn't count
+  if (voter.role === "Maniac") {
+    voteWeight = 0;
+  }
 
+  // Add vote
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
   }
 
   votes[targetIndex] += voteWeight;
 
-  // Animate whole voting box out
+  // 🐍 If Viper voted → open poison screen BEFORE continuing
+  if (voter.role === "Viper" && !viperChoosingPoison) {
+
+    viperChoosingPoison = true;
+
+    // DO NOT fade here
+    showPoisonScreen();
+    return;
+  }
+
+  // ✅ Normal voters fade
   votingBox.classList.add("fade-out-vote");
 
-// If Viper just voted → open poison screen
-if (voter.role === "Viper" && !viperChoosingPoison) {
+  currentVoterIndex++;
 
-  viperChoosingPoison = true;
-
-  showPoisonScreen();
-
-  return; // STOP normal flow
-}
-
-currentVoterIndex++;
-
-setTimeout(() => {
-  showNextVoter();
-}, 100);
-}
-
-function showPoisonScreen() {
-
-  const viper = players[currentVoterIndex];
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h3>${viper.name}, choose someone to poison</h3>
-    </div>
-    <div class="roles-reveal-content" id="poisonOptions"></div>
-  `;
-
-  const poisonOptions = document.getElementById("poisonOptions");
-
-  players.forEach((player, index) => {
-
-    if (player.alive && index !== currentVoterIndex) {
-
-      const btn = document.createElement("button");
-      btn.textContent = player.name;
-      btn.className = "reveal-roles-btn";
-      btn.style.marginBottom = "8px";
-
-      btn.onclick = () => {
-
-        poisonedTarget = index;
-
-        viperChoosingPoison = false;
-
-        currentVoterIndex++;
-
-        setTimeout(() => {
-          showNextVoter();
-        }, 100);
-      };
-
-      poisonOptions.appendChild(btn);
-    }
-  });
+  setTimeout(() => {
+    votingBox.classList.remove("fade-out-vote"); // reset animation
+    showNextVoter();
+  }, 200); // slightly smoother timing
 }
 
 function finishVoting() {
