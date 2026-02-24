@@ -2765,15 +2765,6 @@ function updateRoleVisuals() {
   });
 }
 
-document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
-  cb.addEventListener("change", () => {
-    updateRoleAvailability();
-    updateRoleVisuals();
-  });
-});
-updateRoleAvailability();
-updateRoleVisuals();
-
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
   if (!currentSubject || customItems.length === 0) {
@@ -3810,6 +3801,22 @@ aiModalOverlay.addEventListener('click', (e) => {
   if (e.target === aiModalOverlay) closeAiModal();
 });
 updateRoleVisuals();
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener("change", () => {
+      updateRoleAvailability();
+      updateRoleVisuals();
+    });
+  });
+
+  // Initialize on load
+  updateRoleAvailability();
+  updateRoleVisuals();
+
+});
+
 </script>
 <div id="shieldFlashOverlay"></div>
 </body>
