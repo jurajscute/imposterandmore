@@ -2761,7 +2761,7 @@ function updateRoleAvailability() {
   const imposterCount = parseInt(imposterSlider.value, 10);
 
   const civilianSlots = playerCount - imposterCount;
-  const maxSpecialRoles = Math.max(0, civilianSlots - 1);
+  const maxSpecialRoles = Math.max(0, civilianSlots);
 
   let selectedCivilianRoles = 0;
 
