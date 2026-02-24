@@ -855,6 +855,8 @@ let imposterIndex = null;
 let players = [];
 let currentVoterIndex = 0;
 let votes = {};
+let poisonedTarget = null;
+let viperChoosingPoison = false;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -2104,12 +2106,63 @@ if (players[currentVoterIndex].role === "Maniac") {
   // Animate whole voting box out
   votingBox.classList.add("fade-out-vote");
 
-  setTimeout(() => {
-    currentVoterIndex++;
-    votingBox.classList.remove("fade-out-vote");
-    showNextVoter();
-  }, 250);
+// If Viper just voted → open poison screen
+if (voter.role === "Viper" && !viperChoosingPoison) {
+
+  viperChoosingPoison = true;
+
+  showPoisonScreen();
+
+  return; // STOP normal flow
 }
+
+currentVoterIndex++;
+
+setTimeout(() => {
+  showNextVoter();
+}, 100);
+}
+
+function showPoisonScreen() {
+
+  const viper = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>${viper.name}, choose someone to poison</h3>
+    </div>
+    <div class="roles-reveal-content" id="poisonOptions"></div>
+  `;
+
+  const poisonOptions = document.getElementById("poisonOptions");
+
+  players.forEach((player, index) => {
+
+    if (player.alive && index !== currentVoterIndex) {
+
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn";
+      btn.style.marginBottom = "8px";
+
+      btn.onclick = () => {
+
+        poisonedTarget = index;
+
+        viperChoosingPoison = false;
+
+        currentVoterIndex++;
+
+        setTimeout(() => {
+          showNextVoter();
+        }, 100);
+      };
+
+      poisonOptions.appendChild(btn);
+    }
+  });
+}
+
 function finishVoting() {
 
   let maxVotes = 0;
@@ -2291,6 +2344,44 @@ if (
   endGame(`<strong>${assassinPlayer.name} the Assassin wins!</strong> Their target was voted out.`,"Assassin");
   return;
 
+  }
+}
+
+// 🐍 Apply poison AFTER vote elimination
+if (poisonedTarget !== null) {
+
+  const poisonedPlayer = players[poisonedTarget];
+
+  if (poisonedPlayer.alive) {
+    poisonedPlayer.alive = false;
+
+    const poisonedName = poisonedPlayer.name;
+    const poisonedRole = poisonedPlayer.role;
+
+    poisonedTarget = null;
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h3>Poison Strikes...</h3>
+      </div>
+      <div class="roles-reveal-content">
+        <h3>${poisonedName} has been poisoned!</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[poisonedRole]}; font-weight:bold;">
+            ${poisonedRole}
+          </span>
+        </p>
+        <br><br>
+        <button id="continueBtn" class="reveal-roles-btn">
+          Continue
+        </button>
+      </div>
+    `;
+
+    document.getElementById("continueBtn").onclick = nextRound;
+
+    return;
   }
 }
   showVotingResults(eliminatedIndex);
