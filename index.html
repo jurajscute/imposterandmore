@@ -2154,6 +2154,12 @@ function castVote(targetIndex) {
     voteWeight = 0;
   }
 
+   // 🐍 Viper vote doesn't count
+  if (voter.role === "Viper") {
+    voteWeight = 0;
+  }
+
+
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
   }
