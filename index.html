@@ -2231,6 +2231,7 @@ function finishVoting() {
 if (eliminatedIndex !== null) {
 
   const eliminatedPlayer = players[eliminatedIndex];
+  eliminatedPlayer.alive = false;
 
   // 🛡️ Shield special ability
 if (eliminatedPlayer.role === "Shield") {
@@ -2457,16 +2458,7 @@ function showVotingResults(eliminatedIndex) {
 
 function nextRound() {
 
-  if (checkWinCondition()) return;
-
-  currentVoterIndex = 0;  
-  votes = {};
-
-  showNextVoter();
-
-  function nextRound() {
-
-  // 🐍 Apply poison BEFORE checking win condition
+  // 🐍 Apply poison FIRST
   if (poisonedTarget !== null) {
 
     const poisonedPlayer = players[poisonedTarget];
@@ -2482,7 +2474,7 @@ function nextRound() {
 
       votingBox.innerHTML = `
         <div class="roles-reveal-header">
-          <h3>🐍 Poison Strikes...</h3>
+          <h3 style="color:#00ff66;">🐍 Poison Strikes...</h3>
         </div>
         <div class="roles-reveal-content">
           <h3>${poisonedName} has been poisoned!</h3>
@@ -2508,18 +2500,18 @@ function nextRound() {
         showNextVoter();
       };
 
-      return; // stop here until poison screen handled
+      return; // stop here until poison handled
     }
+
+    poisonedTarget = null;
   }
 
-  // If no poison, proceed normally
+  // No poison → continue normally
   if (checkWinCondition()) return;
 
   currentVoterIndex = 0;
   votes = {};
   showNextVoter();
-}
-
 }
 
 function checkWinCondition() {
