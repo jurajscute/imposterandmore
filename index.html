@@ -2762,6 +2762,38 @@ function updateRoleVisuals() {
   });
 }
 
+function updateRoleAvailability() {
+
+  const toggles = document.querySelectorAll('.role-pill input[type="checkbox"]');
+
+  // 🔓 Step 1: Always re-enable everything first
+  toggles.forEach(toggle => {
+    toggle.disabled = false;
+  });
+
+  const playerCount = parseInt(playerSlider.value, 10);
+  const imposterCount = parseInt(imposterSlider.value, 10);
+
+  const civilianSlots = playerCount - imposterCount;
+
+  let specialRolesCount = 0;
+
+  toggles.forEach(toggle => {
+    if (toggle.checked) specialRolesCount++;
+  });
+
+  // Leave at least 1 normal civilian
+  const maxSpecialRoles = civilianSlots - 1;
+
+  if (specialRolesCount >= maxSpecialRoles) {
+    toggles.forEach(toggle => {
+      if (!toggle.checked) {
+        toggle.disabled = true;
+      }
+    });
+  }
+}
+
 document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(cb => {
   cb.addEventListener("change", updateRoleVisuals);
 });
@@ -3747,6 +3779,13 @@ maniacToggle.addEventListener("change", () => {
 
 shadowToggle.addEventListener("change", () => {
   localStorage.setItem("shadowEnabled", shadowToggle.checked);
+});
+
+document.querySelectorAll('.role-pill input[type="checkbox"]').forEach(toggle => {
+  toggle.addEventListener("change", () => {
+    updateRoleAvailability();
+    updateRoleVisuals();
+  });
 });
 
 /* ===== INITIALIZATION ===== */
