@@ -2766,6 +2766,12 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+
+revealedCards = 0;
+lockedCards = 0;
+firstPlayerBox.classList.remove("show");
+firstPlayerBox.textContent = "";
+
   if (!currentSubject || customItems.length === 0) {
     errorBox.textContent = "Please select a subject first";
     return;
