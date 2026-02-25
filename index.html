@@ -4067,17 +4067,37 @@ function initializePlayers() {
           specialHint.className = "sheriff-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Eliminate the impostor, by any means necessary!<br><br>You can <strong>shoot</strong> someone during a vote, don't miss!`;
         } else if (word === "Maniac") {
-          const realImposterIndex = words.indexOf("Imposter");
-          const targetName = playerNames[realImposterIndex];
-          specialHint.className = "maniac-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} win, at all costs!<br><br><strong>YOUR VOTE DOESN'T COUNT</strong>`;
+          // Find ANY main evil role
+const realEvilIndex = words.findIndex(role =>
+  mainEvilRoles.includes(role)
+);
+
+if (realEvilIndex !== -1) {
+  const targetName = playerNames[realEvilIndex];
+
+  specialHint.className = "maniac-hint";
+  specialHint.innerHTML = `
+    <strong>Your Mission:</strong><br>
+    Help ${targetName} win, at all costs!<br><br>
+    <strong>YOUR VOTE DOESN'T COUNT</strong>
+  `;
+}
         } else if (word === "Shadow") {
-          const realImposterIndex = words.indexOf("Imposter");
-          const targetName = playerNames[realImposterIndex];
-          specialHint.className = "shadow-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Help ${targetName} win, try figure out the word!`;
-        }
-        
+
+  const realEvilIndex = words.findIndex(role =>
+    mainEvilRoles.includes(role)
+  );
+
+  if (realEvilIndex !== -1) {
+    const targetName = playerNames[realEvilIndex];
+
+    specialHint.className = "shadow-hint";
+    specialHint.innerHTML = `
+      <strong>Your Mission:</strong><br>
+      Help ${targetName} win, try figure out the word!
+    `;
+  }
+}
         if (kingPlayer === i) {
           const kingHint = document.createElement("div");
           kingHint.className = "king-hint";
