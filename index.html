@@ -431,7 +431,8 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.main-evil.enabled {
+.main-evil:has(input:checked) {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
   border: 2px solid #ff0000;
 }
 
@@ -854,14 +855,14 @@
    <h4 class="role-category">Impostors</h4>
   <div class="roles-grid">
 
-    <div class="role-pill main-evil" id="imposterContainer">
+    <div class="role-pill imposter-toggle" id="imposterContainer">
       <label>
         <input id="imposterToggle" type="checkbox" name="imposter">
         Impostor
       </label>
     </div>
 
-    <div class="role-pill main-evil" id="dictratorContainer">
+    <div class="role-pill dictator-toggle" id="dictratorContainer">
       <label>
         <input id="dictatorToggle" type="checkbox" name="dictator">
         Dictator
@@ -3139,6 +3140,9 @@ const roleToggleMap = {
   Idiot: "idiotToggle",
   Shield: "shieldToggle",
 
+  Imposter: "imposterToggle",
+  Dictator: "dictatorToggle",
+
   Shadow: "shadowToggle",
   Maniac: "maniacToggle",
 
@@ -4258,6 +4262,15 @@ playerSlider.addEventListener("input", () => {
 });
 
 // Save toggle states
+dictatorToggle.addEventListener("change", () => {
+  localStorage.setItem("dictatorEnabled", dictatorToggle.checked);
+});
+
+imposterToggle.addEventListener("change", () => {
+  localStorage.setItem("imposterEnabled", imposterToggle.checked);
+});
+
+
 detectiveToggle.addEventListener("change", () => {
   localStorage.setItem("detectiveEnabled", detectiveToggle.checked);
 });
