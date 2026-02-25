@@ -417,6 +417,13 @@
   opacity: 1;
 }
 
+.vote-summary {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
 .lover-death-message {
   margin-top: 15px;
   padding: 15px;
@@ -2387,7 +2394,7 @@ function castVote(targetIndex) {
         setTimeout(() => {
           currentVoterIndex++;
           showNextVoter();
-        }, 800);
+        }, 1400);
       };
 
       dictatorOptions.appendChild(btn);
@@ -2631,6 +2638,26 @@ let maxVotes = Math.max(...Object.values(votes || {0:0}));
 let topPlayers = Object.keys(votes).filter(
   player => votes[player] === maxVotes
 );
+// 📊 Build Vote Summary
+let voteSummaryHTML = `
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
+`;
+
+players.forEach((player, index) => {
+  if (!player.alive) return;
+
+  const voteCount = votes[index] || 0;
+
+  voteSummaryHTML += `
+    <p>
+      <strong>${player.name}</strong> - ${voteCount} vote${voteCount !== 1 ? "s" : ""}
+    </p>
+  `;
+});
+
+voteSummaryHTML += `</div>`;
 
   let eliminatedIndex = null;
 
@@ -2645,6 +2672,26 @@ let topPlayers = Object.keys(votes).filter(
         <p>No one is eliminated by vote.</p>
       </div>
     `;
+    // 📊 Build Vote Summary
+let voteSummaryHTML = `
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
+`;
+
+players.forEach((player, index) => {
+  if (!player.alive) return;
+
+  const voteCount = votes[index] || 0;
+
+  voteSummaryHTML += `
+    <p>
+      <strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}
+    </p>
+  `;
+});
+
+voteSummaryHTML += `</div>`;
 
   } else {
 
@@ -2843,6 +2890,26 @@ votingBox.appendChild(continueBtn);
         </p>
       </div>
     `;
+    // 📊 Build Vote Summary
+let voteSummaryHTML = `
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
+`;
+
+players.forEach((player, index) => {
+  if (!player.alive) return;
+
+  const voteCount = votes[index] || 0;
+
+  voteSummaryHTML += `
+    <p>
+      <strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}
+    </p>
+  `;
+});
+
+voteSummaryHTML += `</div>`;
 
     if (loverDeathIndex !== null) {
       const lover = players[loverDeathIndex];
