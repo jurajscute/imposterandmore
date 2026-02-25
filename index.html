@@ -2318,6 +2318,7 @@ votingBox.classList.add("vote-fade-in");
     }
   });
 }
+
 function castVote(targetIndex) {
 
   const voter = players[currentVoterIndex];
@@ -2337,21 +2338,31 @@ function castVote(targetIndex) {
 
   votes[targetIndex] += voteWeight;
 
-  // 🐍 VIPER LOGIC
+  // 🐍 VIPER
   if (voter.role === "Viper" && !viperChoosingPoison) {
     viperChoosingPoison = true;
     showPoisonScreen();
     return;
   }
 
-  // ⭐ SHERIFF LOGIC
-  if (
-    voter.role === "Sheriff" &&
-    sheriffShotTarget === null
-  ) {
+  // ⭐ SHERIFF
+  if (voter.role === "Sheriff" && sheriffShotTarget === null) {
     showSheriffShootOptions(targetIndex);
     return;
   }
+
+  // 👑 DICTATOR
+  if (voter.role === "Dictator") {
+    showDictatorBlockScreen();
+    return;
+  }
+
+  // ✅ Normal advance
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+}
 
   function showDictatorBlockScreen() {
 
@@ -2468,7 +2479,7 @@ function castVote(targetIndex) {
 
   optionsBox.appendChild(skipBtn);
   }
-}
+
 
 function proceedToNextVoter() {
   currentVoterIndex++;
