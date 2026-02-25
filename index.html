@@ -2305,37 +2305,51 @@ function showSheriffShootOptions(voteTargetIndex) {
 
 function finishVoting() {
 
-  if (!votes || Object.keys(votes).length === 0) {
-    showVotingResults(null);
-    return;
-  }
-
   let maxVotes = Math.max(...Object.values(votes));
-
   let topPlayers = Object.keys(votes).filter(
     player => votes[player] === maxVotes
   );
 
-  // 🔥 TIE
-  if (topPlayers.length !== 1) {
+  let eliminatedIndex = null;
 
+  // 🗳 VOTE RESULT
+  if (topPlayers.length > 1) {
+
+    // It's a tie
     votingBox.innerHTML = `
       <div class="roles-reveal-header">
-        <h2>Seems like a Tie!</h2>
+        <h2>⚖️ It's a Tie!</h2>
       </div>
       <div class="roles-reveal-content">
-        <p>No one is eliminated this round.</p>
-        <br>
-        <button id="continueBtn" class="reveal-roles-btn">
-          Continue
-        </button>
+        <p>No one is eliminated by vote.</p>
       </div>
     `;
 
-    document.getElementById("continueBtn").onclick = nextRound;
+  } else {
 
-    return;
+    eliminatedIndex = parseInt(topPlayers[0]);
+    const eliminatedPlayer = players[eliminatedIndex];
+    eliminatedPlayer.alive = false;
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2>${eliminatedPlayer.name} has been eliminated!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>
+          They were the 
+          <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+            ${eliminatedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
   }
+
+  // 🔫 SHERIFF RESOLUTION (ALWAYS RUNS — even on tie)
+  resolveSheriffAfterVote();
+
+}
 
   let eliminatedIndex = parseInt(topPlayers[0]);
 
@@ -2586,7 +2600,7 @@ votingBox.appendChild(continueBtn);
 
   sheriffShotTarget = null;
 }
-}
+
 function showVotingResults(eliminatedIndex) {
 
   let resultsHTML = `
