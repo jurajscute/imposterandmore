@@ -431,9 +431,9 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-.imposter-toggle.enabled::after,
-.dictator-toggle.enabled::after {
-  box-shadow: 0 0 18px rgba(255, 0, 0, 0.8);
+.main-evil:has(input:checked) {
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+  border: 2px solid #ff0000;
 }
 
 /* ===== SHERIFF SCREEN ===== */
@@ -855,14 +855,14 @@
    <h4 class="role-category">Impostors</h4>
   <div class="roles-grid">
 
-    <div class="role-pill imposter-toggle" id="imposterContainer">
+    <div class="role-pill main-evil" id="imposterContainer">
       <label>
         <input id="imposterToggle" type="checkbox" name="imposter">
         Impostor
       </label>
     </div>
 
-    <div class="role-pill dictator-toggle" id="dictratorContainer">
+    <div class="role-pill main-evil" id="dictratorContainer">
       <label>
         <input id="dictatorToggle" type="checkbox" name="dictator">
         Dictator
