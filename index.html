@@ -3339,12 +3339,47 @@ for (let i = rolePool.length - 1; i > 0; i--) {
   [rolePool[i], rolePool[j]] = [rolePool[j], rolePool[i]];
 }
 
-// 🟢 Enable as many roles as possible
-const rolesToUse = Math.min(rolePool.length, civilianSlots);
 
-for (let i = 0; i < rolesToUse; i++) {
-  const role = rolePool[i];
+// Shuffle helper
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
+shuffle(crewPool);
+shuffle(evilPool);
+shuffle(neutralPool);
+
+// Final selected roles
+let selectedRoles = [];
+
+// 🟢 STEP 1 — FORCE CREW ROLES BASED ON PLAYER COUNT
+
+const minCrewRequired = playerCount > 3 ? 2 : 1;
+
+for (let i = 0; i < minCrewRequired; i++) {
+  if (
+    crewPool.length > 0 &&
+    selectedRoles.length < civilianSlots
+  ) {
+    selectedRoles.push(crewPool.shift());
+  }
+}
+// 🟢 STEP 2 — Fill remaining slots with everything else
+let remainingPool = [...crewPool, ...evilPool, ...neutralPool];
+shuffle(remainingPool);
+
+while (
+  selectedRoles.length < civilianSlots &&
+  remainingPool.length > 0
+) {
+  selectedRoles.push(remainingPool.shift());
+}
+
+// 🟢 STEP 3 — Enable roles
+selectedRoles.forEach(role => {
   if (role === 'detective') useDetective = true;
   if (role === 'jester') useJester = true;
   if (role === 'jackal') useJackal = true;
@@ -3358,16 +3393,7 @@ for (let i = 0; i < rolesToUse; i++) {
   if (role === 'sheriff') useSheriff = true;
   if (role === 'maniac') useManiac = true;
   if (role === 'shadow') useShadow = true;
-}
-
-// 8️⃣ Stackable add-ons
-if (loversToggle.checked && playerCount >= 2) {
-  useLovers = Math.random() < 0.35;
-}
-
-if (kingToggle.checked) {
-  useKing = Math.random() < 0.35;
-}
+});
 
 const crewPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Crew");
 const evilPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Evil");
