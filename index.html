@@ -3333,6 +3333,10 @@ if (cluelessToggle.checked && categoryItems.length >= 2) {
   rolePool.push('clueless');
 }
 
+const crewPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Crew");
+const evilPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Evil");
+const neutralPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Neutral");
+
 // Shuffle role pool
 for (let i = rolePool.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
@@ -3394,10 +3398,6 @@ selectedRoles.forEach(role => {
   if (role === 'maniac') useManiac = true;
   if (role === 'shadow') useShadow = true;
 });
-
-const crewPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Crew");
-const evilPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Evil");
-const neutralPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Neutral");
 
   } else {
       // Manual mode validation
