@@ -2564,7 +2564,25 @@ if (sheriffShotTarget !== null) {
     `;
   }
 
-  votingBox.innerHTML += message;
+  const sheriffDiv = document.createElement("div");
+sheriffDiv.innerHTML = `
+  <hr>
+  ${message}
+`;
+
+votingBox.appendChild(sheriffDiv);
+
+// 🔥 Add a new Continue button AFTER sheriff resolution
+const continueBtn = document.createElement("button");
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
+
+continueBtn.onclick = () => {
+  nextRound();
+};
+
+votingBox.appendChild(continueBtn);
 
   sheriffShotTarget = null;
 }
