@@ -954,6 +954,8 @@ let poisonedTarget = null;
 let viperChoosingPoison = false;
 let sheriffChoosingTarget = false;
 let sheriffAllowedRoles = ["Imposter", "Jackal", "Assassin", "Viper", "Maniac", "Shadow"]; // roles Sheriff can kill safely
+let sheriffHasShot = false;
+let sheriffShotTarget = null;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -2211,16 +2213,14 @@ function castVote(targetIndex) {
     return; // STOP here — do NOT increment index yet
   }
 
-  // ⭐ SHERIFF SPECIAL LOGIC
-if (voter.role === "Sheriff" && !sheriffChoosingTarget) {
-
-  sheriffChoosingTarget = true;
-
-  showSheriffScreen();
-
-  return; // STOP normal flow
+ // ⭐ Sheriff marks a target (but resolves later)
+if (
+  voter.role === "Sheriff" &&
+  !sheriffHasShot &&
+  targetIndex !== currentVoterIndex // can't shoot self
+) {
+  sheriffShotTarget = targetIndex;
 }
-
   // Normal voter flow
   currentVoterIndex++;
 
@@ -2310,66 +2310,6 @@ function showSheriffScreen() {
   };
 
   sheriffOptions.appendChild(skipBtn);
-}
-
-function resolveSheriffShot(targetIndex) {
-
-  const sheriff = players[currentVoterIndex];
-  const target = players[targetIndex];
-
-  sheriffChoosingTarget = false;
-  sheriffHasShot = true; // 🔫 BULLET USED
-
-  // 🎭 JESTER SHOT = JESTER WINS
-  if (target.role === "Jester") {
-
-    votingBox.innerHTML = `
-      <div class="win-header">
-        <h2>${target.name} the Jester wins!</h2>
-      </div>
-      <div class="win-content">
-        <p>The Sheriff shot the Jester!</p>
-        <button onclick="location.reload()" class="reveal-roles-btn">
-          New Game
-        </button>
-      </div>
-    `;
-
-    return;
-  }
-
-  let sheriffDies = false;
-
-  if (sheriffAllowedRoles.includes(target.role)) {
-    // ✅ Correct shot
-    target.alive = false;
-  } else {
-    // ❌ Wrong shot → Sheriff dies
-    sheriffDies = true;
-    sheriff.alive = false;
-  }
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h3>⭐ Sheriff Action</h3>
-    </div>
-    <div class="roles-reveal-content">
-      ${
-        sheriffDies
-          ? `<p>${sheriff.name} shot the wrong person and died!</p>`
-          : `<p>${target.name} was shot by the Sheriff!</p>`
-      }
-      <br>
-      <button id="continueBtn" class="reveal-roles-btn">
-        Continue
-      </button>
-    </div>
-  `;
-
-  document.getElementById("continueBtn").onclick = () => {
-    currentVoterIndex++;
-    showNextVoter();
-  };
 }
 
 function finishVoting() {
@@ -2487,7 +2427,6 @@ flash.classList.add("shield-flash-active");
       </button>
     </div>
   `;
-
   document.getElementById("continueBtn").onclick = nextRound;
 };
 
@@ -2495,6 +2434,45 @@ flash.classList.add("shield-flash-active");
   });
 
   return; // STOP normal elimination
+}
+
+// ⭐ Resolve Sheriff shot AFTER voting result
+if (sheriffShotTarget !== null && !sheriffHasShot) {
+
+  const sheriff = players.find(p => p.role === "Sheriff" && p.alive);
+
+  if (sheriff) {
+
+    const target = players[sheriffShotTarget];
+    sheriffHasShot = true;
+
+    // 🎭 Jester shot = instant Jester win
+    if (target.role === "Jester") {
+      votingBox.innerHTML += `
+        <hr>
+        <h3>${target.name} the Jester was shot by the Sheriff and wins!</h3>
+      `;
+      return;
+    }
+
+    if (sheriffAllowedRoles.includes(target.role)) {
+      target.alive = false;
+
+      votingBox.innerHTML += `
+        <hr>
+        <h3>${target.name} was shot by the Sheriff!</h3>
+      `;
+    } else {
+      sheriff.alive = false;
+
+      votingBox.innerHTML += `
+        <hr>
+        <h3>${sheriff.name} shot the wrong role and died!</h3>
+      `;
+    }
+  }
+
+  sheriffShotTarget = null;
 }
 
   // ❤️ Lovers die together
