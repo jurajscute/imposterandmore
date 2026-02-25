@@ -846,6 +846,23 @@
       Randomize Roles
     </label>
   </div>
+  <!-- ================= IMPOSTORS ================= -->
+   <h4 class="role-category">Impostors</h4>
+  <div class="roles-grid">
+
+    <div class="role-pill imposter-toggle" id="imposterContainer">
+      <label>
+        <input id="imposterToggle" type="checkbox" name="imposter">
+        Impostor
+      </label>
+    </div>
+    <div class="role-pill dictator-toggle" id="dictratorrContainer">
+      <label>
+        <input id="dictatorToggle" type="checkbox" name="dictator">
+        Dictator
+      </label>
+    </div>
+
 
   <!-- ================= CREW ================= -->
   <h4 class="role-category">Crew</h4>
@@ -902,8 +919,8 @@
 
   </div>
 
-  <!-- ================= IMPOSTOR ================= -->
-  <h4 class="role-category">Impostor</h4>
+  <!-- ================= EVIL ================= -->
+  <h4 class="role-category">Evil</h4>
   <div class="roles-grid">
 
     <div class="role-pill shadow-toggle" id="shadowContainer">
@@ -1093,6 +1110,8 @@ const playerCountDisplay = document.getElementById("playerCountDisplay");
 // Role toggle elements
 const randomizeToggle = document.getElementById("randomizeToggle");
 const detectiveToggle = document.getElementById("detectiveToggle");
+const imposterToggle = document.getElementById("imposterToggle");
+const dictatorToggle = document.getElementById("dictatorToggle");
 const jesterToggle = document.getElementById("jesterToggle");
 const jackalToggle = document.getElementById("jackalToggle");
 const viperToggle = document.getElementById("viperToggle");
@@ -1158,6 +1177,9 @@ const roleData = {
   clueless:   { team: "Crew" },
   idiot:      { team: "Crew" },
 
+  imposter:   { team: "Evil" },
+  dictator:   { team: "Evil" },
+
   maniac:     { team: "Evil" },
   shadow:     { team: "Evil" },
 
@@ -1168,6 +1190,8 @@ const roleData = {
 };
 
 // Containers for visual disabling
+const imposterContainer = document.getElementById("imposterContainer");
+const dictatorContainer = document.getElementById("dictatorContainer");
 const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
 const jackalContainer = document.getElementById("jackalContainer");
@@ -2950,6 +2974,8 @@ function checkWinCondition() {
   const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
   const viperAlive  = alivePlayers.find(p => p.role === "Viper");
 
+const mainEvilRoles = ["Imposter", "Dictator"];
+
 const impostorsAlive = alivePlayers.filter(p =>
   mainEvilRoles.includes(p.role) ||
   ["Maniac","Shadow"].includes(p.role)
@@ -3468,14 +3494,31 @@ if (randomizeToggle.checked) {
   activeMainEvil = shuffled[0];
 }
 
-// MAIN EVIL ASSIGNMENT
+// 🔴 BUILD ACTIVE MAIN EVIL POOL
+let activeMainEvilPool = [];
+
+activeMainEvilPool.push("Imposter"); // Base Imposter always exists
+
+if (dictatorToggle.checked) {
+  activeMainEvilPool.push("Dictator");
+}
+// 🔴 MAIN EVIL ASSIGNMENT
 let imposters = 0;
 
 while (imposters < imposterCount) {
+
   const idx = Math.floor(Math.random() * playerCount);
 
   if (words[idx] === "Civilian") {
-    words[idx] = activeMainEvil;
+
+    // Pick random enabled evil type
+    const randomEvil =
+      activeMainEvilPool[
+        Math.floor(Math.random() * activeMainEvilPool.length)
+      ];
+
+    words[idx] = randomEvil;
+
     imposterIndex = idx;
     imposters++;
   }
