@@ -3495,14 +3495,22 @@ if (randomizeToggle.checked) {
   activeMainEvil = shuffled[0];
 }
 
-// 🔴 BUILD ACTIVE MAIN EVIL POOL
-let activeMainEvilPool = [];
+// 🔴 BUILD MAIN EVIL POOL BASED ON TOGGLES
+let mainEvilPool = [];
 
-activeMainEvilPool.push("Imposter"); // Base Imposter always exists
+if (imposterToggle.checked) {
+  mainEvilPool.push("Imposter");
+}
 
 if (dictatorToggle.checked) {
-  activeMainEvilPool.push("Dictator");
+  mainEvilPool.push("Dictator");
 }
+
+// SAFETY: If nothing enabled, default to Impostor
+if (mainEvilPool.length === 0) {
+  mainEvilPool.push("Imposter");
+}
+
 // 🔴 MAIN EVIL ASSIGNMENT
 let imposters = 0;
 
@@ -3512,15 +3520,13 @@ while (imposters < imposterCount) {
 
   if (words[idx] === "Civilian") {
 
-    // Pick random enabled evil type
-    const randomEvil =
-      activeMainEvilPool[
-        Math.floor(Math.random() * activeMainEvilPool.length)
-      ];
+    // Pick random enabled main evil
+    const chosenEvil =
+      mainEvilPool[Math.floor(Math.random() * mainEvilPool.length)];
 
-    words[idx] = randomEvil;
+    words[idx] = chosenEvil;
 
-    imposterIndex = idx;
+    imposterIndex = idx; // still works for first evil
     imposters++;
   }
 }
