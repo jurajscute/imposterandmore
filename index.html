@@ -645,6 +645,7 @@
 </head>
 
 <body>
+  
 <div class="container">
 
   <h1>
@@ -1042,6 +1043,21 @@ const cancelAiBtn = document.getElementById("cancelAiBtn");
 const generateAiBtn = document.getElementById("generateAiBtn");
 const aiTopicInput = document.getElementById("aiTopicInput");
 const aiStatus = document.getElementById("aiStatus");
+
+Object.values(roleToggleMap).forEach(toggleId => {
+  const toggle = document.getElementById(toggleId);
+
+  if (!toggle) return;
+
+  const container = toggle.closest(".role-pill");
+
+  // Initial state (for page reload)
+  container.classList.toggle("enabled", toggle.checked);
+
+  toggle.addEventListener("change", () => {
+    container.classList.toggle("enabled", toggle.checked);
+  });
+});
 
 /* ====== GAME STATE ===== */
 let currentSubject = "";
