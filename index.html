@@ -2404,6 +2404,52 @@ function castVote(targetIndex) {
   const dictator = players[currentVoterIndex];
 
   // 🔄 Build live vote map BEFORE cancellation
+  let liveVotes = {};
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+    if (player.vote === null) return;
+
+    let weight = 1;
+    if (index === kingPlayer) weight = 2;
+    if (player.role === "Maniac") weight = 0;
+    if (player.role === "Viper") weight = 0;
+
+    if (!liveVotes[player.vote]) liveVotes[player.vote] = 0;
+    liveVotes[player.vote] += weight;
+  });
+
+  // 🗳 Build vote breakdown
+  let voteBreakdownHTML = `
+    <div class="dictator-intel">
+      <hr>
+      <h3>🗳 Current Votes</h3>
+  `;
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+
+    const voteCount = liveVotes[index] || 0;
+
+    voteBreakdownHTML += `
+      <p><strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}</p>
+    `;
+  });
+
+  voteBreakdownHTML += `<hr><h3>🕵️ Who Voted For Who</h3>`;
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+    if (player.vote === null) return;
+
+    const votedFor = players[player.vote]?.name || "Nobody";
+
+    voteBreakdownHTML += `
+      <p>${player.name} ➜ ${votedFor}</p>
+    `;
+  });
+
+  voteBreakdownHTML += `</div>`;
 
   // 🎭 Render Screen
   votingBox.innerHTML = `
