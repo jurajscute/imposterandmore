@@ -953,7 +953,7 @@ let votes = {};
 let poisonedTarget = null;
 let viperChoosingPoison = false;
 let sheriffAllowedRoles = ["Imposter", "Jackal", "Assassin", "Viper", "Maniac", "Shadow"]; // roles Sheriff can kill safely
-let sheriffHasShot = false;
+
 let sheriffShotTarget = null;
 
 // NEW: State for detective interaction
@@ -2200,7 +2200,6 @@ function castVote(targetIndex) {
  // ⭐ Sheriff secretly chooses shoot target during their vote
 if (
   voter.role === "Sheriff" &&
-  !sheriffHasShot &&
   sheriffShotTarget === null
 ) {
   showSheriffShootOptions(targetIndex);
@@ -2277,7 +2276,6 @@ function showSheriffShootOptions(voteTargetIndex) {
 
       btn.onclick = () => {
         sheriffShotTarget = index;
-        sheriffHasShot = true;
 
         // Continue voting normally
         currentVoterIndex++;
@@ -2295,7 +2293,6 @@ function showSheriffShootOptions(voteTargetIndex) {
   skipBtn.style.marginTop = "15px";
 
   skipBtn.onclick = () => {
-    sheriffHasShot = true;
     currentVoterIndex++;
     showNextVoter();
   };
