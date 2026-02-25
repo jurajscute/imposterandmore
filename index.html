@@ -2238,7 +2238,6 @@ function showPoisonScreen() {
 
 function finishVoting() {
 
-  // No votes case safety
   if (!votes || Object.keys(votes).length === 0) {
     showVotingResults(null);
     return;
@@ -2252,11 +2251,29 @@ function finishVoting() {
 
   // 🔥 TIE
   if (topPlayers.length !== 1) {
-    showVotingResults(null);
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2>Seems like a Tie!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>No one is eliminated this round.</p>
+        <br>
+        <button id="continueBtn" class="reveal-roles-btn">
+          Continue
+        </button>
+      </div>
+    `;
+
+    document.getElementById("continueBtn").onclick = nextRound;
+
     return;
   }
 
   let eliminatedIndex = parseInt(topPlayers[0]);
+
+  showVotingResults(eliminatedIndex);
+
 
 if (eliminatedIndex !== null) {
 
