@@ -2180,21 +2180,9 @@ function castVote(targetIndex) {
 
   let voteWeight = 1;
 
-  // 👑 King double vote
-  if (currentVoterIndex === kingPlayer) {
-    voteWeight = 2;
-  }
-
-  // 😈 Maniac vote doesn't count
-  if (voter.role === "Maniac") {
-    voteWeight = 0;
-  }
-
-   // 🐍 Viper vote doesn't count
-  if (voter.role === "Viper") {
-    voteWeight = 0;
-  }
-
+  if (currentVoterIndex === kingPlayer) voteWeight = 2;
+  if (voter.role === "Maniac") voteWeight = 0;
+  if (voter.role === "Viper") voteWeight = 0;
 
   if (!votes[targetIndex]) {
     votes[targetIndex] = 0;
@@ -2202,37 +2190,31 @@ function castVote(targetIndex) {
 
   votes[targetIndex] += voteWeight;
 
-  // 🐍 VIPER SPECIAL LOGIC
+  // 🐍 VIPER LOGIC
   if (voter.role === "Viper" && !viperChoosingPoison) {
-
     viperChoosingPoison = true;
-
     showPoisonScreen();
-
-    return; // STOP here — do NOT increment index yet
+    return;
   }
-  // Normal voter flow
+
+  // ⭐ SHERIFF LOGIC (MUST BE BEFORE increment)
+  if (
+    voter.role === "Sheriff" &&
+    !sheriffHasShot &&
+    !sheriffChoosingTarget
+  ) {
+    sheriffChoosingTarget = true;
+    showSheriffScreen();
+    return; // 🚨 STOP HERE
+  }
+
+  // ✅ Only non-Viper, non-Sheriff reach here
   currentVoterIndex++;
 
   setTimeout(() => {
     showNextVoter();
   }, 150);
-
-// ⭐ Sheriff secret shooting
-if (
-  voter.role === "Sheriff" &&
-  !sheriffHasShot &&
-  !sheriffChoosingTarget
-) {
-  sheriffChoosingTarget = true;
-  showSheriffScreen();
-  return;
 }
-}
-
-
-
-
 
 function showPoisonScreen() {
 
