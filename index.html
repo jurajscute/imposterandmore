@@ -2681,6 +2681,91 @@ if (eliminatedPlayer.role === "Shield") {
   continueBtn.textContent = "Continue";
   continueBtn.className = "reveal-roles-btn";
   continueBtn.style.marginTop = "15px";
+  continueBtn.onclick = () => {
+  resolveSheriffAfterShield();
+};
+
+  votingBox.appendChild(continueBtn);
+}
+
+function resolveSheriffAfterShield() {
+
+  if (sheriffShotTarget === null) {
+    nextRound();
+    return;
+  }
+
+  const sheriff = players.find(p => p.role === "Sheriff");
+  const target = players[sheriffShotTarget];
+
+  if (!target || !target.alive) {
+    sheriffShotTarget = null;
+    nextRound();
+    return;
+  }
+
+  // 🎭 Jester shot = instant win
+  if (target.role === "Jester") {
+    endGame(
+      `<strong>${target.name} the Jester wins!</strong><br>
+       They were shot by the Sheriff!`,
+      "Jester"
+    );
+    return;
+  }
+
+  let loverDeathIndex = null;
+
+  if (sheriffAllowedRoles.includes(target.role)) {
+
+    target.alive = false;
+    loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    `;
+
+  } else {
+
+    sheriff.alive = false;
+    const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
+    loverDeathIndex = handleLoverChainDeath(sheriffIndex);
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>❌ The Sheriff shot the wrong person and died!</h3>
+    `;
+  }
+
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
+        <hr>
+        <h3>💔 ${lover.name} could not live without their lover...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+            ${lover.role}
+          </span>
+        </p>
+      </div>
+    `;
+  }
+
+  sheriffShotTarget = null;
+
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
   continueBtn.onclick = nextRound;
 
   votingBox.appendChild(continueBtn);
