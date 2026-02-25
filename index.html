@@ -2454,72 +2454,138 @@ function finishVoting() {
       return;
     }
 
-eliminatedPlayer.alive = false;
+    // 🛡️ SHIELD REVENGE
+    if (eliminatedPlayer.role === "Shield") {
 
-const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
+      eliminatedPlayer.alive = false;
 
-votingBox.innerHTML = `
-  <div class="roles-reveal-header">
-    <h2>${eliminatedPlayer.name} has been eliminated!</h2>
-  </div>
-  <div class="roles-reveal-content">
-    <p>
-      They were the 
-      <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
-        ${eliminatedPlayer.role}
-      </span>
-    </p>
-  </div>
-`;
+      const voters = players
+        .map((player, index) => ({ player, index }))
+        .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
 
-if (loverDeathIndex !== null) {
-  const lover = players[loverDeathIndex];
-
-  votingBox.innerHTML += `
-    <div class="lover-death-message">
-      <hr>
-      <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-          ${lover.role}
-        </span>
-      </p>
-    </div>
-  `;
-}
-
-    // ❤️ LOVER CHAIN DEATH
-    if (eliminatedPlayer.isLover) {
-      const otherLover = players.find((p, index) =>
-        p.isLover && index !== eliminatedIndex && p.alive
-      );
-      if (otherLover) {
-        otherLover.alive = false;
+      if (voters.length === 0) {
+        votingBox.innerHTML = `
+          <div class="roles-reveal-header">
+            <h2>${eliminatedPlayer.name} has been eliminated!</h2>
+          </div>
+          <div class="roles-reveal-content">
+            <p>No one can be punished.</p>
+          </div>
+        `;
+        return;
       }
+
+      votingBox.innerHTML = `
+        <div class="roles-reveal-header">
+          <h2 style="color:${roleColors["Shield"]}">
+            ${eliminatedPlayer.name}'s Shield activates!
+          </h2>
+          <p>Choose one player to eliminate:</p>
+        </div>
+        <div class="roles-reveal-content" id="shieldOptions"></div>
+      `;
+
+      const shieldOptions = document.getElementById("shieldOptions");
+
+      voters.forEach(obj => {
+        const btn = document.createElement("button");
+        btn.textContent = obj.player.name;
+        btn.className = "reveal-roles-btn";
+
+        btn.onclick = () => {
+
+          const killedPlayer = obj.player;
+          killedPlayer.alive = false;
+
+          const loverDeathIndex = handleLoverChainDeath(obj.index);
+
+          votingBox.innerHTML = `
+            <div class="roles-reveal-header">
+              <h3 style="color:${roleColors["Shield"]}">
+                ${eliminatedPlayer.name}'s Shield activates!
+              </h3>
+            </div>
+            <div class="roles-reveal-content">
+              <h3>${killedPlayer.name} has been splattered by a shield!</h3>
+              <p>
+                They were the 
+                <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
+                  ${killedPlayer.role}
+                </span>
+              </p>
+            </div>
+          `;
+
+          if (loverDeathIndex !== null) {
+            const lover = players[loverDeathIndex];
+            votingBox.innerHTML += `
+              <div class="lover-death-message">
+                <hr>
+                <h3>💔 ${lover.name} could not live without their lover...</h3>
+                <p>
+                  They were the 
+                  <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+                    ${lover.role}
+                  </span>
+                </p>
+              </div>
+            `;
+          }
+
+          const continueBtn = document.createElement("button");
+          continueBtn.textContent = "Continue";
+          continueBtn.className = "reveal-roles-btn";
+          continueBtn.style.marginTop = "15px";
+          continueBtn.onclick = nextRound;
+
+          votingBox.appendChild(continueBtn);
+        };
+
+        shieldOptions.appendChild(btn);
+      });
+
+      return;
+    }
+
+    // 🗳 Normal elimination
+    eliminatedPlayer.alive = false;
+
+    const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2>${eliminatedPlayer.name} has been eliminated!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>
+          They were the 
+          <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+            ${eliminatedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+      votingBox.innerHTML += `
+        <div class="lover-death-message">
+          <hr>
+          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+              ${lover.role}
+            </span>
+          </p>
+        </div>
+      `;
     }
 
     // 🗡 ASSASSIN CHECKS
     const assassinEnabled = document.getElementById("assassinToggle")?.checked;
     let assassinPlayer = players.find(p => p.role === "Assassin");
 
-    // 🎭 + 🗡 Combo win
-    if (
-      assassinEnabled &&
-      assassinPlayer &&
-      assassinTarget !== null &&
-      eliminatedPlayer.role === "Jester" &&
-      eliminatedIndex === assassinTarget - 1
-    ) {
-      endGame(
-        `<strong>${eliminatedPlayer.name} the Jester</strong> AND
-         <strong>${assassinPlayer.name} the Assassin</strong> both win!`,
-        "Assassin"
-      );
-      return;
-    }
-
-    // 🗡 Assassin solo
     if (
       assassinEnabled &&
       assassinPlayer &&
@@ -2535,73 +2601,69 @@ if (loverDeathIndex !== null) {
     }
   }
 
-// 🔫 SHERIFF RESOLUTION (even on tie)
-if (sheriffShotTarget !== null) {
+  // 🔫 SHERIFF RESOLUTION (even on tie)
+  if (sheriffShotTarget !== null) {
 
-  const sheriff = players.find(p => p.role === "Sheriff");
-  const target = players[sheriffShotTarget];
+    const sheriff = players.find(p => p.role === "Sheriff");
+    const target = players[sheriffShotTarget];
 
-  if (target.role === "Jester") {
-    endGame(
-      `<strong>${target.name} the Jester wins!</strong><br>
-       They were shot by the Sheriff!`,
-      "Jester"
-    );
-    return;
-  }
+    if (target.role === "Jester") {
+      endGame(
+        `<strong>${target.name} the Jester wins!</strong><br>
+         They were shot by the Sheriff!`,
+        "Jester"
+      );
+      return;
+    }
 
-  let loverDeathIndex = null;
+    let loverDeathIndex = null;
 
-  if (sheriffAllowedRoles.includes(target.role)) {
+    if (sheriffAllowedRoles.includes(target.role)) {
 
-    target.alive = false;
-    loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
+      target.alive = false;
+      loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
-    votingBox.innerHTML += `
-      <hr>
-      <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[target.role]}; font-weight:bold;">
-          ${target.role}
-        </span>
-      </p>
-    `;
-
-  } else {
-
-    sheriff.alive = false;
-
-    const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
-    loverDeathIndex = handleLoverChainDeath(sheriffIndex);
-
-    votingBox.innerHTML += `
-      <hr>
-      <h3>❌ The Sheriff shot the wrong person and died!</h3>
-    `;
-  }
-
-  // ❤️ LOVER MESSAGE (NOW RUNS FOR BOTH CASES)
-  if (loverDeathIndex !== null) {
-
-    const lover = players[loverDeathIndex];
-
-    votingBox.innerHTML += `
-      <div class="lover-death-message">
+      votingBox.innerHTML += `
         <hr>
-        <h3>💔 ${lover.name} could not live without their lover...</h3>
+        <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
         <p>
           They were the 
-          <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-            ${lover.role}
+          <span style="color:${roleColors[target.role]}; font-weight:bold;">
+            ${target.role}
           </span>
         </p>
-      </div>
-    `;
-  }
+      `;
 
-  sheriffShotTarget = null;
-}
+    } else {
+
+      sheriff.alive = false;
+      const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
+      loverDeathIndex = handleLoverChainDeath(sheriffIndex);
+
+      votingBox.innerHTML += `
+        <hr>
+        <h3>❌ The Sheriff shot the wrong person and died!</h3>
+      `;
+    }
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+      votingBox.innerHTML += `
+        <div class="lover-death-message">
+          <hr>
+          <h3>💔 ${lover.name} could not live without their lover...</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+              ${lover.role}
+            </span>
+          </p>
+        </div>
+      `;
+    }
+
+    sheriffShotTarget = null;
+  }
 
   // ❤️ LOVERS WIN CHECK
   const alivePlayers = players.filter(p => p.alive);
