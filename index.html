@@ -953,8 +953,8 @@ let votes = {};
 let poisonedTarget = null;
 let viperChoosingPoison = false;
 let sheriffAllowedRoles = ["Imposter", "Jackal", "Assassin", "Viper", "Maniac", "Shadow"]; // roles Sheriff can kill safely
+let sheriffChoosingTarget = false;
 let sheriffHasShot = false;
-let sheriffShotTarget = null;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -2217,7 +2217,22 @@ function castVote(targetIndex) {
   setTimeout(() => {
     showNextVoter();
   }, 150);
+
+// ⭐ Sheriff secret shooting
+if (
+  voter.role === "Sheriff" &&
+  !sheriffHasShot &&
+  !sheriffChoosingTarget
+) {
+  sheriffChoosingTarget = true;
+  showSheriffScreen();
+  return;
 }
+}
+
+
+
+
 
 function showPoisonScreen() {
 
@@ -2263,15 +2278,13 @@ function showSheriffScreen() {
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
-      <h3>⭐ ${sheriff.name}, choose someone to SHOOT</h3>
-      <p>You may skip if you are unsure.</p>
+      <h3>⭐ ${sheriff.name}, choose someone to shoot</h3>
     </div>
     <div class="roles-reveal-content" id="sheriffOptions"></div>
   `;
 
-  const sheriffOptions = document.getElementById("sheriffOptions");
+  const container = document.getElementById("sheriffOptions");
 
-  // 🔫 Shoot buttons
   players.forEach((player, index) => {
 
     if (player.alive && index !== currentVoterIndex) {
@@ -2283,83 +2296,96 @@ function showSheriffScreen() {
 
       btn.onclick = () => resolveSheriffShot(index);
 
-      sheriffOptions.appendChild(btn);
-    }
-  });
-
-  // ⏭ Skip Button
-  const skipBtn = document.createElement("button");
-  skipBtn.textContent = "Skip Shooting";
-  skipBtn.className = "reveal-roles-btn";
-  skipBtn.style.marginTop = "15px";
-
-  skipBtn.onclick = () => {
-    sheriffChoosingTarget = false;
-    currentVoterIndex++;
-    showNextVoter();
-  };
-
-  sheriffOptions.appendChild(skipBtn);
-}
-
-function showSheriffDecisionScreen(sheriff) {
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2>⭐ ${sheriff.name}, do you want to shoot?</h2>
-    </div>
-    <div class="roles-reveal-content" id="sheriffOptions"></div>
-  `;
-
-  const container = document.getElementById("sheriffOptions");
-
-  // 🔫 Shoot buttons
-  players.forEach((player, index) => {
-    if (player.alive && player.name !== sheriff.name) {
-
-      const btn = document.createElement("button");
-      btn.textContent = player.name;
-      btn.className = "reveal-roles-btn";
-      btn.style.marginBottom = "8px";
-
-      btn.onclick = () => resolveSheriffShot(sheriff, index);
-
       container.appendChild(btn);
     }
   });
 
-  // ⏭ Skip button
+  // ⏭ Skip option
   const skipBtn = document.createElement("button");
   skipBtn.textContent = "Skip (Do not shoot)";
   skipBtn.className = "reveal-roles-btn";
   skipBtn.style.marginTop = "15px";
 
   skipBtn.onclick = () => {
-    sheriffHasShot = true; // bullet is used even if skipped
-    showVotingResults(eliminatedIndex);
+    sheriffHasShot = true; // bullet consumed
+    sheriffChoosingTarget = false;
+    currentVoterIndex++;
+    showNextVoter();
   };
 
   container.appendChild(skipBtn);
 }
 
-function resolveSheriffShot(sheriff, targetIndex) {
+function resolveSheriffShot(targetIndex) {
 
+  const sheriff = players[currentVoterIndex];
   const target = players[targetIndex];
-  sheriffHasShot = true;
 
-  // 🎭 Jester wins if shot
+  sheriffChoosingTarget = false;
+  sheriffHasShot = true; // 🔫 bullet used
+
+  // 🎭 Jester wins instantly if shot
   if (target.role === "Jester") {
-    endGame(`<strong>${target.name} the Jester wins!</strong> Shot by Sheriff.`,"Jester");
+    endGame(
+      `<strong>${target.name} the Jester wins!</strong><br>
+       They were shot by the Sheriff!`,
+      "Jester"
+    );
     return;
   }
 
+  let message = "";
+
+  // ✅ Correct role shot
   if (sheriffAllowedRoles.includes(target.role)) {
+
     target.alive = false;
+
+    message = `
+      <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    `;
+
   } else {
+
+    // ❌ Wrong role — Sheriff dies
     sheriff.alive = false;
+
+    message = `
+      <h3>❌ ${sheriff.name} shot the wrong person and died!</h3>
+      <p>
+        The target was 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    `;
   }
 
-  showVotingResults(eliminatedIndex);
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>⭐ Sheriff Action</h2>
+    </div>
+    <div class="roles-reveal-content">
+      ${message}
+      <br><br>
+      <button id="continueBtn" class="reveal-roles-btn">
+        Continue Voting
+      </button>
+    </div>
+  `;
+
+  document.getElementById("continueBtn").onclick = () => {
+    currentVoterIndex++;
+    setTimeout(() => {
+      showNextVoter();
+    }, 150);
+  };
 }
 
 function finishVoting() {
