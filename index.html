@@ -2454,115 +2454,100 @@ function finishVoting() {
       return;
     }
 
-    // 🛡️ SHIELD REVENGE
-    if (eliminatedPlayer.role === "Shield") {
+  // 🛡️ SHIELD REVENGE (Shield survives)
+if (eliminatedPlayer.role === "Shield") {
 
-      eliminatedPlayer.pendingDeath = true;
+  const voters = players
+    .map((player, index) => ({ player, index }))
+    .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
 
-      const voters = players
-        .map((player, index) => ({ player, index }))
-        .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
+  if (voters.length === 0) {
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2>${eliminatedPlayer.name} was voted!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>But no one can be punished.</p>
+      </div>
+    `;
+  } else {
 
-      if (voters.length === 0) {
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2 style="color:${roleColors["Shield"]}">
+          🛡️ ${eliminatedPlayer.name}'s Shield activates!
+        </h2>
+        <p>Choose one player to eliminate:</p>
+      </div>
+      <div class="roles-reveal-content" id="shieldOptions"></div>
+    `;
+
+    const shieldOptions = document.getElementById("shieldOptions");
+
+    voters.forEach(obj => {
+      const btn = document.createElement("button");
+      btn.textContent = obj.player.name;
+      btn.className = "reveal-roles-btn";
+
+      btn.onclick = () => {
+
+        const killedPlayer = obj.player;
+        killedPlayer.alive = false;
+
+        let loverDeathIndex = null;
+
+        if (killedPlayer.isLover) {
+          loverDeathIndex = handleLoverChainDeath(obj.index);
+        }
+
         votingBox.innerHTML = `
           <div class="roles-reveal-header">
-            <h2>${eliminatedPlayer.name} has been eliminated!</h2>
+            <h3 style="color:${roleColors["Shield"]}">
+              🛡️ ${eliminatedPlayer.name} retaliates!
+            </h3>
           </div>
           <div class="roles-reveal-content">
-            <p>No one can be punished.</p>
+            <h3>${killedPlayer.name} has been smushed into pieces!</h3>
+            <p>
+              They were the 
+              <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
+                ${killedPlayer.role}
+              </span>
+            </p>
           </div>
         `;
-        return;
-      }
 
-      votingBox.innerHTML = `
-        <div class="roles-reveal-header">
-          <h2 style="color:${roleColors["Shield"]}">
-            ${eliminatedPlayer.name}'s Shield activates!
-          </h2>
-          <p>Choose one player to eliminate:</p>
-        </div>
-        <div class="roles-reveal-content" id="shieldOptions"></div>
-      `;
-
-      const shieldOptions = document.getElementById("shieldOptions");
-
-      voters.forEach(obj => {
-        const btn = document.createElement("button");
-        btn.textContent = obj.player.name;
-        btn.className = "reveal-roles-btn";
-
-        btn.onclick = () => {
-
-          const killedPlayer = obj.player;
-          killedPlayer.alive = false;
-
-          if (eliminatedPlayer.pendingDeath) {
-  eliminatedPlayer.alive = false;
-  eliminatedPlayer.pendingDeath = false;
-}
-
-          let loverDeathIndex = null;
-
-// If killed player is a Lover → trigger chain death
-if (killedPlayer.isLover) {
-  loverDeathIndex = handleLoverChainDeath(obj.index);
-}
-
-// ALSO: if the Shield was a Lover and the killed player was NOT the lover,
-// we need to trigger chain from the Shield's death
-if (eliminatedPlayer.isLover && !killedPlayer.isLover) {
-  const shieldIndex = players.findIndex(p => p === eliminatedPlayer);
-  loverDeathIndex = handleLoverChainDeath(shieldIndex);
-}
-
-          votingBox.innerHTML = `
-            <div class="roles-reveal-header">
-              <h3 style="color:${roleColors["Shield"]}">
-                ${eliminatedPlayer.name}'s Shield activates!
-              </h3>
-            </div>
-            <div class="roles-reveal-content">
-              <h3>${killedPlayer.name} has been splattered by a shield!</h3>
+        if (loverDeathIndex !== null) {
+          const lover = players[loverDeathIndex];
+          votingBox.innerHTML += `
+            <div class="lover-death-message">
+              <hr>
+              <h3>💔 ${lover.name} could not live without their lover...</h3>
               <p>
                 They were the 
-                <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
-                  ${killedPlayer.role}
+                <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+                  ${lover.role}
                 </span>
               </p>
             </div>
           `;
+        }
 
-          if (loverDeathIndex !== null) {
-            const lover = players[loverDeathIndex];
-            votingBox.innerHTML += `
-              <div class="lover-death-message">
-                <hr>
-                <h3>💔 ${lover.name} could not live without their lover...</h3>
-                <p>
-                  They were the 
-                  <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-                    ${lover.role}
-                  </span>
-                </p>
-              </div>
-            `;
-          }
+        const continueBtn = document.createElement("button");
+        continueBtn.textContent = "Continue";
+        continueBtn.className = "reveal-roles-btn";
+        continueBtn.style.marginTop = "15px";
+        continueBtn.onclick = nextRound;
 
-          const continueBtn = document.createElement("button");
-          continueBtn.textContent = "Continue";
-          continueBtn.className = "reveal-roles-btn";
-          continueBtn.style.marginTop = "15px";
-          continueBtn.onclick = nextRound;
+        votingBox.appendChild(continueBtn);
+      };
 
-          votingBox.appendChild(continueBtn);
-        };
+      shieldOptions.appendChild(btn);
+    });
+  }
 
-        shieldOptions.appendChild(btn);
-      });
-
-      return;
-    }
+  return; // stop normal elimination
+}
 
     // 🗳 Normal elimination
     eliminatedPlayer.alive = false;
