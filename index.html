@@ -1066,6 +1066,7 @@ let votes = {};
 let poisonedTarget = null;
 let viperChoosingPoison = false;
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Jackal", "Assassin", "Viper", "Maniac", "Shadow"]; // roles Sheriff can kill safely
+let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
@@ -2343,16 +2344,59 @@ function castVote(targetIndex) {
     return;
   }
 
- // ⭐ Sheriff secretly chooses shoot target during their vote
-if (
-  voter.role === "Sheriff" &&
-  sheriffShotTarget === null
-) {
-  showSheriffShootOptions(targetIndex);
-  return;
-}
+  // ⭐ SHERIFF LOGIC
+  if (
+    voter.role === "Sheriff" &&
+    sheriffShotTarget === null
+  ) {
+    showSheriffShootOptions(targetIndex);
+    return;
+  }
 
-  // ✅ Only non-Viper, non-Sheriff reach here
+  // 🟥 DICTATOR LOGIC (AFTER voting)
+  if (voter.role === "Dictator" && voter.alive) {
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2 style="color:${roleColors["Dictator"]}">
+        Dictator Power
+        </h2>
+        <p>Select a player whose vote will not count:</p>
+      </div>
+      <div class="roles-reveal-content" id="dictatorOptions"></div>
+    `;
+
+    const dictatorOptions = document.getElementById("dictatorOptions");
+
+    players.forEach((p, index) => {
+
+      if (!p.alive) return;
+
+      const btn = document.createElement("button");
+      btn.textContent = p.name;
+      btn.className = "reveal-roles-btn";
+
+      btn.onclick = () => {
+
+        dictatorBlockedPlayer = index;
+
+        votingBox.innerHTML = `
+          <h3>${p.name}'s vote has been nullified.</h3>
+        `;
+
+        setTimeout(() => {
+          currentVoterIndex++;
+          showNextVoter();
+        }, 800);
+      };
+
+      dictatorOptions.appendChild(btn);
+    });
+
+    return; // STOP normal flow until choice made
+  }
+
+  // ✅ Normal flow
   currentVoterIndex++;
 
   setTimeout(() => {
@@ -2559,10 +2603,34 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
 
-  let maxVotes = Math.max(...Object.values(votes || {0:0}));
-  let topPlayers = Object.keys(votes).filter(
-    player => votes[player] === maxVotes
-  );
+ // 🔄 Rebuild votes so Dictator cancellation applies
+votes = {};
+
+players.forEach((player, index) => {
+
+  if (!player.alive) return;
+
+  // 🚫 Skip Dictator blocked player
+  if (index === dictatorBlockedPlayer) return;
+
+  if (player.vote !== null) {
+
+    let weight = 1;
+
+    if (index === kingPlayer) weight = 2;
+    if (player.role === "Maniac") weight = 0;
+    if (player.role === "Viper") weight = 0;
+
+    if (!votes[player.vote]) votes[player.vote] = 0;
+    votes[player.vote] += weight;
+  }
+});
+
+// Now calculate result
+let maxVotes = Math.max(...Object.values(votes || {0:0}));
+let topPlayers = Object.keys(votes).filter(
+  player => votes[player] === maxVotes
+);
 
   let eliminatedIndex = null;
 
@@ -2914,6 +2982,8 @@ function resolveSheriffAfterShield() {
   continueBtn.onclick = nextRound;
 
   votingBox.appendChild(continueBtn);
+
+  dictatorBlockedPlayer = null;
 }
 
 function nextRound() {
