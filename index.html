@@ -427,7 +427,7 @@
 
 .sheriff-content {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* flexible columns */
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin-top: 15px;
   width: 100%;
@@ -469,6 +469,13 @@
 .sheriff-content button:last-child:nth-child(odd) {
   grid-column: 1 / -1;   /* span both columns */
   justify-self: center;  /* center it */
+}
+
+/* 🔥 Skip always centered below */
+.sheriff-skip {
+  grid-column: 1 / -1;   /* span both columns */
+  justify-self: center;  /* center horizontally */
+  max-width: 250px;      /* optional: make it slightly smaller */
 }
 
 @keyframes sheriffGlow {
@@ -2364,6 +2371,7 @@ skipBtn.className = "reveal-roles-btn";
 skipBtn.style.background = "#334155";
 skipBtn.style.color = "white";
 skipBtn.style.marginTop = "10px";
+skipBtn.className = "reveal-roles-btn sheriff-btn sheriff-skip";
 
 skipBtn.onclick = () => {
   sheriffShotTarget = null;
