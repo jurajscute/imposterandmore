@@ -2454,22 +2454,40 @@ function finishVoting() {
       return;
     }
 
-    eliminatedPlayer.alive = false;
-    handleLoverChainDeath(eliminatedIndex);
+eliminatedPlayer.alive = false;
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2>${eliminatedPlayer.name} has been eliminated!</h2>
-      </div>
-      <div class="roles-reveal-content">
-        <p>
-          They were the 
-          <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
-            ${eliminatedPlayer.role}
-          </span>
-        </p>
-      </div>
-    `;
+const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
+
+votingBox.innerHTML = `
+  <div class="roles-reveal-header">
+    <h2>${eliminatedPlayer.name} has been eliminated!</h2>
+  </div>
+  <div class="roles-reveal-content">
+    <p>
+      They were the 
+      <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+        ${eliminatedPlayer.role}
+      </span>
+    </p>
+  </div>
+`;
+
+if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+
+  votingBox.innerHTML += `
+    <div class="lover-death-message">
+      <hr>
+      <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
+    </div>
+  `;
+}
 
     // ❤️ LOVER CHAIN DEATH
     if (eliminatedPlayer.isLover) {
