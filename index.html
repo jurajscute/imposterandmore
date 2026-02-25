@@ -2517,70 +2517,73 @@ function finishVoting() {
     }
   }
 
-  // 🔫 SHERIFF RESOLUTION (even on tie)
-  if (sheriffShotTarget !== null) {
+// 🔫 SHERIFF RESOLUTION (even on tie)
+if (sheriffShotTarget !== null) {
 
-    const sheriff = players.find(p => p.role === "Sheriff");
-    const target = players[sheriffShotTarget];
+  const sheriff = players.find(p => p.role === "Sheriff");
+  const target = players[sheriffShotTarget];
 
-    if (target.role === "Jester") {
-      endGame(
-        `<strong>${target.name} the Jester wins!</strong><br>
-         They were shot by the Sheriff!`,
-        "Jester"
-      );
-      return;
-    }
+  if (target.role === "Jester") {
+    endGame(
+      `<strong>${target.name} the Jester wins!</strong><br>
+       They were shot by the Sheriff!`,
+      "Jester"
+    );
+    return;
+  }
 
-    if (sheriffAllowedRoles.includes(target.role)) {
-      target.alive = false;
+  let loverDeathIndex = null;
 
-const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
-      votingBox.innerHTML += `
+  if (sheriffAllowedRoles.includes(target.role)) {
+
+    target.alive = false;
+    loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    `;
+
+  } else {
+
+    sheriff.alive = false;
+
+    const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
+    loverDeathIndex = handleLoverChainDeath(sheriffIndex);
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>❌ The Sheriff shot the wrong person and died!</h3>
+    `;
+  }
+
+  // ❤️ LOVER MESSAGE (NOW RUNS FOR BOTH CASES)
+  if (loverDeathIndex !== null) {
+
+    const lover = players[loverDeathIndex];
+
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
         <hr>
-        <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+        <h3>💔 ${lover.name} could not live without their lover...</h3>
         <p>
           They were the 
-          <span style="color:${roleColors[target.role]}; font-weight:bold;">
-            ${target.role}
+          <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+            ${lover.role}
           </span>
         </p>
-      `;
-    } else {
-      sheriff.alive = false;
-
-const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
-const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
-
-      votingBox.innerHTML += `
-        <hr>
-        <h3>❌ The Sheriff shot the wrong person and died!</h3>
-      `;
-
-      if (loverDeathIndex !== null) {
-
-  const lover = players[loverDeathIndex];
-
-  const loverMessage = document.createElement("div");
-  loverMessage.className = "lover-death-message";
-
-  loverMessage.innerHTML = `
-    <hr>
-    <h3>${lover.name} could not live without their lover...</h3>
-    <p>
-      They were the 
-      <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-        ${lover.role}
-      </span>
-    </p>
-  `;
-
-  votingBox.appendChild(loverMessage);
-}
-    }
-
-    sheriffShotTarget = null;
+      </div>
+    `;
   }
+
+  sheriffShotTarget = null;
+}
 
   // ❤️ LOVERS WIN CHECK
   const alivePlayers = players.filter(p => p.alive);
