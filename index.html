@@ -2452,10 +2452,7 @@ function finishVoting() {
       return;
     }
 
-    if (sheriffAllowedRoles.includes(target.role)) {
-      target.alive = false;
-
-     const sheriffDiv = document.createElement("div");
+   const sheriffDiv = document.createElement("div");
 sheriffDiv.className = "sheriff-announcement";
 
 if (sheriffAllowedRoles.includes(target.role)) {
@@ -2491,8 +2488,8 @@ if (sheriffAllowedRoles.includes(target.role)) {
       The Sheriff has died.
     </div>
   `;
+  }
 }
-
 votingBox.appendChild(sheriffDiv);
 
   // ❤️ LOVERS WIN CHECK
