@@ -2238,19 +2238,16 @@ function showPoisonScreen() {
 
 function finishVoting() {
 
-  let maxVotes = Math.max(...Object.values(voteCounts));
+let maxVotes = Math.max(...votes);
 
-let topPlayers = Object.keys(voteCounts).filter(
-  player => voteCounts[player] === maxVotes
-);
+let topIndexes = votes
+  .map((v, i) => v === maxVotes ? i : -1)
+  .filter(i => i !== -1);
 
-if (topPlayers.length > 1) {
-  // 🔥 It's a tie
-  eliminationResult.textContent = "It's a tie! No one is eliminated.";
+if (topIndexes.length > 1) {
+  console.log("Tie! No elimination.");
 } else {
-  // ✅ Only one highest vote
-  let eliminatedPlayer = topPlayers[0];
-  eliminationResult.textContent = `${eliminatedPlayer} has been eliminated!`;
+  console.log("Player", topIndexes[0] + 1, "is eliminated.");
 }
 
 if (eliminatedIndex !== null) {
