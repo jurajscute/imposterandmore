@@ -413,45 +413,6 @@
   opacity: 1;
 }
 
-/* ===== SHERIFF RESULT SCREEN ===== */
-
-.sheriff-announcement {
-  border: 3px solid #d97706;
-  box-shadow: 0 0 20px rgba(217, 119, 6, 0.6);
-  background: linear-gradient(135deg, #fff7ed, #ffe4c7);
-  padding: 20px;
-  border-radius: 12px;
-  margin-top: 20px;
-  animation: sheriffPulse 1.2s ease;
-}
-
-.sheriff-header {
-  font-size: 22px;
-  font-weight: bold;
-  text-align: center;
-  color: #b45309;
-  margin-bottom: 10px;
-}
-
-.sheriff-kill {
-  font-size: 18px;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.sheriff-role-reveal {
-  font-weight: bold;
-  font-size: 18px;
-  text-align: center;
-  margin-top: 8px;
-}
-
-@keyframes sheriffPulse {
-  0% { transform: scale(0.95); opacity: 0; }
-  60% { transform: scale(1.03); opacity: 1; }
-  100% { transform: scale(1); }
-}
-
 /* Optional subtle pulse */
 @keyframes poisonPulse {
   0% { box-shadow: 0 0 8px rgba(0,255,100,0.5); }
@@ -2452,45 +2413,30 @@ function finishVoting() {
       return;
     }
 
-   const sheriffDiv = document.createElement("div");
-sheriffDiv.className = "sheriff-announcement";
+    if (sheriffAllowedRoles.includes(target.role)) {
+      target.alive = false;
 
-if (sheriffAllowedRoles.includes(target.role)) {
+      votingBox.innerHTML += `
+        <hr>
+        <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[target.role]}; font-weight:bold;">
+            ${target.role}
+          </span>
+        </p>
+      `;
+    } else {
+      sheriff.alive = false;
 
-  target.alive = false;
+      votingBox.innerHTML += `
+        <hr>
+        <h3>❌ The Sheriff shot the wrong person and died!</h3>
+      `;
+    }
 
-  sheriffDiv.innerHTML = `
-    <div class="sheriff-header">🔫 Sheriff Action</div>
-    <div class="sheriff-kill">
-      ${target.name} was shot by the Sheriff!
-    </div>
-    <div class="sheriff-role-reveal"
-         style="color:${roleColors[target.role]};">
-      They were the ${target.role}
-    </div>
-  `;
-
-} else {
-
-  sheriff.alive = false;
-
-  sheriffDiv.innerHTML = `
-    <div class="sheriff-header">🔫 Sheriff Action</div>
-    <div class="sheriff-kill">
-      The Sheriff shot the wrong person…
-    </div>
-    <div class="sheriff-role-reveal"
-         style="color:${roleColors[target.role]};">
-      The target was the ${target.role}
-    </div>
-    <div class="sheriff-role-reveal"
-         style="color:${roleColors["Sheriff"]}; margin-top:10px;">
-      The Sheriff has died.
-    </div>
-  `;
+    sheriffShotTarget = null;
   }
-}
-votingBox.appendChild(sheriffDiv);
 
   // ❤️ LOVERS WIN CHECK
   const alivePlayers = players.filter(p => p.alive);
