@@ -1139,6 +1139,26 @@ const roleThemes = {
   Lovers: "#ff7abc"
 };
 
+const roleData = {
+  Detective:  { team: "Crew" },
+  Sheriff:    { team: "Crew" },
+  Shield:     { team: "Crew" },
+  King:       { team: "Crew" },
+  Philosopher:{ team: "Crew" },
+  Echo:       { team: "Crew" },
+  Clueless:   { team: "Crew" },
+  Idiot:      { team: "Crew" },
+
+  Imposter:   { team: "Evil" },
+  Maniac:     { team: "Evil" },
+  Shadow:     { team: "Evil" },
+
+  Jackal:     { team: "Neutral" },
+  Viper:      { team: "Neutral" },
+  Assassin:   { team: "Neutral" },
+  Jester:     { team: "Neutral" }
+};
+
 // Containers for visual disabling
 const detectiveContainer = document.getElementById("detectiveContainer");
 const jesterContainer = document.getElementById("jesterContainer");
@@ -3274,43 +3294,25 @@ firstPlayerBox.textContent = "";
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
-      // 1. Reset all
-      useDetective = false;
-      useJester = false;
-      useJackal = false;
-      useViper = false;
-      useShield = false;
-      useAssassin = false;
-      useClueless = false;
-      useEcho = false;
-      useIdiot = false;
-      usePhilosopher = false;
-      useSheriff = false;
-      useManiac = false;
-      useShadow = false;
-      useKing = false;
-      useLovers = false;
+     // 1️⃣ Reset all
+useDetective = false;
+useJester = false;
+useJackal = false;
+useViper = false;
+useShield = false;
+useAssassin = false;
+useClueless = false;
+useEcho = false;
+useIdiot = false;
+usePhilosopher = false;
+useSheriff = false;
+useManiac = false;
+useShadow = false;
+useKing = false;
+useLovers = false;
 
-      // 2. Calculate available slots for civilian roles
-      // We generally want to leave at least 1 "plain" civilian in play.
-      const civilianSlots = playerCount - imposterCount;
-      // If 3 players (1 imp), civilianSlots = 2. Max roles = 1.
-      // If 4 players (1 imp), civilianSlots = 3. Max roles = 2.
-      // If 5 players (1 imp), civilianSlots = 4. Max roles = 3.
-      
-      let maxSpecialRoles = Math.max(0, civilianSlots - 1);
-      
-      // Determine random count between 0 and maxSpecialRoles
-      // (If maxSpecialRoles is 0, count is 0)
-      let targetRoleCount = 0;
-      if (maxSpecialRoles > 0) {
-        // Random number between 0 and maxSpecialRoles inclusive
-        // Changed to allow 0 roles (0 to max)
-        targetRoleCount = Math.floor(Math.random() * (maxSpecialRoles + 1));
-      }
-
-      // 3. Define pool of roles that consume a slot
-      let rolePool = [];
+// 2️⃣ Build role pool
+let rolePool = [];
 
 if (detectiveToggle.checked) rolePool.push('detective');
 if (jesterToggle.checked) rolePool.push('jester');
@@ -3329,51 +3331,72 @@ if (cluelessToggle.checked && categoryItems.length >= 2) {
   rolePool.push('clueless');
 }
 
-if (rolePool.length === 0) {
-  targetRoleCount = 0;
+// 3️⃣ Calculate slots
+const civilianSlots = playerCount - imposterCount;
+let maxSpecialRoles = civilianSlots;
+
+// Safety
+if (rolePool.length === 0 || maxSpecialRoles <= 0) {
+  maxSpecialRoles = 0;
 }
-      // Shuffle role pool
-      for (let i = rolePool.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [rolePool[i], rolePool[j]] = [rolePool[j], rolePool[i]];
-      }
 
-      // Enable the first N roles from the shuffled pool
-      for (let i = 0; i < targetRoleCount; i++) {
-         if (i < rolePool.length) {
-             const role = rolePool[i];
-             if (role === 'detective') useDetective = true;
-             if (role === 'jester') useJester = true;
-             if (role === 'jackal') useJackal = true;
-             if (role === 'viper') useViper = true;
-             if (role === 'shield') useShield = true;
-             if (role === 'assassin') useAssassin = true;
-             if (role === 'clueless') useClueless = true;
-             if (role === 'echo') useEcho = true;
-             if (role === 'idiot') useIdiot = true;
-             if (role === 'philosopher') usePhilosopher = true;
-             if (role === 'sheriff') useSheriff = true;
-             if (role === 'maniac') useManiac = true;
-             if (role === 'shadow') useShadow = true;
-         }
-      }
+// 4️⃣ Split by team
+const remainingPool = [...rolePool];
 
-      // 4. Handle King (doesn't take a slot, stackable)
-// Randomize Add-ons separately (respect toggles)
+let selectedRoles = [];
 
-// Lovers
+// 🟦 FORCE at least 1 Crew role if possible
+if (crewPool.length > 0 && maxSpecialRoles > 0) {
+  const forcedCrew =
+    crewPool[Math.floor(Math.random() * crewPool.length)];
+
+  selectedRoles.push(forcedCrew);
+}
+
+// 5️⃣ Shuffle remaining roles
+for (let i = remainingPool.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [remainingPool[i], remainingPool[j]] =
+    [remainingPool[j], remainingPool[i]];
+}
+
+// 6️⃣ Fill remaining slots
+for (let role of remainingPool) {
+  if (selectedRoles.length >= maxSpecialRoles) break;
+  if (!selectedRoles.includes(role)) {
+    selectedRoles.push(role);
+  }
+}
+
+// 7️⃣ Enable selected roles
+selectedRoles.forEach(role => {
+  if (role === 'detective') useDetective = true;
+  if (role === 'jester') useJester = true;
+  if (role === 'jackal') useJackal = true;
+  if (role === 'viper') useViper = true;
+  if (role === 'shield') useShield = true;
+  if (role === 'assassin') useAssassin = true;
+  if (role === 'clueless') useClueless = true;
+  if (role === 'echo') useEcho = true;
+  if (role === 'idiot') useIdiot = true;
+  if (role === 'philosopher') usePhilosopher = true;
+  if (role === 'sheriff') useSheriff = true;
+  if (role === 'maniac') useManiac = true;
+  if (role === 'shadow') useShadow = true;
+});
+
+// 8️⃣ Add-ons (stackable)
 if (loversToggle.checked && playerCount >= 2) {
   useLovers = Math.random() < 0.33;
-} else {
-  useLovers = false;
 }
 
-// King
 if (kingToggle.checked) {
   useKing = Math.random() < 0.33;
-} else {
-  useKing = false;
 }
+
+const crewPool = rolePool.filter(r => roleData[r].team === "Crew");
+const evilPool = rolePool.filter(r => roleData[r].team === "Evil");
+const neutralPool = rolePool.filter(r => roleData[r].team === "Neutral");
 
   } else {
       // Manual mode validation
