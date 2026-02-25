@@ -2211,15 +2211,6 @@ function castVote(targetIndex) {
 
     return; // STOP here — do NOT increment index yet
   }
-
- // ⭐ Sheriff marks a target (but resolves later)
-if (
-  voter.role === "Sheriff" &&
-  !sheriffHasShot &&
-  targetIndex !== currentVoterIndex // can't shoot self
-) {
-  sheriffShotTarget = targetIndex;
-}
   // Normal voter flow
   currentVoterIndex++;
 
@@ -2309,6 +2300,66 @@ function showSheriffScreen() {
   };
 
   sheriffOptions.appendChild(skipBtn);
+}
+
+function showSheriffDecisionScreen(sheriff) {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>⭐ ${sheriff.name}, do you want to shoot?</h2>
+    </div>
+    <div class="roles-reveal-content" id="sheriffOptions"></div>
+  `;
+
+  const container = document.getElementById("sheriffOptions");
+
+  // 🔫 Shoot buttons
+  players.forEach((player, index) => {
+    if (player.alive && player.name !== sheriff.name) {
+
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn";
+      btn.style.marginBottom = "8px";
+
+      btn.onclick = () => resolveSheriffShot(sheriff, index);
+
+      container.appendChild(btn);
+    }
+  });
+
+  // ⏭ Skip button
+  const skipBtn = document.createElement("button");
+  skipBtn.textContent = "Skip (Do not shoot)";
+  skipBtn.className = "reveal-roles-btn";
+  skipBtn.style.marginTop = "15px";
+
+  skipBtn.onclick = () => {
+    sheriffHasShot = true; // bullet is used even if skipped
+    showVotingResults(eliminatedIndex);
+  };
+
+  container.appendChild(skipBtn);
+}
+
+function resolveSheriffShot(sheriff, targetIndex) {
+
+  const target = players[targetIndex];
+  sheriffHasShot = true;
+
+  // 🎭 Jester wins if shot
+  if (target.role === "Jester") {
+    endGame(`<strong>${target.name} the Jester wins!</strong> Shot by Sheriff.`,"Jester");
+    return;
+  }
+
+  if (sheriffAllowedRoles.includes(target.role)) {
+    target.alive = false;
+  } else {
+    sheriff.alive = false;
+  }
+
+  showVotingResults(eliminatedIndex);
 }
 
 function finishVoting() {
@@ -2435,43 +2486,12 @@ flash.classList.add("shield-flash-active");
   return; // STOP normal elimination
 }
 
-// ⭐ Resolve Sheriff shot AFTER voting result
-if (sheriffShotTarget !== null && !sheriffHasShot) {
+// ⭐ If Sheriff is alive and still has bullet, show shoot option
+const sheriff = players.find(p => p.role === "Sheriff" && p.alive);
 
-  const sheriff = players.find(p => p.role === "Sheriff" && p.alive);
-
-  if (sheriff) {
-
-    const target = players[sheriffShotTarget];
-    sheriffHasShot = true;
-
-    // 🎭 Jester shot = instant Jester win
-    if (target.role === "Jester") {
-      votingBox.innerHTML += `
-        <hr>
-        <h3>${target.name} the Jester was shot by the Sheriff and wins!</h3>
-      `;
-      return;
-    }
-
-    if (sheriffAllowedRoles.includes(target.role)) {
-      target.alive = false;
-
-      votingBox.innerHTML += `
-        <hr>
-        <h3>${target.name} was shot by the Sheriff!</h3>
-      `;
-    } else {
-      sheriff.alive = false;
-
-      votingBox.innerHTML += `
-        <hr>
-        <h3>${sheriff.name} shot the wrong role and died!</h3>
-      `;
-    }
-  }
-
-  sheriffShotTarget = null;
+if (sheriff && !sheriffHasShot) {
+  showSheriffDecisionScreen(sheriff);
+  return; // STOP normal result screen
 }
 
   // ❤️ Lovers die together
