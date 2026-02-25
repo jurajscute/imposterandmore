@@ -2457,7 +2457,7 @@ function finishVoting() {
     // 🛡️ SHIELD REVENGE
     if (eliminatedPlayer.role === "Shield") {
 
-      eliminatedPlayer.alive = false;
+      eliminatedPlayer.pendingDeath = true;
 
       const voters = players
         .map((player, index) => ({ player, index }))
@@ -2496,6 +2496,11 @@ function finishVoting() {
 
           const killedPlayer = obj.player;
           killedPlayer.alive = false;
+
+          if (eliminatedPlayer.pendingDeath) {
+  eliminatedPlayer.alive = false;
+  eliminatedPlayer.pendingDeath = false;
+}
 
           let loverDeathIndex = null;
 
