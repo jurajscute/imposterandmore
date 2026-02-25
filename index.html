@@ -2305,7 +2305,7 @@ function showSheriffShootOptions(voteTargetIndex) {
 
 function finishVoting() {
 
-  let maxVotes = Math.max(...Object.values(votes));
+  let maxVotes = Math.max(...Object.values(votes || {0:0}));
   let topPlayers = Object.keys(votes).filter(
     player => votes[player] === maxVotes
   );
@@ -2313,9 +2313,8 @@ function finishVoting() {
   let eliminatedIndex = null;
 
   // 🗳 VOTE RESULT
-  if (topPlayers.length > 1) {
+  if (topPlayers.length > 1 || topPlayers.length === 0) {
 
-    // It's a tie
     votingBox.innerHTML = `
       <div class="roles-reveal-header">
         <h2>⚖️ It's a Tie!</h2>
@@ -2346,261 +2345,74 @@ function finishVoting() {
     `;
   }
 
-  // 🔫 SHERIFF RESOLUTION (ALWAYS RUNS — even on tie)
-  resolveSheriffAfterVote();
+  // 🔫 SHERIFF RESOLUTION (runs even on tie)
+  if (sheriffShotTarget !== null) {
 
-}
+    const sheriff = players.find(p => p.role === "Sheriff");
+    const target = players[sheriffShotTarget];
 
-  let eliminatedIndex = parseInt(topPlayers[0]);
-
-  showVotingResults(eliminatedIndex);
-
-
-if (eliminatedIndex !== null) {
-
-  const eliminatedPlayer = players[eliminatedIndex];
-  eliminatedPlayer.alive = false;
-
-  // 🛡️ Shield special ability
-if (eliminatedPlayer.role === "Shield") {
-
-  // Get all alive players who voted for the Shield
-  const voters = players
-    .map((player, index) => ({ player, index }))
-    .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
-
-  // If no one voted for Shield (edge case)
-  if (voters.length === 0) {
-    showVotingResults(null);
-    return;
-  }
-
-  // Show choice screen
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2 style="color:${roleColors["Shield"]}">
-        ${eliminatedPlayer.name}'s Shield activates!
-      </h2>
-      <p>Choose one player to eliminate:</p>
-    </div>
-    <div class="roles-reveal-content" id="shieldOptions"></div>
-  `;
-
-  const shieldOptions = document.getElementById("shieldOptions");
-
-  voters.forEach(obj => {
-    const btn = document.createElement("button");
-    btn.textContent = obj.player.name;
-    btn.className = "reveal-roles-btn";
-    btn.style.marginBottom = "8px";
-
-   btn.onclick = () => {
-
-  const killedPlayer = obj.player;
-  killedPlayer.alive = false;
-
-  players.forEach(p => p.vote = null);
-  votes = {};
-
-  // 🔥 Blue flash animation
-const flash = document.getElementById("shieldFlashOverlay");
-
-flash.classList.remove("shield-flash-active");
-void flash.offsetWidth; // restart animation
-flash.classList.add("shield-flash-active");
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h3 style="color:${roleColors["Shield"]}; text-shadow:0 0 10px ${roleColors["Shield"]};">
-        ${eliminatedPlayer.name}'s Shield activates!
-      </h3>
-    </div>
-
-    <div class="roles-reveal-content">
-      <hr>
-      <h3>${killedPlayer.name} has been splattered by a shield!</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
-          ${killedPlayer.role}
-        </span>
-      </p>
-
-      <br><br>
-      <button id="continueBtn" class="reveal-roles-btn">
-        Continue
-      </button>
-    </div>
-  `;
-  document.getElementById("continueBtn").onclick = nextRound;
-};
-
-    shieldOptions.appendChild(btn);
-  });
-
-  return; // STOP normal elimination
-}
-
-  // ❤️ Lovers die together
-  if (eliminatedPlayer.isLover) {
-
-    const otherLover = players.find((p, index) =>
-      p.isLover && index !== eliminatedIndex && p.alive
-    );
-
-    if (otherLover) {
-      otherLover.alive = false;
+    // 🎭 Jester instant win
+    if (target.role === "Jester") {
+      endGame(
+        `<strong>${target.name} the Jester wins!</strong><br>
+         They were shot by the Sheriff!`,
+        "Jester"
+      );
+      return;
     }
+
+    let sheriffMessage = "";
+
+    if (sheriffAllowedRoles.includes(target.role)) {
+
+      target.alive = false;
+
+      sheriffMessage = `
+        <hr>
+        <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[target.role]}; font-weight:bold;">
+            ${target.role}
+          </span>
+        </p>
+      `;
+
+    } else {
+
+      sheriff.alive = false;
+
+      sheriffMessage = `
+        <hr>
+        <h3>❌ The Sheriff shot the wrong person and died!</h3>
+        <p>
+          The target was 
+          <span style="color:${roleColors[target.role]}; font-weight:bold;">
+            ${target.role}
+          </span>
+        </p>
+      `;
+    }
+
+    const sheriffDiv = document.createElement("div");
+    sheriffDiv.innerHTML = sheriffMessage;
+    votingBox.appendChild(sheriffDiv);
+
+    sheriffShotTarget = null;
   }
 
-  // Recalculate alive players AFTER lover chain death
-  const alivePlayers = players.filter(p => p.alive);
+  // ✅ Continue button ALWAYS appears
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
 
-  // ❤️ Lovers win (only 2 alive and both lovers)
-  const loversAlive = alivePlayers.filter(p => p.isLover);
-  if (loversAlive.length === 2 && alivePlayers.length === 2) {
-    endGame(`<strong>The Lovers win!</strong>`,"Lovers");
-    return;
-  }
+  continueBtn.onclick = () => {
+    nextRound();
+  };
 
-// 🗡 Assassin
-const assassinEnabled = document.getElementById("assassinToggle").checked;
-let assassinPlayer = players.find(p => p.role === "Assassin");
-
-// 🎭 + 🗡 Jester & Assassin combo win
-if (
-  assassinEnabled &&
-  assassinPlayer &&
-  assassinTarget !== null &&
-  eliminatedPlayer.role === "Jester" &&
-  eliminatedIndex === assassinTarget - 1
-) {
-
-const jesterColor = roleColors["Jester"];
-const assassinColor = roleColors["Assassin"];
-
-votingBox.innerHTML = `
-  <div class="win-header"
-       style="
-         background: linear-gradient(-45deg, ${jesterColor}, ${assassinColor}, ${jesterColor});
-         background-size: 400% 400%;
-         animation: gradientShift 10s ease infinite;
-         color: white;
-       ">
-    <h2>
-      <span style="text-shadow:0 0 12px ;">
-        ${eliminatedPlayer.name} the Jester
-      </span>
-      AND
-      <span style="text-shadow:0 0 12px ;">
-        ${assassinPlayer.name} the Assassin
-      </span>
-      both win!
-    </h2>
-  </div>
-  <div class="win-content" style="background:#f4f4f4;">
-    <button onclick="location.reload()" class="reveal-roles-btn">
-      New Game
-    </button>
-  </div>
-`;
-
-  return;
+  votingBox.appendChild(continueBtn);
 }
-
-// 🎭 Jester solo
-if (eliminatedPlayer.role === "Jester") {
-  endGame(`<strong>${eliminatedPlayer.name} the Jester</strong> wins by getting voted out!`,"Jester");
-  return;
-}
-
-// 🗡 Assassin solo!
-if (
-  assassinEnabled &&
-  assassinPlayer &&
-  assassinTarget !== null &&
-  eliminatedIndex === assassinTarget - 1 &&
-  assassinPlayer.alive
-) {
-  endGame(`<strong>${assassinPlayer.name} the Assassin wins!</strong> Their target was voted out.`,"Assassin");
-  return;
-
-  }
-}
-  showVotingResults(eliminatedIndex);
-  // ⭐ Resolve Sheriff shot AFTER voting results
-if (sheriffShotTarget !== null) {
-
-  const sheriff = players.find(p => p.role === "Sheriff");
-
-  const target = players[sheriffShotTarget];
-
-  let message = "";
-
-  // 🎭 Jester instant win
-  if (target.role === "Jester") {
-    endGame(
-      `<strong>${target.name} the Jester wins!</strong><br>
-       They were shot by the Sheriff!`,
-      "Jester"
-    );
-    return;
-  }
-
-  if (sheriffAllowedRoles.includes(target.role)) {
-
-    target.alive = false;
-
-    message = `
-      <hr>
-      <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[target.role]}; font-weight:bold;">
-          ${target.role}
-        </span>
-      </p>
-    `;
-
-  } else {
-
-    sheriff.alive = false;
-
-    message = `
-      <hr>
-      <h3>❌ The Sheriff shot the wrong person and died!</h3>
-      <p>
-        The target was 
-        <span style="color:${roleColors[target.role]}; font-weight:bold;">
-          ${target.role}
-        </span>
-      </p>
-    `;
-  }
-
-  const sheriffDiv = document.createElement("div");
-sheriffDiv.innerHTML = `
-  <hr>
-  ${message}
-`;
-
-votingBox.appendChild(sheriffDiv);
-
-// 🔥 Add a new Continue button AFTER sheriff resolution
-const continueBtn = document.createElement("button");
-continueBtn.textContent = "Continue";
-continueBtn.className = "reveal-roles-btn";
-continueBtn.style.marginTop = "15px";
-
-continueBtn.onclick = () => {
-  nextRound();
-};
-
-votingBox.appendChild(continueBtn);
-
-  sheriffShotTarget = null;
-}
-
 function showVotingResults(eliminatedIndex) {
 
   let resultsHTML = `
