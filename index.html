@@ -426,6 +426,21 @@
   animation: loverFade 0.6s ease;
 }
 
+.dictator-screen {
+  background: linear-gradient(135deg, #8b0000, #ff0000);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.dictator-screen .roles-reveal-header {
+  background: linear-gradient(135deg, #8b0000, #ff0000);
+}
+
+.dictator-screen {
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -2418,7 +2433,7 @@ function castVote(targetIndex) {
 
   // 🎭 Render Screen
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
+    <div class="dictator-screen">
       <h2 style="color:${roleColors["Dictator"]}">
         👑 ${dictator.name}, you control the narrative.
       </h2>
