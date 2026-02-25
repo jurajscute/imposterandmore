@@ -862,7 +862,7 @@
       </label>
     </div>
 
-    <div class="role-pill main-evil" id="dictratorContainer">
+    <div class="role-pill main-evil" id="dictatorContainer">
       <label>
         <input id="dictatorToggle" type="checkbox" name="dictator">
         Dictator
@@ -2353,52 +2353,125 @@ function castVote(targetIndex) {
     return;
   }
 
-  // 🟥 DICTATOR LOGIC (AFTER voting)
-  if (voter.role === "Dictator" && voter.alive) {
+  function showDictatorBlockScreen() {
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2 style="color:${roleColors["Dictator"]}">
-        Dictator Power
-        </h2>
-        <p>Select a player whose vote will not count:</p>
-      </div>
-      <div class="roles-reveal-content" id="dictatorOptions"></div>
+  const dictator = players[currentVoterIndex];
+
+  // 🔄 Build live vote map BEFORE cancellation
+  let liveVotes = {};
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+    if (player.vote === null) return;
+
+    let weight = 1;
+    if (index === kingPlayer) weight = 2;
+    if (player.role === "Maniac") weight = 0;
+    if (player.role === "Viper") weight = 0;
+
+    if (!liveVotes[player.vote]) liveVotes[player.vote] = 0;
+    liveVotes[player.vote] += weight;
+  });
+
+  // 🗳 Build vote breakdown
+  let voteBreakdownHTML = `
+    <div class="dictator-intel">
+      <hr>
+      <h3>🗳 Current Votes</h3>
+  `;
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+
+    const voteCount = liveVotes[index] || 0;
+
+    voteBreakdownHTML += `
+      <p><strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}</p>
     `;
+  });
 
-    const dictatorOptions = document.getElementById("dictatorOptions");
+  voteBreakdownHTML += `<hr><h3>🕵️ Who Voted For Who</h3>`;
 
-    players.forEach((p, index) => {
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+    if (player.vote === null) return;
 
-      if (!p.alive) return;
+    const votedFor = players[player.vote]?.name || "Nobody";
 
-      const btn = document.createElement("button");
-      btn.textContent = p.name;
-      btn.className = "reveal-roles-btn";
+    voteBreakdownHTML += `
+      <p>${player.name} ➜ ${votedFor}</p>
+    `;
+  });
 
-      btn.onclick = () => {
+  voteBreakdownHTML += `</div>`;
 
-        dictatorBlockedPlayer = index;
+  // 🎭 Render Screen
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Dictator"]}">
+        👑 ${dictator.name}, you control the narrative.
+      </h2>
+      <p>Silence one voice… or let chaos unfold.</p>
+    </div>
 
-        votingBox.innerHTML = `
-          <h3>${p.name}'s vote has been nullified.</h3>
-        `;
+    ${voteBreakdownHTML}
 
-        setTimeout(() => {
-          currentVoterIndex++;
-          showNextVoter();
-        }, 1400);
-      };
+    <div class="roles-reveal-content" id="dictatorOptions"></div>
+  `;
 
-      dictatorOptions.appendChild(btn);
-    });
+  const optionsBox = document.getElementById("dictatorOptions");
 
-    return; // STOP normal flow until choice made
+  // 🎯 Target selection (no self)
+  players.forEach((player, index) => {
+    if (!player.alive || index === currentVoterIndex) return;
+
+    const btn = document.createElement("button");
+    btn.className = "reveal-roles-btn";
+    btn.textContent = `Cancel ${player.name}'s vote`;
+
+    btn.onclick = () => {
+      dictatorBlockedPlayer = index;
+
+      votingBox.innerHTML = `
+        <div class="roles-reveal-header">
+          <h3 style="color:${roleColors["Dictator"]}">
+            👑 Decree Issued
+          </h3>
+        </div>
+        <div class="roles-reveal-content">
+          <p>${player.name}'s vote will not be counted.</p>
+        </div>
+      `;
+
+      const continueBtn = document.createElement("button");
+      continueBtn.textContent = "Continue";
+      continueBtn.className = "reveal-roles-btn";
+      continueBtn.onclick = proceedToNextVoter;
+
+      votingBox.appendChild(continueBtn);
+    };
+
+    optionsBox.appendChild(btn);
+  });
+
+  // 🟢 Skip Option
+  const skipBtn = document.createElement("button");
+  skipBtn.textContent = "Skip (Let all votes stand)";
+  skipBtn.className = "reveal-roles-btn";
+  skipBtn.style.marginTop = "10px";
+  skipBtn.style.opacity = "0.8";
+
+  skipBtn.onclick = () => {
+    dictatorBlockedPlayer = null;
+    proceedToNextVoter();
+  };
+
+  optionsBox.appendChild(skipBtn);
   }
+}
 
-  // ✅ Normal flow
+function proceedToNextVoter() {
   currentVoterIndex++;
-
   setTimeout(() => {
     showNextVoter();
   }, 150);
