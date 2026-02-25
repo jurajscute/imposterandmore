@@ -2497,7 +2497,19 @@ function finishVoting() {
           const killedPlayer = obj.player;
           killedPlayer.alive = false;
 
-          const loverDeathIndex = handleLoverChainDeath(obj.index);
+          let loverDeathIndex = null;
+
+// If killed player is a Lover → trigger chain death
+if (killedPlayer.isLover) {
+  loverDeathIndex = handleLoverChainDeath(obj.index);
+}
+
+// ALSO: if the Shield was a Lover and the killed player was NOT the lover,
+// we need to trigger chain from the Shield's death
+if (eliminatedPlayer.isLover && !killedPlayer.isLover) {
+  const shieldIndex = players.findIndex(p => p === eliminatedPlayer);
+  loverDeathIndex = handleLoverChainDeath(shieldIndex);
+}
 
           votingBox.innerHTML = `
             <div class="roles-reveal-header">
