@@ -3294,7 +3294,7 @@ firstPlayerBox.textContent = "";
 
   // RANDOMIZE LOGIC
   if (randomizeToggle.checked) {
-     // 1️⃣ Reset all
+ // 1️⃣ Reset all
 useDetective = false;
 useJester = false;
 useJackal = false;
@@ -3331,44 +3331,37 @@ if (cluelessToggle.checked && categoryItems.length >= 2) {
   rolePool.push('clueless');
 }
 
-// 3️⃣ Calculate slots
+// 3️⃣ Calculate available slots
 const civilianSlots = playerCount - imposterCount;
-let maxSpecialRoles = civilianSlots;
 
-// Safety
-if (rolePool.length === 0 || maxSpecialRoles <= 0) {
-  maxSpecialRoles = 0;
+// You must leave at least 1 normal civilian
+const maxSpecialRoles = Math.max(0, civilianSlots - 1);
+
+// If no room, stop here
+if (maxSpecialRoles === 0 || rolePool.length === 0) {
+  return;
 }
 
-// 4️⃣ Split by team
-const remainingPool = [...rolePool];
-
-let selectedRoles = [];
-
-// 🟦 FORCE at least 1 Crew role if possible
-if (crewPool.length > 0 && maxSpecialRoles > 0) {
-  const forcedCrew =
-    crewPool[Math.floor(Math.random() * crewPool.length)];
-
-  selectedRoles.push(forcedCrew);
-}
-
-// 5️⃣ Shuffle remaining roles
-for (let i = remainingPool.length - 1; i > 0; i--) {
+// 4️⃣ Shuffle role pool
+for (let i = rolePool.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
-  [remainingPool[i], remainingPool[j]] =
-    [remainingPool[j], remainingPool[i]];
+  [rolePool[i], rolePool[j]] = [rolePool[j], rolePool[i]];
 }
 
-// 6️⃣ Fill remaining slots
-for (let role of remainingPool) {
-  if (selectedRoles.length >= maxSpecialRoles) break;
-  if (!selectedRoles.includes(role)) {
-    selectedRoles.push(role);
+// 5️⃣ Select up to allowed amount
+const selectedRoles = rolePool.slice(0, Math.min(maxSpecialRoles, rolePool.length));
+
+// 6️⃣ Guarantee at least 1 Crew role if possible
+const hasCrew = selectedRoles.some(r => roleData[r].team === "Crew");
+
+if (!hasCrew) {
+  const crewRoles = rolePool.filter(r => roleData[r].team === "Crew");
+  if (crewRoles.length > 0) {
+    selectedRoles[0] = crewRoles[Math.floor(Math.random() * crewRoles.length)];
   }
 }
 
-// 7️⃣ Enable selected roles
+// 7️⃣ Enable roles
 selectedRoles.forEach(role => {
   if (role === 'detective') useDetective = true;
   if (role === 'jester') useJester = true;
@@ -3385,13 +3378,13 @@ selectedRoles.forEach(role => {
   if (role === 'shadow') useShadow = true;
 });
 
-// 8️⃣ Add-ons (stackable)
+// 8️⃣ Stackable add-ons
 if (loversToggle.checked && playerCount >= 2) {
-  useLovers = Math.random() < 0.33;
+  useLovers = Math.random() < 0.35;
 }
 
 if (kingToggle.checked) {
-  useKing = Math.random() < 0.33;
+  useKing = Math.random() < 0.35;
 }
 
 const crewPool = rolePool.filter(r => roleData[r].team === "Crew");
