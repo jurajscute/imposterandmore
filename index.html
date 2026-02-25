@@ -4186,32 +4186,17 @@ if (lockedCards === totalCards) {
 /* ===== TOGGLE RANDOMIZE CHECKBOXES ===== */
 randomizeToggle.addEventListener('change', () => {
   const isDisabled = randomizeToggle.checked;
-  
-  imposterToggle.disabled = isDisabled;
-  dictatorToggle.disabled = isDisabled;
-  detectiveToggle.disabled = isDisabled;
-  jesterToggle.disabled = isDisabled;
-  jackalToggle.disabled = isDisabled;
-  viperToggle.disabled = isDisabled;
-  shieldToggle.disabled = isDisabled;
-  assassinToggle.disabled = isDisabled;
-  kingToggle.disabled = isDisabled;
-  loversToggle.disabled =isDisabled
-  cluelessToggle.disabled = isDisabled;
-  echoToggle.disabled = isDisabled;
-  idiotToggle.disabled = isDisabled;
-  philosopherToggle.disabled = isDisabled;
-  sheriffToggle.disabled = isDisabled;
-  maniacToggle.disabled = isDisabled;
-  shadowToggle.disabled = isDisabled;
 
-  // Visual Styling
-  const containers = [detectiveContainer, jesterContainer, jackalContainer, viperContainer, shieldContainer, dictatorContainer, imposterContainer, philosopherContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, sheriffContainer, maniacContainer, shadowContainer];
-  containers.forEach(container => {
+  document.querySelectorAll('.role-pill').forEach(pill => {
+    const checkbox = pill.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    checkbox.disabled = isDisabled;
+
     if (isDisabled) {
-      container.classList.add('disabled');
+      pill.classList.add('disabled');
     } else {
-      container.classList.remove('disabled');
+      pill.classList.remove('disabled');
     }
   });
 });
