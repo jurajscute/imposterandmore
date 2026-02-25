@@ -99,6 +99,7 @@
     .role-card.lovers { border-left-color: #ff7abc; } .lovers .role-icon { background: linear-gradient(135deg, #e874ff, #fdb4ff); }
     .role-card.clueless { border-left-color: #06b6d4; } .clueless .role-icon { background: #06b6d4; }
 	  .role-card.echo { border-left-color: #6368ba; } .echo .role-icon { background: #6368ba; }
+    .role-card.sheriff { border-left-color: #977d08; } .sheriff .role-icon { background: #977d08; }
     .role-card.idiot { border-left-color: #d9ff00; } .idiot .role-icon { background: #d9ff00; }
     .role-card.philosopher { border-left-color: #2b99ff; } .philosopher .role-icon { background: #2b99ff; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
@@ -223,6 +224,7 @@
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .lovers-role { color: #ff78b7; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
 	  .echo-role { color: #6368ba; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .sheriff-role { color: #977d08; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .idiot-role { color: #d6c800; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .philosopher-role { color: #2b99ff; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .maniac-role { color: #530000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -236,7 +238,7 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .imposter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .viper-hint, .shield-hint, .king-hint, .lovers-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .viper-hint, .shield-hint, .king-hint, .lovers-hint, .sheriff-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
@@ -247,11 +249,12 @@
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
     .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
+    .sheriff-hint { color: #977d08; background: #fff4b9; border-color: #977d08; }
     .idiot-hint { color: #d6c800; background: #f1f8b16e; border-color: #d6c800; }
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
-    .imposter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
+    .imposter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .sheriff-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -291,6 +294,7 @@
     .role-list .lovers-role { background: #fee8f2; color: #ff78b7; border-left-color: #ff3d87; }
     .role-list .clueless-role { background: #ecfeff; color: #0891b2; border-left-color: #0891b2; }
     .role-list .echo-role { background: #d0cbff; color: #6368ba; border-left-color: #6368ba; }
+    .role-list .sheriff-role { background: #fff4b9; color: #977d08; border-left-color: #977d08; }
     .role-list .idiot-role { background: #f1f8b16e; color: #d6c800; border-left-color: #d6c800; }
     .role-list .philosopher-role { background: #d0eeff; color: #2b99ff; border-left-color: #2b99ff; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
@@ -595,6 +599,7 @@
             <div class="role-card lovers"><h4><span class="role-icon">🩷</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">🔊</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
+            <div class="role-card sheriff"><h4><span class="role-icon">🌵</span>Sheriff</h4><p>You have the option to eliminate someone! Be careful, with great power comes great responsibility.</p><div class="goal">Goal: Eliminate impostors, by any means necessary.</div></div>
             <div class="role-card idiot"><h4><span class="role-icon">🐔</span>Idiot</h4><p>You have no idea what the word is.</p><div class="goal">Goal: Eliminate impostors.</div></div>
             <div class="role-card philosopher"><h4><span class="role-icon">💭</span>Philosopher</h4><p>You are able to ask a single Yes or No question, the target must answer it honestly (Unless they're a jester!).</p><div class="goal">Goal: Eliminate impostors, question your enemies.</div></div>
             <div class="role-card maniac"><h4><span class="role-icon">💢</span>Maniac</h4><p>Help the impostor win, but without using a vote!</p><div class="goal">Goal: Win with the Impostor.</div></div>
@@ -785,6 +790,13 @@
       </label>
     </div>
 
+    <div class="role-pill sheriff-toggle" id="sheriffContainer">
+      <label>
+        <input id="sheriffToggle" type="checkbox" name="sheriff">
+        Sheriff
+      </label>
+    </div>
+
     <div class="role-pill idiot-toggle" id="idiotContainer">
       <label>
         <input id="idiotToggle" type="checkbox" name="idiot">
@@ -940,6 +952,8 @@ let currentVoterIndex = 0;
 let votes = {};
 let poisonedTarget = null;
 let viperChoosingPoison = false;
+let sheriffChoosingTarget = false;
+let sheriffAllowedRoles = ["Imposter", "Jackal", "Assassin", "Viper", "Maniac", "Shadow"]; // roles Sheriff can kill safely
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -998,6 +1012,7 @@ const kingToggle = document.getElementById("kingToggle");
 const loversToggle = document.getElementById("loversToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
+const sheriffToggle = document.getElementById("sheriffToggle");
 const idiotToggle = document.getElementById("idiotToggle");
 const philosopherToggle = document.getElementById("philosopherToggle");
 const maniacToggle = document.getElementById("maniacToggle");
@@ -1013,6 +1028,7 @@ const roleColors = {
   "Philosopher": "#2b99ff",
   "Clueless": "#06b6d4",
   "Echo": "#6368ba",
+  "Sheriff": "#977d08",
   "Idiot": "#d9ff00",
   "Shield": "#0025a0",
 
@@ -1051,6 +1067,7 @@ const cluelessContainer = document.getElementById("cluelessContainer");
 const echoContainer = document.getElementById("echoContainer");
 const idiotContainer = document.getElementById("idiotContainer");
 const philosopherContainer = document.getElementById("philosopherContainer");
+const sheriffContainer = document.getElementById("sheriffContainer");
 const maniacContainer = document.getElementById("maniacContainer");
 const shadowContainer = document.getElementById("shadowContainer");
 
@@ -1384,6 +1401,7 @@ cluelessToggle.checked = JSON.parse(localStorage.getItem("cluelessEnabled")) || 
 echoToggle.checked = JSON.parse(localStorage.getItem("echoEnabled")) || false;
 idiotToggle.checked = JSON.parse(localStorage.getItem("idiotEnabled")) || false;
 philosopherToggle.checked = JSON.parse(localStorage.getItem("philosopherEnabled")) || false;
+sheriffToggle.checked = JSON.parse(localStorage.getItem("sheriffEnabled")) || false;
 maniacToggle.checked = JSON.parse(localStorage.getItem("maniacEnabled")) || false;
 shadowToggle.checked = JSON.parse(localStorage.getItem("shadowEnabled")) || false;
 
@@ -2021,6 +2039,9 @@ function revealAllRoles() {
    }  else if (word === "Philosopher") {
       roleName = "Philosopher";
       roleClass = "philosopher-role";
+   }  else if (word === "Sheriff") {
+      roleName = "Sheriff";
+      roleClass = "sheriff-role";
     }  else if (word === "Maniac") {
       roleName = "Maniac";
       roleClass = "maniac-role";
@@ -2190,6 +2211,16 @@ function castVote(targetIndex) {
     return; // STOP here — do NOT increment index yet
   }
 
+  // ⭐ SHERIFF SPECIAL LOGIC
+if (voter.role === "Sheriff" && !sheriffChoosingTarget) {
+
+  sheriffChoosingTarget = true;
+
+  showSheriffScreen();
+
+  return; // STOP normal flow
+}
+
   // Normal voter flow
   currentVoterIndex++;
 
@@ -2234,6 +2265,111 @@ function showPoisonScreen() {
       poisonOptions.appendChild(btn);
     }
   });
+}
+
+function showSheriffScreen() {
+
+  const sheriff = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>⭐ ${sheriff.name}, choose someone to SHOOT</h3>
+      <p>You may skip if you are unsure.</p>
+    </div>
+    <div class="roles-reveal-content" id="sheriffOptions"></div>
+  `;
+
+  const sheriffOptions = document.getElementById("sheriffOptions");
+
+  // 🔫 Shoot buttons
+  players.forEach((player, index) => {
+
+    if (player.alive && index !== currentVoterIndex) {
+
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn";
+      btn.style.marginBottom = "8px";
+
+      btn.onclick = () => resolveSheriffShot(index);
+
+      sheriffOptions.appendChild(btn);
+    }
+  });
+
+  // ⏭ Skip Button
+  const skipBtn = document.createElement("button");
+  skipBtn.textContent = "Skip Shooting";
+  skipBtn.className = "reveal-roles-btn";
+  skipBtn.style.marginTop = "15px";
+
+  skipBtn.onclick = () => {
+    sheriffChoosingTarget = false;
+    currentVoterIndex++;
+    showNextVoter();
+  };
+
+  sheriffOptions.appendChild(skipBtn);
+}
+
+function resolveSheriffShot(targetIndex) {
+
+  const sheriff = players[currentVoterIndex];
+  const target = players[targetIndex];
+
+  sheriffChoosingTarget = false;
+  sheriffHasShot = true; // 🔫 BULLET USED
+
+  // 🎭 JESTER SHOT = JESTER WINS
+  if (target.role === "Jester") {
+
+    votingBox.innerHTML = `
+      <div class="win-header">
+        <h2>${target.name} the Jester wins!</h2>
+      </div>
+      <div class="win-content">
+        <p>The Sheriff shot the Jester!</p>
+        <button onclick="location.reload()" class="reveal-roles-btn">
+          New Game
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  let sheriffDies = false;
+
+  if (sheriffAllowedRoles.includes(target.role)) {
+    // ✅ Correct shot
+    target.alive = false;
+  } else {
+    // ❌ Wrong shot → Sheriff dies
+    sheriffDies = true;
+    sheriff.alive = false;
+  }
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>⭐ Sheriff Action</h3>
+    </div>
+    <div class="roles-reveal-content">
+      ${
+        sheriffDies
+          ? `<p>${sheriff.name} shot the wrong person and died!</p>`
+          : `<p>${target.name} was shot by the Sheriff!</p>`
+      }
+      <br>
+      <button id="continueBtn" class="reveal-roles-btn">
+        Continue
+      </button>
+    </div>
+  `;
+
+  document.getElementById("continueBtn").onclick = () => {
+    currentVoterIndex++;
+    showNextVoter();
+  };
 }
 
 function finishVoting() {
@@ -2717,6 +2853,7 @@ function getRandomItemFromArray(arr) {
 
 const roleToggleMap = {
   Philosopher: "philosopherToggle",
+  Sheriff: "sheriffToggle",
   Detective: "detectiveToggle",
   Clueless: "cluelessToggle",
   Echo: "echoToggle",
@@ -2914,6 +3051,7 @@ firstPlayerBox.textContent = "";
   let useEcho = echoToggle.checked;
   let useIdiot = idiotToggle.checked;
   let usePhilosopher = philosopherToggle.checked;
+  let useSheriff = sheriffToggle.checked;
   let useManiac = maniacToggle.checked;
   let useShadow = shadowToggle.checked;
   let useKing = kingToggle.checked;
@@ -2932,6 +3070,7 @@ firstPlayerBox.textContent = "";
       useEcho = false;
       useIdiot = false;
       usePhilosopher = false;
+      useSheriff = false;
       useManiac = false;
       useShadow = false;
       useKing = false;
@@ -2967,6 +3106,7 @@ if (shieldToggle.checked) rolePool.push('shield');
 if (echoToggle.checked) rolePool.push('echo');
 if (idiotToggle.checked) rolePool.push('idiot');
 if (philosopherToggle.checked) rolePool.push('philosopher');
+if (sheriffToggle.checked) rolePool.push('sheriff');
 if (maniacToggle.checked) rolePool.push('maniac');
 if (shadowToggle.checked) rolePool.push('shadow');
 
@@ -2997,6 +3137,7 @@ if (rolePool.length === 0) {
              if (role === 'echo') useEcho = true;
              if (role === 'idiot') useIdiot = true;
              if (role === 'philosopher') usePhilosopher = true;
+             if (role === 'sheriff') useSheriff = true;
              if (role === 'maniac') useManiac = true;
              if (role === 'shadow') useShadow = true;
          }
@@ -3033,6 +3174,7 @@ if (kingToggle.checked) {
       if (useEcho) specialRolesCount++;
       if (useIdiot) specialRolesCount++;
       if (usePhilosopher) specialRolesCount++;
+      if (useSheriff) specialRolesCount++;
       if (useManiac) specialRolesCount++;
       if (useShadow) specialRolesCount++;
       
@@ -3169,6 +3311,17 @@ if (kingToggle.checked) {
       }
     }
   }
+  // Sheriff
+  if (useSheriff) {
+    let assigned = false;
+    while (!assigned) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (words[idx] === "Civilian") {
+        words[idx] = "Sheriff";
+        assigned = true;
+      }
+    }
+  }
       // Maniac
   if (useManiac) {
     let assigned = false;
@@ -3270,7 +3423,7 @@ if (useLovers && playerCount >= 2) {
     
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
       for (let i = 0; i < words.length; i++) {
-        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Maniac" && words[i] !== "Shadow" ) {
+        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Sheriff" && words[i] !== "Maniac" && words[i] !== "Shadow" ) {
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
           assassinTarget = i + 1;
           break;
@@ -3302,7 +3455,7 @@ function initializePlayers() {
     const specialRoles = [
       "Imposter","Detective","Jester","Jackal","Viper", "Shield",
       "Assassin","Clueless","Echo","Idiot","Philosopher",
-      "Maniac","Shadow"
+      "Maniac","Shadow","Sheriff"
     ];
 
     if (!specialRoles.includes(roleName)) {
@@ -3374,6 +3527,7 @@ function initializePlayers() {
         else if (targetWord === "Echo") roleReveal = "an Echo";
         else if (targetWord === "Idiot") roleReveal = "Mentally ill";
         else if (targetWord === "Philosopher") roleReveal = "a Philosopher";
+        else if (targetWord === "Sheriff") roleReveal = "a Sheriff";
         else if (targetWord === "Maniac") roleReveal = "Mentally ill";
         else if (targetWord === "Shadow") roleReveal = "Evil";
         else if (targetWord === "Detective") roleReveal = "Detective"; // Should be impossible if logic holds
@@ -3464,6 +3618,12 @@ function initializePlayers() {
           const roleText = document.createElement("div");
           roleText.className = "philosopher-role";
           roleText.textContent = "Philosopher";
+          wordBox.appendChild(roleText);
+          } else if (word === "Sheriff") {
+          wordBox.textContent = secretItem;
+          const roleText = document.createElement("div");
+          roleText.className = "sheriff-role";
+          roleText.textContent = "Sheriff";
           wordBox.appendChild(roleText);
           } else if (word === "Maniac") {
           wordBox.textContent = secretItem;
@@ -3556,6 +3716,9 @@ function initializePlayers() {
         } else if (word === "Philosopher") {
           specialHint.className = "philosopher-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Question the enemies!<br>You can ask one<br><strong> YES</strong> or<strong> NO</strong> question!`;
+        } else if (word === "Sheriff") {
+          specialHint.className = "sheriff-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Eliminate the impostor, by any means necessary!<br><br>You can <strong>shoot</strong> someone during a vote, don't miss!`;
         } else if (word === "Maniac") {
           const realImposterIndex = words.indexOf("Imposter");
           const targetName = playerNames[realImposterIndex];
@@ -3689,11 +3852,12 @@ randomizeToggle.addEventListener('change', () => {
   echoToggle.disabled = isDisabled;
   idiotToggle.disabled = isDisabled;
   philosopherToggle.disabled = isDisabled;
+  sheriffToggle.disabled = isDisabled;
   maniacToggle.disabled = isDisabled;
   shadowToggle.disabled = isDisabled;
 
   // Visual Styling
-  const containers = [detectiveContainer, jesterContainer, jackalContainer, viperContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, philosopherContainer, maniacContainer, shadowContainer];
+  const containers = [detectiveContainer, jesterContainer, jackalContainer, viperContainer, shieldContainer, assassinContainer, kingContainer, loversContainer, cluelessContainer, echoContainer, idiotContainer, sheriffContainer, maniacContainer, shadowContainer];
   containers.forEach(container => {
     if (isDisabled) {
       container.classList.add('disabled');
@@ -3797,6 +3961,10 @@ idiotToggle.addEventListener("change", () => {
 
 philosopherToggle.addEventListener("change", () => {
   localStorage.setItem("philosopherEnabled", philosopherToggle.checked);
+});
+
+sheriffToggle.addEventListener("change", () => {
+  localStorage.setItem("sheriffEnabled", sheriffToggle.checked);
 });
 
 maniacToggle.addEventListener("change", () => {
