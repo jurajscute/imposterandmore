@@ -3310,7 +3310,10 @@ useShadow = false;
 useKing = false;
 useLovers = false;
 
-// 2️⃣ Build role pool
+// 2. Calculate available slots (non-imposters)
+const civilianSlots = playerCount - imposterCount;
+
+// 3. Build role pool
 let rolePool = [];
 
 if (detectiveToggle.checked) rolePool.push('detective');
@@ -3330,38 +3333,18 @@ if (cluelessToggle.checked && categoryItems.length >= 2) {
   rolePool.push('clueless');
 }
 
-// 3️⃣ Calculate available slots
-const civilianSlots = playerCount - imposterCount;
-
-// You must leave at least 1 normal civilian
-const maxSpecialRoles = Math.max(0, civilianSlots - 1);
-
-// If no room, stop here
-if (maxSpecialRoles === 0 || rolePool.length === 0) {
-  return;
-}
-
-// 4️⃣ Shuffle role pool
+// Shuffle role pool
 for (let i = rolePool.length - 1; i > 0; i--) {
   const j = Math.floor(Math.random() * (i + 1));
   [rolePool[i], rolePool[j]] = [rolePool[j], rolePool[i]];
 }
 
-// 5️⃣ Select up to allowed amount
-const selectedRoles = rolePool.slice(0, Math.min(maxSpecialRoles, rolePool.length));
+// 🟢 Enable as many roles as possible
+const rolesToUse = Math.min(rolePool.length, civilianSlots);
 
-// 6️⃣ Guarantee at least 1 Crew role if possible
-const hasCrew = selectedRoles.some(r => roleData[r] && roleData[r].team === "Crew");
+for (let i = 0; i < rolesToUse; i++) {
+  const role = rolePool[i];
 
-if (!hasCrew) {
-  const crewRoles = rolePool.filter(r => roleData[r].team === "Crew");
-  if (crewRoles.length > 0) {
-    selectedRoles[0] = crewRoles[Math.floor(Math.random() * crewRoles.length)];
-  }
-}
-
-// 7️⃣ Enable roles
-selectedRoles.forEach(role => {
   if (role === 'detective') useDetective = true;
   if (role === 'jester') useJester = true;
   if (role === 'jackal') useJackal = true;
@@ -3375,7 +3358,7 @@ selectedRoles.forEach(role => {
   if (role === 'sheriff') useSheriff = true;
   if (role === 'maniac') useManiac = true;
   if (role === 'shadow') useShadow = true;
-});
+}
 
 // 8️⃣ Stackable add-ons
 if (loversToggle.checked && playerCount >= 2) {
