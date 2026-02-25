@@ -3850,6 +3850,12 @@ function initializePlayers() {
           roleText.className = "imposter-role";
           roleText.textContent = "Imposter";
           wordBox.appendChild(roleText);
+        } else if (word === "Dictator") {
+          wordBox.textContent = "???";
+          const roleText = document.createElement("div");
+          roleText.className = "dictator-role";
+          roleText.textContent = "Dictator";
+          wordBox.appendChild(roleText);
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
