@@ -1139,6 +1139,8 @@ const roleThemes = {
   Lovers: "#ff7abc"
 };
 
+const mainEvilRoles = ["Imposter"];
+
 const roleData = {
   detective:  { team: "Crew" },
   sheriff:    { team: "Crew" },
@@ -1148,7 +1150,6 @@ const roleData = {
   clueless:   { team: "Crew" },
   idiot:      { team: "Crew" },
 
-  imposter:   { team: "Evil" },
   maniac:     { team: "Evil" },
   shadow:     { team: "Evil" },
 
@@ -2938,9 +2939,10 @@ function checkWinCondition() {
   const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
   const viperAlive  = alivePlayers.find(p => p.role === "Viper");
 
-  const impostorsAlive = alivePlayers.filter(p =>
-    ["Imposter","Maniac","Shadow"].includes(p.role)
-  );
+const impostorsAlive = alivePlayers.filter(p =>
+  mainEvilRoles.includes(p.role) ||
+  ["Maniac","Shadow"].includes(p.role)
+);
 
   const crewAlive = alivePlayers.filter(p =>
     !["Imposter","Jackal","Assassin","Viper","Maniac","Shadow"].includes(p.role)
@@ -3398,7 +3400,23 @@ selectedRoles.forEach(role => {
   if (role === 'maniac') useManiac = true;
   if (role === 'shadow') useShadow = true;
 });
+// 🟢 STEP 4 — Add-ons (DO NOT consume slots)
 
+// 🎲 Add-ons (50% activation chance)
+
+// ❤️ Lovers
+if (loversToggle.checked && playerCount >= 2) {
+  useLovers = Math.random() < 0.33;
+} else {
+  useLovers = false;
+}
+
+// 👑 King
+if (kingToggle.checked) {
+  useKing = Math.random() < 0.5;
+} else {
+  useKing = false;
+}
   } else {
       // Manual mode validation
       const civilianSlots = playerCount - imposterCount;
@@ -3431,16 +3449,26 @@ selectedRoles.forEach(role => {
   // --- ROLE ASSIGNMENT LOGIC ---
   words = Array(playerCount).fill("Civilian");
 
-  // Imposters
-  let imposters = 0;
-  while (imposters < imposterCount) {
-    const idx = Math.floor(Math.random() * playerCount);
-    if (words[idx] === "Civilian") {
-      words[idx] = "Imposter";
-      imposterIndex = idx;
-      imposters++;
-    }
+let activeMainEvil = "Imposter"; // fallback
+
+if (randomizeToggle.checked) {
+  const shuffled = [...mainEvilRoles];
+  shuffled.sort(() => Math.random() - 0.5);
+  activeMainEvil = shuffled[0];
+}
+
+// MAIN EVIL ASSIGNMENT
+let imposters = 0;
+
+while (imposters < imposterCount) {
+  const idx = Math.floor(Math.random() * playerCount);
+
+  if (words[idx] === "Civilian") {
+    words[idx] = activeMainEvil;
+    imposterIndex = idx;
+    imposters++;
   }
+}
 
   // Detective
   let detectiveIndex = null;
