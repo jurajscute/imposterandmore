@@ -3387,9 +3387,9 @@ if (kingToggle.checked) {
   useKing = Math.random() < 0.35;
 }
 
-const crewPool = rolePool.filter(r => roleData[r].team === "Crew");
-const evilPool = rolePool.filter(r => roleData[r].team === "Evil");
-const neutralPool = rolePool.filter(r => roleData[r].team === "Neutral");
+const crewPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Crew");
+const evilPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Evil");
+const neutralPool = rolePool.filter(r => roleData[r] && roleData[r].team === "Neutral");
 
   } else {
       // Manual mode validation
