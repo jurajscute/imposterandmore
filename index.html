@@ -417,13 +417,6 @@
   opacity: 1;
 }
 
-.vote-summary {
-  margin-top: 15px;
-  padding: 10px;
-  background: rgba(255,255,255,0.05);
-  border-radius: 8px;
-}
-
 .lover-death-message {
   margin-top: 15px;
   padding: 15px;
@@ -2664,34 +2657,17 @@ voteSummaryHTML += `</div>`;
   // ⚖️ TIE
   if (topPlayers.length > 1 || topPlayers.length === 0) {
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2>⚖️ It's a Tie!</h2>
-      </div>
-      <div class="roles-reveal-content">
-        <p>No one is eliminated by vote.</p>
-      </div>
-    `;
-    // 📊 Build Vote Summary
-let voteSummaryHTML = `
-  <div class="vote-summary">
-    <hr>
-    <h3>🗳️ Vote Results</h3>
-`;
-
-players.forEach((player, index) => {
-  if (!player.alive) return;
-
-  const voteCount = votes[index] || 0;
-
-  voteSummaryHTML += `
-    <p>
-      <strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}
-    </p>
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>⚖️ It's a Tie!</h2>
+    </div>
+    <div class="roles-reveal-content">
+      <p>No one is eliminated by vote.</p>
+    </div>
   `;
-});
 
-voteSummaryHTML += `</div>`;
+  votingBox.innerHTML += voteSummaryHTML;
+
 
   } else {
 
@@ -2878,38 +2854,19 @@ votingBox.appendChild(continueBtn);
     const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
 
     votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2>${eliminatedPlayer.name} has been eliminated!</h2>
-      </div>
-      <div class="roles-reveal-content">
-        <p>
-          They were the 
-          <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
-            ${eliminatedPlayer.role}
-          </span>
-        </p>
-      </div>
-    `;
-    // 📊 Build Vote Summary
-let voteSummaryHTML = `
-  <div class="vote-summary">
-    <hr>
-    <h3>🗳️ Vote Results</h3>
-`;
-
-players.forEach((player, index) => {
-  if (!player.alive) return;
-
-  const voteCount = votes[index] || 0;
-
-  voteSummaryHTML += `
+  <div class="roles-reveal-header">
+    <h2>${eliminatedPlayer.name} has been voted!</h2>
+  </div>
+  <div class="roles-reveal-content">
     <p>
-      <strong>${player.name}</strong>: ${voteCount} vote${voteCount !== 1 ? "s" : ""}
+      They were the 
+      <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+        ${eliminatedPlayer.role}
+      </span>
     </p>
-  `;
-});
-
-voteSummaryHTML += `</div>`;
+  </div>
+`;
+votingBox.innerHTML += voteSummaryHTML;
 
     if (loverDeathIndex !== null) {
       const lover = players[loverDeathIndex];
