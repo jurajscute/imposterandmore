@@ -426,11 +426,11 @@
 }
 
 .sheriff-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 👈 2 equal columns */
+  gap: 12px;
+  margin-top: 15px;
+  justify-items: center; /* center buttons inside grid cells */
 }
 
 .sheriff-footer {
@@ -448,6 +448,11 @@
   background: linear-gradient(135deg, #facc15, #eab308);
   color: black;
   font-weight: bold;
+}
+
+.sheriff-btn { 
+  width: 200px;
+  text-align: center;
 }
 
 .sheriff-btn:hover {
