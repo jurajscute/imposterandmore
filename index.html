@@ -1140,23 +1140,22 @@ const roleThemes = {
 };
 
 const roleData = {
-  Detective:  { team: "Crew" },
-  Sheriff:    { team: "Crew" },
-  Shield:     { team: "Crew" },
-  King:       { team: "Crew" },
-  Philosopher:{ team: "Crew" },
-  Echo:       { team: "Crew" },
-  Clueless:   { team: "Crew" },
-  Idiot:      { team: "Crew" },
+  detective:  { team: "Crew" },
+  sheriff:    { team: "Crew" },
+  shield:     { team: "Crew" },
+  philosopher:{ team: "Crew" },
+  echo:       { team: "Crew" },
+  clueless:   { team: "Crew" },
+  idiot:      { team: "Crew" },
 
-  Imposter:   { team: "Evil" },
-  Maniac:     { team: "Evil" },
-  Shadow:     { team: "Evil" },
+  imposter:   { team: "Evil" },
+  maniac:     { team: "Evil" },
+  shadow:     { team: "Evil" },
 
-  Jackal:     { team: "Neutral" },
-  Viper:      { team: "Neutral" },
-  Assassin:   { team: "Neutral" },
-  Jester:     { team: "Neutral" }
+  jackal:     { team: "Neutral" },
+  viper:      { team: "Neutral" },
+  assassin:   { team: "Neutral" },
+  jester:     { team: "Neutral" }
 };
 
 // Containers for visual disabling
@@ -3352,7 +3351,7 @@ for (let i = rolePool.length - 1; i > 0; i--) {
 const selectedRoles = rolePool.slice(0, Math.min(maxSpecialRoles, rolePool.length));
 
 // 6️⃣ Guarantee at least 1 Crew role if possible
-const hasCrew = selectedRoles.some(r => roleData[r].team === "Crew");
+const hasCrew = selectedRoles.some(r => roleData[r] && roleData[r].team === "Crew");
 
 if (!hasCrew) {
   const crewRoles = rolePool.filter(r => roleData[r].team === "Crew");
