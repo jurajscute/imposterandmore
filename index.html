@@ -2512,14 +2512,6 @@ flash.classList.add("shield-flash-active");
   return; // STOP normal elimination
 }
 
-// ⭐ If Sheriff is alive and still has bullet, show shoot option
-const sheriff = players.find(p => p.role === "Sheriff" && p.alive);
-
-if (sheriff && !sheriffHasShot) {
-  showSheriffDecisionScreen(sheriff);
-  return; // STOP normal result screen
-}
-
   // ❤️ Lovers die together
   if (eliminatedPlayer.isLover) {
 
