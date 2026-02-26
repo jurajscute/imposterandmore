@@ -1138,6 +1138,10 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
+let hunterMarkedTarget = null;
+let hunterHasUsedAbility = false;
+let isHunterChoosing = false;
+
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
 let activeDetectiveCardElement = null;
@@ -2727,6 +2731,48 @@ if (!sheriff || !sheriff.alive) {
   addContinueButton();
 }
 
+resolveHunterAbility();
+
+function resolveHunterAbility() {
+
+  if (hunterMarkedTarget === null || hunterHasUsedAbility) return;
+
+  const hunterIndex = players.findIndex(p => p.role === "Hunter" && p.alive);
+  if (hunterIndex === -1) return;
+
+  if (players[hunterIndex].vote === hunterMarkedTarget) {
+
+    const target = players[hunterMarkedTarget];
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>🎯 Hunter Decision</h3>
+      <p>Do you want to execute ${target.name}?</p>
+      <button id="hunterYes">Kill</button>
+      <button id="hunterNo">Spare</button>
+    `;
+
+    document.getElementById("hunterYes").onclick = () => {
+      target.alive = false;
+      hunterHasUsedAbility = true;
+
+      votingBox.innerHTML += `
+        <h3>💀 ${target.name} was hunted down!</h3>
+      `;
+
+      addContinueButton();
+    };
+
+    document.getElementById("hunterNo").onclick = () => {
+      hunterHasUsedAbility = true;
+      addContinueButton();
+    };
+
+  } else {
+    addContinueButton();
+  }
+}
+
 function showSheriffShootOptions(voteTargetIndex) {
 
   const sheriff = players[currentVoterIndex];
@@ -3504,6 +3550,9 @@ function updateRoleVisuals() {
 function generateCards() {
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
+hunterMarkedTarget = null;
+hunterHasUsedAbility = false;
+hunterChoosingIndex = null;
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
@@ -4178,6 +4227,21 @@ function initializePlayers() {
     // --- DETECTIVE CLICK HANDLER (ON THE CARD ITSELF) ---
     // This handles the click when the detective selects THIS card as a target
     card.addEventListener('click', (e) => {
+if (hunterChoosingIndex !== null && i !== hunterChoosingIndex && hunterMarkedTarget === null) {
+
+  hunterMarkedTarget = i;
+
+  const hunterCard = document.querySelectorAll(".card")[hunterChoosingIndex];
+  const confirmText = document.createElement("div");
+  confirmText.className = "hunter-locked";
+  confirmText.innerHTML = `<br><strong>Target Locked:</strong><br>${playerNames[i]}`;
+
+  hunterCard.querySelector(".word-box").appendChild(confirmText);
+
+  hunterChoosingIndex = null;
+
+  return; // Prevents normal reveal logic from running
+}
       // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
       if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
         
@@ -4295,12 +4359,24 @@ function initializePlayers() {
   visionBox.innerHTML = rolesHTML;
 
   wordBox.appendChild(visionBox);
-        } else if (word === "Hunter") {
-          wordBox.textContent = "???";
-          const roleText = document.createElement("div");
-          roleText.className = "hunter-role";
-          roleText.textContent = "Hunter";
-          wordBox.appendChild(roleText);
+        } else if (word === "Hunter") {{
+
+  wordBox.textContent = "???";
+
+  const roleText = document.createElement("div");
+  roleText.className = "hunter-role";
+  roleText.textContent = "Hunter";
+  wordBox.appendChild(roleText);
+
+  // 🎯 Activate Hunter targeting mode
+  hunterChoosingIndex = i;
+
+  const info = document.createElement("div");
+  info.className = "hunter-instruction";
+  info.innerHTML = "<br><strong>Choose your pre.</strong>";
+
+  wordBox.appendChild(info);
+        }
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
