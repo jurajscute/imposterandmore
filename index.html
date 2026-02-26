@@ -2763,30 +2763,16 @@ function showHunterDecisionScreen() {
     </div>
   `;
 
-  document.getElementById("hunterYes").onclick = () => {
+ document.getElementById("hunterYes").onclick = () => {
 
-    // Kill silently
-    if (players[targetIndex].alive) {
-
-  if (players[targetIndex].role === "Shield") {
-    shieldKilledByHunter = true;
-  }
-
-  players[targetIndex].alive = false;
+  // 🏹 Only STORE the kill
   hunterPendingKill = targetIndex;
 
-      // Lover chain
-      const loverDeathIndex = handleLoverChainDeath(targetIndex);
-      if (loverDeathIndex !== null) {
-        hunterPendingKill = [targetIndex, loverDeathIndex];
-      }
-    }
+  hunterHasUsedAbility = true;
 
-    hunterHasUsedAbility = true;
-
-    currentVoterIndex++;
-    showNextVoter();
-  };
+  currentVoterIndex++;
+  showNextVoter();
+};
 
   document.getElementById("hunterNo").onclick = () => {
 
@@ -2862,6 +2848,14 @@ skipBtn.onclick = () => {
 }
 
 function finishVoting() {
+  // 🏹 Remove Hunter target vote (but keep them alive for now)
+if (hunterPendingKill !== null) {
+  const targetIndex = Array.isArray(hunterPendingKill)
+    ? hunterPendingKill[0]
+    : hunterPendingKill;
+
+  players[targetIndex].vote = null;
+}
 
  // 🔄 Rebuild votes so Dictator cancellation applies
 votes = {};
@@ -2945,7 +2939,7 @@ voteSummaryHTML += `</div>`;
     }
 
 // 🛡️ SHIELD CHECK
-if (eliminatedPlayer.role === "Shield") {
+if (eliminatedPlayer.role === "Shield" && !shieldKilledByHunter)
 
   // 💀 Shield was hunted earlier this round
   if (shieldKilledByHunter) {
@@ -3193,6 +3187,9 @@ votingBox.innerHTML += voteSummaryHTML;
       );
       return;
     }
+
+shieldKilledByHunter = false;
+
   }
 
 
@@ -3204,6 +3201,46 @@ votingBox.innerHTML += voteSummaryHTML;
     endGame(`<strong>The Lovers win!</strong>`, "Lovers");
     return;
   }
+
+  // 🎯 Apply Hunter Kill AFTER votes conclude
+if (hunterPendingKill !== null) {
+
+  const targetIndex = Array.isArray(hunterPendingKill)
+    ? hunterPendingKill[0]
+    : hunterPendingKill;
+
+  const target = players[targetIndex];
+
+  if (target.alive) {
+
+    if (target.role === "Shield") {
+      shieldKilledByHunter = true;
+    }
+
+    target.alive = false;
+
+    const loverDeathIndex = handleLoverChainDeath(targetIndex);
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>💀 ${target.name} was hunted down!</h3>
+      <p style="font-style: italic;">
+        A silent hunter struck during the meeting...
+      </p>
+    `;
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+      votingBox.innerHTML += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+        </div>
+      `;
+    }
+  }
+
+  hunterPendingKill = null;
+}
 
   // ✅ Continue button
   const continueBtn = document.createElement("button");
@@ -3326,6 +3363,19 @@ if (checkWinCondition()) return;
 setTimeout(() => {
   nextRound();
 }, 800);
+
+// 🔄 Add final Continue button after Sheriff (and Hunter if any)
+
+const continueBtn = document.createElement("button");
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
+
+continueBtn.onclick = () => {
+  nextRound();
+};
+
+votingBox.appendChild(continueBtn);
 }
 
 function nextRound() {
