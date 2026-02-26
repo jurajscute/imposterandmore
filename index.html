@@ -2753,15 +2753,43 @@ function showHunterDecisionScreen() {
   }
 
   votingBox.innerHTML = `
+  <div class="roles-reveal-header">
+    <h3>🏹 Hunter Decision</h3>
+  </div>
+  <div class="roles-reveal-content">
+    <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
+    <button id="hunterKill" class="reveal-roles-btn">Kill</button>
+    <button id="hunterSpare" class="reveal-roles-btn">Spare</button>
+    <button id="hunterChange" class="reveal-roles-btn">Change Target</button>
+  </div>
+`;
+document.getElementById("hunterKill").onclick = () => {
+  hunterPendingKill = targetIndex;
+  hunterHasUsedAbility = true;
+  currentVoterIndex++;
+  showNextVoter();
+};
+document.getElementById("hunterSpare").onclick = () => {
+  hunterHasUsedAbility = true;
+  currentVoterIndex++;
+  showNextVoter();
+};
+document.getElementById("hunterChange").onclick = () => {
+
+  hunterCanRetarget = true;
+  hunterHasUsedAbility = false; // allow ability next round
+
+  votingBox.innerHTML = `
     <div class="roles-reveal-header">
-      <h3>🏹 Hunter Decision</h3>
+      <h3>Choose New Prey</h3>
     </div>
     <div class="roles-reveal-content">
-      <p>Do you want to murder <strong>${players[targetIndex].name}</strong>?</p>
-      <button id="hunterYes" class="reveal-roles-btn">Kill</button>
-      <button id="hunterNo" class="reveal-roles-btn">Spare</button>
+      <p>Select a new target. You may attempt to kill them next meeting.</p>
     </div>
   `;
+
+  enableHunterRetargetMode();
+};
 
  document.getElementById("hunterYes").onclick = () => {
 
@@ -2781,6 +2809,40 @@ function showHunterDecisionScreen() {
     currentVoterIndex++;
     showNextVoter();
   };
+}
+
+function enableHunterRetargetMode() {
+
+  players.forEach((player, index) => {
+
+    if (!player.alive) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = player.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+
+      hunterMarkedTarget = index;
+      hunterCanRetarget = false;
+
+      votingBox.innerHTML = `
+        <h3>🎯 New target locked: ${player.name}</h3>
+      `;
+
+      const continueBtn = document.createElement("button");
+      continueBtn.textContent = "Continue";
+      continueBtn.className = "reveal-roles-btn";
+      continueBtn.onclick = () => {
+        currentVoterIndex++;
+        showNextVoter();
+      };
+
+      votingBox.appendChild(continueBtn);
+    };
+
+    votingBox.appendChild(btn);
+  });
 }
 
 function showSheriffShootOptions(voteTargetIndex) {
