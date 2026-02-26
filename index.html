@@ -3258,18 +3258,20 @@ resolveSheriffAfterShield();
 
 // 🏁 Check win condition
 if (checkWinCondition()) return;
-
 // 🔘 Add ONE Continue button AFTER everything is rendered
 clearContinueButtons();
 
 const continueBtn = document.createElement("button");
-  continueBtn.textContent = "Continue";
-  continueBtn.className = "reveal-roles-btn";
-  continueBtn.style.marginTop = "15px";
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
 
-  continueBtn.onclick = () => {
-    nextRound();
-  };
+continueBtn.onclick = () => {
+  nextRound();
+};
+
+votingBox.appendChild(continueBtn); // ← THIS WAS MISSING
+
 }
 
 function resolveSheriffAfterShield() {
