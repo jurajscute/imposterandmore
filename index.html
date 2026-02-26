@@ -2834,8 +2834,14 @@ function enableHunterRetargetMode() {
       votingBox.innerHTML = `
         <h3>🎯 New target locked: ${player.name}</h3>
       `;
-
 clearContinueButtons();
+
+// Remove old hunter UI if present
+const oldSection = document.getElementById("hunterDecisionSection");
+if (oldSection) oldSection.remove();
+
+const container = document.createElement("div");
+container.id = "hunterDecisionSection";
 
       const continueBtn = document.createElement("button");
       continueBtn.textContent = "Continue";
@@ -3061,18 +3067,6 @@ if (eliminatedPlayer.role === "Shield") {
 
     votingBox.innerHTML += voteSummaryHTML;
 
-clearContinueButtons();
-
-    const continueBtn = document.createElement("button");
-    continueBtn.textContent = "Continue";
-    continueBtn.className = "reveal-roles-btn";
-    continueBtn.style.marginTop = "15px";
-    continueBtn.onclick = () => {
-      resolveSheriffAfterShield();
-    };
-
-    votingBox.appendChild(continueBtn);
-
     return; // stop normal Shield logic
   }
 
@@ -3152,17 +3146,6 @@ clearContinueButtons();
             </div>
           `;
         }
-
-// ✅ NOW add Continue button
-
-clearContinueButtons();
-
-const continueBtn = document.createElement("button");
-continueBtn.textContent = "Continue";
-continueBtn.className = "reveal-roles-btn";
-continueBtn.style.marginTop = "15px";
-
-votingBox.appendChild(continueBtn);
       };
 
       shieldOptions.appendChild(btn);
@@ -3278,27 +3261,17 @@ hunterAction = null;
 // 🧹 Reset round flag
 shieldKilledByHunter = false;
 
-// 🔫 Resolve sheriff automatically
+// 🔫 Resolve sheriff
 resolveSheriffAfterShield();
+
+// 🏹 Ask hunter AFTER sheriff
 askHunterDecision();
 
-
-// 🏁 Check win condition
-if (checkWinCondition()) return;
-// 🔘 Add ONE Continue button AFTER everything is rendered
-clearContinueButtons();
-
-const continueBtn = document.createElement("button");
-continueBtn.textContent = "Continue";
-continueBtn.className = "reveal-roles-btn";
-continueBtn.style.marginTop = "15px";
-
-continueBtn.onclick = () => {
-  nextRound();
-};
-
-votingBox.appendChild(continueBtn); // ← THIS WAS MISSING
-
+// If hunter is dead or no decision needed,
+// we manually add Continue
+if (!players.some(p => p.role === "Hunter" && p.alive)) {
+    addFinalContinueButton();
+}
 }
 
 function resolveSheriffAfterShield() {
@@ -3365,7 +3338,6 @@ function resolveSheriffAfterShield() {
 
   sheriffShotTarget = null;
 
-  addFinalContinueButton();
 }
 
 function addFinalContinueButton() {
