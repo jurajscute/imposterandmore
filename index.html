@@ -4227,26 +4227,30 @@ function initializePlayers() {
     // --- DETECTIVE CLICK HANDLER (ON THE CARD ITSELF) ---
     // This handles the click when the detective selects THIS card as a target
     card.addEventListener('click', (e) => {
-if (hunterChoosingIndex !== null && i !== hunterChoosingIndex && hunterMarkedTarget === null) {
+card.addEventListener('click', (e) => {
 
-  hunterMarkedTarget = i;
+  if (
+    hunterChoosingIndex !== null &&
+    i !== hunterChoosingIndex &&
+    hunterMarkedTarget === null
+  ) {
 
-  const hunterCard = document.querySelectorAll(".card")[hunterChoosingIndex];
-  const confirmText = document.createElement("div");
-  confirmText.className = "hunter-locked";
- specialHint.innerHTML = `
-  <strong>Your Mission:</strong><br>
-  Survive and trick everyone!<br><br>
-  You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
-  <strong>Target -</strong> ${playerNames[i]}
-`;
+    hunterMarkedTarget = i;
 
-  hunterCard.querySelector(".word-box").appendChild(confirmText);
+    // Update the red mission box instead of the card
+    specialHint.innerHTML = `
+      <strong>Your Mission:</strong><br>
+      Survive and trick everyone!<br><br>
+      You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
+      <strong>Target -</strong> ${playerNames[i]}
+    `;
 
-  hunterChoosingIndex = null;
+    hunterChoosingIndex = null;
 
-  return; // Prevents normal reveal logic from running
-}
+    return; // stop normal reveal logic
+  }
+
+});
       // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
       if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
         
