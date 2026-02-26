@@ -1138,6 +1138,7 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
+let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
 let hunterHasUsedAbility = false;
 let isHunterChoosing = false;
@@ -3235,6 +3236,58 @@ function resolveSheriffAfterShield() {
 
   sheriffShotTarget = null;
 
+
+// 🔥 NOW resolve Hunter BEFORE continuing
+function resolveHunterAbility() {
+
+  if (hunterMarkedTarget === null || hunterHasUsedAbility) {
+    showFinalContinue();
+    return;
+  }
+
+  const hunterIndex = players.findIndex(p => p.role === "Hunter" && p.alive);
+  if (hunterIndex === -1) {
+    showFinalContinue();
+    return;
+  }
+
+  if (players[hunterIndex].vote === hunterMarkedTarget) {
+
+    const target = players[hunterMarkedTarget];
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>🎯 Hunter Decision</h3>
+      <p>Do you want to execute ${target.name}?</p>
+      <button id="hunterYes">Kill</button>
+      <button id="hunterNo">Spare</button>
+    `;
+
+    document.getElementById("hunterYes").onclick = () => {
+
+      target.alive = false;
+      hunterHasUsedAbility = true;
+
+      votingBox.innerHTML += `
+        <h3>💀 ${target.name} was hunted down!</h3>
+      `;
+
+      showFinalContinue();
+    };
+
+    document.getElementById("hunterNo").onclick = () => {
+      hunterHasUsedAbility = true;
+      showFinalContinue();
+    };
+
+  } else {
+    showFinalContinue();
+  }
+}
+}
+
+function showFinalContinue() {
+
   const continueBtn = document.createElement("button");
   continueBtn.textContent = "Continue";
   continueBtn.className = "reveal-roles-btn";
@@ -3244,64 +3297,6 @@ function resolveSheriffAfterShield() {
   votingBox.appendChild(continueBtn);
 
   dictatorBlockedPlayer = null;
-}
-
-function nextRound() {
-
-  // 🐍 Apply poison FIRST
-  if (poisonedTarget !== null) {
-
-    const poisonedPlayer = players[poisonedTarget];
-
-    if (poisonedPlayer && poisonedPlayer.alive) {
-
-      poisonedPlayer.alive = false;
-
-      const poisonedName = poisonedPlayer.name;
-      const poisonedRole = poisonedPlayer.role;
-
-      poisonedTarget = null;
-
-      votingBox.innerHTML = `
-        <div class="roles-reveal-header">
-          <h3 style="color:#00ff66;">🐍 Poison Strikes...</h3>
-        </div>
-        <div class="roles-reveal-content">
-          <h3>${poisonedName} has been poisoned!</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[poisonedRole]}; font-weight:bold;">
-              ${poisonedRole}
-            </span>
-          </p>
-          <br><br>
-          <button id="continueBtn" class="reveal-roles-btn">
-            Continue
-          </button>
-        </div>
-      `;
-
-      document.getElementById("continueBtn").onclick = () => {
-
-        if (checkWinCondition()) return;
-
-        currentVoterIndex = 0;
-        votes = {};
-        showNextVoter();
-      };
-
-      return; // stop here until poison handled
-    }
-
-    poisonedTarget = null;
-  }
-
-  // No poison → continue normally
-  if (checkWinCondition()) return;
-
-  currentVoterIndex = 0;
-  votes = {};
-  showNextVoter();
 }
 
 function checkWinCondition() {
