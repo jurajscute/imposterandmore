@@ -4355,7 +4355,7 @@ if (status) {
   visionBox.innerHTML = rolesHTML;
 
   wordBox.appendChild(visionBox);
-        } else if (word === "Hunter") {
+       } else if (word === "Hunter") {
 
   wordBox.textContent = "???";
 
@@ -4364,18 +4364,20 @@ if (status) {
   roleText.textContent = "Hunter";
   wordBox.appendChild(roleText);
 
-  // Activate Hunter targeting mode
   hunterChoosingIndex = i;
 
-  // ✅ CREATE specialHint properly
-  specialHint = document.createElement("div");
-  specialHint.className = "hunter-hint";
-  specialHint.innerHTML = `
+  const hunterHint = document.createElement("div");
+  hunterHint.className = "hunter-hint show"; // show immediately
+
+  hunterHint.innerHTML = `
     <strong>Your Mission:</strong><br>
     Survive and trick everyone!<br><br>
     You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
     <div class="hunter-status"><strong>Choose your prey.</strong></div>
   `;
+
+  card.appendChild(hunterHint);
+
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
