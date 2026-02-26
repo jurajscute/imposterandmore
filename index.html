@@ -4675,7 +4675,7 @@ if (lockedCards === totalCards) {
     cardsContainer.appendChild(card);
   });
 
-  if (specialHint && specialHint.textContent) {
+  if (specialHint) {
   card.appendChild(specialHint);
   setTimeout(() => specialHint.classList.add('show'), 10);
 }
