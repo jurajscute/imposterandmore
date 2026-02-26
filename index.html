@@ -4364,28 +4364,6 @@ card.addEventListener('click', (e) => {
     </div>
   `;
 });
-
-  visionBox.innerHTML = rolesHTML;
-
-  wordBox.appendChild(visionBox);
-        } else if (word === "Hunter") {{
-
-  wordBox.textContent = "???";
-
-  const roleText = document.createElement("div");
-  roleText.className = "hunter-role";
-  roleText.textContent = "Hunter";
-  wordBox.appendChild(roleText);
-
-  // 🎯 Activate Hunter targeting mode
-  hunterChoosingIndex = i;
-
-  const info = document.createElement("div");
-  info.className = "hunter-instruction";
-  info.innerHTML = "<br><strong>Choose your pre.</strong>";
-
-  wordBox.appendChild(info);
-        }
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
