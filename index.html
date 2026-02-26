@@ -4231,8 +4231,10 @@ if (hunterChoosingIndex !== null && i !== hunterChoosingIndex) {
 
   hunterMarkedTarget = i;
 
-  document.getElementById("hunterStatus").innerHTML =
-    `<strong>Target -</strong> ${playerNames[i]}`;
+  const status = document.querySelector(".hunter-status");
+if (status) {
+  status.innerHTML = `<strong>Target -</strong> ${playerNames[i]}`;
+}
 
   return;
 }
@@ -4372,7 +4374,7 @@ if (hunterChoosingIndex !== null && i !== hunterChoosingIndex) {
     <strong>Your Mission:</strong><br>
     Survive and trick everyone!<br><br>
     You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
-    <div id="hunterStatus"><strong>Choose your prey.</strong></div>
+    <div class="hunter-status"><strong>Choose your prey.</strong></div>
   `;
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
