@@ -3314,7 +3314,14 @@ if (hunterPendingKillIndex !== null) {
 
   hunterPendingKillIndex = null;
 }
+// After everything resolves
+shieldKilledByHunter = false;
 
+if (checkWinCondition()) return;
+
+setTimeout(() => {
+  nextRound();
+}, 800);
 }
 
 function checkWinCondition() {
