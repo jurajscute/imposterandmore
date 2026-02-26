@@ -4679,7 +4679,11 @@ if (lockedCards === totalCards) {
 
   if (specialHint) {
   card.appendChild(specialHint);
-  setTimeout(() => specialHint.classList.add('show'), 10);
+
+  // FORCE visibility immediately
+  requestAnimationFrame(() => {
+    specialHint.classList.add("show");
+  });
 }
 }
 
