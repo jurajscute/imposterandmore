@@ -4171,10 +4171,21 @@ function initializePlayers() {
   const color = roleColors[player.role] || "#ffffff";
 
   rolesHTML += `
-    <div class="mastermind-player-role" style="color:${color}; font-weight:bold;">
-      ${player.name} - ${player.role}
-    </div>
-  `;
+  <div class="mastermind-player-role">
+    ${player.name}: 
+    <span style="
+      color:${color};
+      font-weight:bold;
+      text-shadow:
+        -1px -1px 0 #fff,
+         1px -1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px  1px 0 #fff;
+    ">
+      ${player.role}
+    </span>
+  </div>
+`;
 });
 
   visionBox.innerHTML = rolesHTML;
