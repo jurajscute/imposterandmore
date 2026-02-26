@@ -3314,14 +3314,46 @@ if (hunterPendingKillIndex !== null) {
 
   hunterPendingKillIndex = null;
 }
-// After everything resolves
+// 🧹 Clean up round flags
 shieldKilledByHunter = false;
+hunterPendingKillIndex = null;
+sheriffShotTarget = null;
 
+// 🏁 Check win before advancing
 if (checkWinCondition()) return;
 
+// ▶️ Always move to next round
 setTimeout(() => {
   nextRound();
 }, 800);
+}
+
+function nextRound() {
+
+  // 🔄 Reset per-round vote data
+  players.forEach(player => {
+    player.vote = null;
+  });
+
+  votes = {};
+  currentVoterIndex = 0;
+
+  dictatorBlockedPlayer = null;
+  sheriffShotTarget = null;
+  viperChoosingPoison = false;
+
+  // 🏹 Hunter reset (only if ability already used)
+  hunterPendingKill = null;
+  shieldKilledByHunter = false;
+
+  // 🧼 Clear voting box
+  votingBox.innerHTML = "";
+
+  // 🏁 Check win condition first
+  if (checkWinCondition()) return;
+
+  // ▶️ Start next voting phase
+  startVotingPhase();
 }
 
 function checkWinCondition() {
