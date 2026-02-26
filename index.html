@@ -2378,6 +2378,10 @@ function startVotingPhase() {
 }
 
 function showNextVoter() {
+  // Remove ANY hunter interference during voting
+if (players[currentVoterIndex]?.role === "Hunter") {
+  // Do nothing special — Hunter votes normally
+}
 
   // Skip dead players
   while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
