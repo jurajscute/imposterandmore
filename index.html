@@ -4628,8 +4628,21 @@ if (loverIndexes.includes(i)) {
         categoryBox.classList.remove("category-shown");
 
         setTimeout(() => {
-          if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
-          if (kingHint && kingHint.parentNode) kingHint.parentNode.removeChild(kingHint);
+
+  if (specialHint && specialHint.parentNode)
+    specialHint.parentNode.removeChild(specialHint);
+
+  if (kingHint && kingHint.parentNode)
+    kingHint.parentNode.removeChild(kingHint);
+
+  // 🔥 REMOVE HUNTER HINT
+  const hunterHint = card.querySelector(".hunter-hint");
+  if (hunterHint) hunterHint.remove();
+
+  // 🔥 Also cancel hunter targeting mode if this was Hunter
+  if (word === "Hunter") {
+    hunterChoosingIndex = null;
+  }
           
           while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
           
