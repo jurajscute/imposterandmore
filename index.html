@@ -1138,6 +1138,8 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
+let shieldKilledByHunter = false;
+let hunterPendingKill = null;
 let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
 let hunterHasUsedAbility = false;
@@ -2455,13 +2457,8 @@ function castVote(targetIndex) {
   }
 
   // 🏹 HUNTER
-if (
-  voter.role === "Hunter" &&
-  hunterMarkedTarget !== null &&
-  !hunterHasUsedAbility &&
-  targetIndex === hunterMarkedTarget
-) {
-  showHunterKillChoice(targetIndex);
+if (voter.role === "Hunter" && !hunterHasUsedAbility) {
+  showHunterDecisionScreen();
   return;
 }
 
@@ -2743,16 +2740,24 @@ if (!sheriff || !sheriff.alive) {
   addContinueButton();
 }
 
-function showHunterKillChoice(targetIndex) {
+function showHunterDecisionScreen() {
 
-  const target = players[targetIndex];
+  const hunterIndex = currentVoterIndex;
+  const targetIndex = hunterMarkedTarget;
+
+  // No marked target
+  if (targetIndex === null) {
+    currentVoterIndex++;
+    showNextVoter();
+    return;
+  }
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
       <h3>🏹 Hunter Decision</h3>
     </div>
     <div class="roles-reveal-content">
-      <p>Do you want to murder <strong>${target.name}</strong>?</p>
+      <p>Do you want to murder <strong>${players[targetIndex].name}</strong>?</p>
       <button id="hunterYes" class="reveal-roles-btn">Kill</button>
       <button id="hunterNo" class="reveal-roles-btn">Spare</button>
     </div>
@@ -2760,32 +2765,27 @@ function showHunterKillChoice(targetIndex) {
 
   document.getElementById("hunterYes").onclick = () => {
 
-    target.alive = false;
-    hunterHasUsedAbility = true;
+    // Kill silently
+    if (players[targetIndex].alive) {
 
-    // 🧠 Handle lovers
-    const loverDeathIndex = handleLoverChainDeath(targetIndex);
+  if (players[targetIndex].role === "Shield") {
+    shieldKilledByHunter = true;
+  }
 
-    votingBox.innerHTML = `
-      <h3>💀 ${target.name} was hunted down!</h3>
-    `;
+  players[targetIndex].alive = false;
+  hunterPendingKill = targetIndex;
 
-    if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-      votingBox.innerHTML += `
-        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-      `;
+      // Lover chain
+      const loverDeathIndex = handleLoverChainDeath(targetIndex);
+      if (loverDeathIndex !== null) {
+        hunterPendingKill = [targetIndex, loverDeathIndex];
+      }
     }
 
-    const continueBtn = document.createElement("button");
-    continueBtn.textContent = "Continue";
-    continueBtn.className = "reveal-roles-btn";
-    continueBtn.onclick = () => {
-      currentVoterIndex++;
-      showNextVoter();
-    };
+    hunterHasUsedAbility = true;
 
-    votingBox.appendChild(continueBtn);
+    currentVoterIndex++;
+    showNextVoter();
   };
 
   document.getElementById("hunterNo").onclick = () => {
@@ -2945,7 +2945,42 @@ voteSummaryHTML += `</div>`;
     }
 
   // 🛡️ SHIELD REVENGE (Shield survives)
+// 🛡️ SHIELD CHECK
 if (eliminatedPlayer.role === "Shield") {
+
+  // 💀 Shield was hunted earlier this round
+  if (shieldKilledByHunter) {
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2 style="color:${roleColors["Shield"]}">
+          🛡️ ${eliminatedPlayer.name}'s Shield shattered...
+        </h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>
+          The Shield was pierced before it could activate.
+        </p>
+      </div>
+    `;
+
+    votingBox.innerHTML += voteSummaryHTML;
+
+    const continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue";
+    continueBtn.className = "reveal-roles-btn";
+    continueBtn.style.marginTop = "15px";
+    continueBtn.onclick = () => {
+      resolveSheriffAfterShield();
+    };
+
+    votingBox.appendChild(continueBtn);
+
+    return; // stop normal Shield logic
+  }
+
+  // 🟢 Normal Shield retaliation continues below (your existing logic)
+}
 
   const voters = players
     .map((player, index) => ({ player, index }))
@@ -3168,7 +3203,7 @@ votingBox.innerHTML += voteSummaryHTML;
   const alivePlayers = players.filter(p => p.alive);
   const loversAlive = alivePlayers.filter(p => p.isLover);
 
-  if (loversAlive.length === 2 && alivePlayers.length === 2) {
+  if (loversAlive.length === 2 && alivePlayers.length === 2) {{
     endGame(`<strong>The Lovers win!</strong>`, "Lovers");
     return;
   }
@@ -3189,6 +3224,7 @@ function resolveSheriffAfterShield() {
 
   if (sheriffShotTarget === null) {
     nextRound();
+    shieldKilledByHunter = false;
     return;
   }
 
@@ -3198,6 +3234,7 @@ function resolveSheriffAfterShield() {
   if (!target || !target.alive) {
     sheriffShotTarget = null;
     nextRound();
+    shieldKilledByHunter = false;
     return;
   }
 
@@ -3258,6 +3295,46 @@ function resolveSheriffAfterShield() {
   }
 
   sheriffShotTarget = null;
+
+ // 🎯 Reveal Hunter Kill After Votes
+if (hunterPendingKill !== null) {
+
+  if (Array.isArray(hunterPendingKill)) {
+
+    const [mainTarget, loverTarget] = hunterPendingKill;
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>💀 ${players[mainTarget].name} was hunted down!</h3>
+    `;
+
+    if (loverTarget !== null) {
+      votingBox.innerHTML += `
+        <div class="lover-death-message">
+          <h3>💔 ${players[loverTarget].name} collapsed from heartbreak...</h3>
+        </div>
+      `;
+    }
+
+  } else {
+
+    votingBox.innerHTML += `
+      <hr>
+      <h3>💀 ${players[hunterPendingKill].name} was hunted down!</h3>
+    `;
+  }
+
+  // 🎭 Dramatic delayed whisper
+  setTimeout(() => {
+    votingBox.innerHTML += `
+      <p style="margin-top:15px; font-style:italic; opacity:0.8;">
+        A silent hunter struck first...
+      </p>
+    `;
+  }, 800);
+
+  hunterPendingKill = null;
+}
 
 }
 
@@ -3505,6 +3582,7 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+shieldKilledByHunter = false;
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 hunterMarkedTarget = null;
