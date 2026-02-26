@@ -3481,6 +3481,8 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+dictatorBlockedPlayer = null;
+  sheriffShotTarget = null;
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
