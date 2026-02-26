@@ -4506,12 +4506,11 @@ card.addEventListener('click', (e) => {
   specialHint.innerHTML = `
     <strong>Your Mission:</strong><br>
     Survive and trick everyone!<br><br>
-    You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
-    <strong>Choose your prey.</strong>
+    <div id="hunterStatus"><strong>Choose your prey.</strong></div>
   `;
 
-  hunterChoosingIndex = i;
-}       
+  hunterChoosingIndex = players.findIndex(p => p.role === "Hunter");
+}      
         } else if (word === "Jackal") {
           specialHint.className = "imposter-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
