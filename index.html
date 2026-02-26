@@ -4234,7 +4234,12 @@ if (hunterChoosingIndex !== null && i !== hunterChoosingIndex && hunterMarkedTar
   const hunterCard = document.querySelectorAll(".card")[hunterChoosingIndex];
   const confirmText = document.createElement("div");
   confirmText.className = "hunter-locked";
-  confirmText.innerHTML = `<br><strong>Target Locked:</strong><br>${playerNames[i]}`;
+ specialHint.innerHTML = `
+  <strong>Your Mission:</strong><br>
+  Survive and trick everyone!<br><br>
+  You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
+  <strong>Target -</strong> ${playerNames[i]}
+`;
 
   hunterCard.querySelector(".word-box").appendChild(confirmText);
 
@@ -4513,10 +4518,19 @@ if (hunterChoosingIndex !== null && i !== hunterChoosingIndex && hunterMarkedTar
         } else if (word === "Mastermind") {
           specialHint.className = "mastermind-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You are <strong>GENIUS</strong> and deducted everyones roles!`;
-        } else if (word === "Hunter") {
-          specialHint.className = "hunter-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You can select a <strong>target</strong> and later during voting decide if you want to kill them!`;
-        } else if (word === "Imposter") {
+        } else if (word === "Hunter") {{
+
+  specialHint.className = "hunter-hint";
+  specialHint.innerHTML = `
+    <strong>Your Mission:</strong><br>
+    Survive and trick everyone!<br><br>
+    You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
+    <strong>Choose your prey.</strong>
+  `;
+
+  hunterChoosingIndex = i;
+}       
+        } else if (word === "Jackal") {
           specialHint.className = "imposter-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
         } else if (word === "Jackal") {
