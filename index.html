@@ -2624,6 +2624,13 @@ function resolveSheriffNow() {
   }
 
   const sheriff = players.find(p => p.role === "Sheriff");
+
+  if (!sheriff || !sheriff.alive) {
+    sheriffShotTarget = null;
+    addContinueButton();
+    return;
+  }
+
   const target = players[sheriffShotTarget];
 
   if (!target || !target.alive) {
@@ -2664,6 +2671,13 @@ function resolveSheriffNow() {
 
     sheriff.alive = false;
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
+    const sheriff = players.find(p => p.role === "Sheriff");
+
+if (!sheriff || !sheriff.alive) {
+  sheriffShotTarget = null;
+  addContinueButton();
+  return;
+}
     loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
     votingBox.innerHTML += `
