@@ -4227,30 +4227,21 @@ function initializePlayers() {
     // --- DETECTIVE CLICK HANDLER (ON THE CARD ITSELF) ---
     // This handles the click when the detective selects THIS card as a target
     card.addEventListener('click', (e) => {
-card.addEventListener('click', (e) => {
+if (hunterChoosingIndex !== null && i !== hunterChoosingIndex && hunterMarkedTarget === null) {
 
-  if (
-    hunterChoosingIndex !== null &&
-    i !== hunterChoosingIndex &&
-    hunterMarkedTarget === null
-  ) {
+  hunterMarkedTarget = i;
 
-    hunterMarkedTarget = i;
+  const hunterCard = document.querySelectorAll(".card")[hunterChoosingIndex];
+  const confirmText = document.createElement("div");
+  confirmText.className = "hunter-locked";
+  confirmText.innerHTML = `<br><strong>Target -</strong><br>${playerNames[i]}`;
 
-    // Update the red mission box instead of the card
-    specialHint.innerHTML = `
-      <strong>Your Mission:</strong><br>
-      Survive and trick everyone!<br><br>
-      You can select a <strong>target</strong> and later during voting decide if you want to kill them!<br><br>
-      <strong>Target -</strong> ${playerNames[i]}
-    `;
+  hunterCard.querySelector(".word-box").appendChild(confirmText);
 
-    hunterChoosingIndex = null;
+  hunterChoosingIndex = null;
 
-    return; // stop normal reveal logic
-  }
-
-});
+  return; // Prevents normal reveal logic from running
+}
       // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
       if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
         
@@ -4364,6 +4355,28 @@ card.addEventListener('click', (e) => {
     </div>
   `;
 });
+
+  visionBox.innerHTML = rolesHTML;
+
+  wordBox.appendChild(visionBox);
+        } else if (word === "Hunter") {{
+
+  wordBox.textContent = "???";
+
+  const roleText = document.createElement("div");
+  roleText.className = "hunter-role";
+  roleText.textContent = "Hunter";
+  wordBox.appendChild(roleText);
+
+  // 🎯 Activate Hunter targeting mode
+  hunterChoosingIndex = i;
+
+  const info = document.createElement("div");
+  info.className = "hunter-instruction";
+  info.innerHTML = "<br><strong>Choose your prey.</strong>";
+
+  wordBox.appendChild(info);
+        }
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
@@ -4500,18 +4513,10 @@ card.addEventListener('click', (e) => {
         } else if (word === "Mastermind") {
           specialHint.className = "mastermind-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You are <strong>GENIUS</strong> and deducted everyones roles!`;
-        } else if (word === "Hunter") {{
-
-  specialHint.className = "hunter-hint";
-  specialHint.innerHTML = `
-    <strong>Your Mission:</strong><br>
-    Survive and trick everyone!<br><br>
-    <div id="hunterStatus"><strong>Choose your prey.</strong></div>
-  `;
-
-  hunterChoosingIndex = players.findIndex(p => p.role === "Hunter");
-}      
-        } else if (word === "Jackal") {
+        } else if (word === "Hunter") {
+          specialHint.className = "hunter-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You can select a <strong>target</strong> and later during voting decide if you want to kill them!`;
+        } else if (word === "Imposter") {
           specialHint.className = "imposter-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
         } else if (word === "Jackal") {
