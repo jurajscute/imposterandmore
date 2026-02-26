@@ -3134,9 +3134,6 @@ const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
 continueBtn.className = "reveal-roles-btn";
 continueBtn.style.marginTop = "15px";
-continueBtn.onclick = () => {
-  resolveSheriffAfterShield();
-};
 
 votingBox.appendChild(continueBtn);
       };
@@ -3257,16 +3254,15 @@ if (hunterPendingKill !== null) {
 
 clearContinueButtons();
 
-  const continueBtn = document.createElement("button");
-  continueBtn.textContent = "Continue";
-  continueBtn.className = "reveal-roles-btn";
-  continueBtn.style.marginTop = "15px";
-  continueBtn.onclick = () => {
-  resolveSheriffAfterShield();
-};
-
   votingBox.appendChild(continueBtn);
   shieldKilledByHunter = false;
+  resolveSheriffAfterShield();
+  const continueBtn = document.createElement("button");
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.onclick = nextRound;
+
+votingBox.appendChild(continueBtn);
 }
 
 function resolveSheriffAfterShield() {
