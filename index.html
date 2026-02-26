@@ -3278,11 +3278,6 @@ if (hunterTarget !== null && hunterAction === "kill") {
   hunterPendingKill = null;
 }
 
-askHunterDecision();
-if (hunterTarget !== null && !players[hunterTarget].alive) {
-  hunterTarget = null;
-}
-
 // 🧹 Reset round flag
 shieldKilledByHunter = false;
 
@@ -3293,6 +3288,8 @@ resolveSheriffAfterShield();
 if (checkWinCondition()) return;
 // 🔘 Add ONE Continue button AFTER everything is rendered
 clearContinueButtons();
+
+askHunterDecision();
 
 const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
