@@ -2559,6 +2559,8 @@ if (voter.role === "Hunter" && !hunterHasUsedAbility) {
         </div>
       `;
 
+clearContinueButtons();
+
       const continueBtn = document.createElement("button");
       continueBtn.textContent = "Continue";
       continueBtn.className = "reveal-roles-btn";
@@ -2830,6 +2832,8 @@ function enableHunterRetargetMode() {
         <h3>🎯 New target locked: ${player.name}</h3>
       `;
 
+clearContinueButtons();
+
       const continueBtn = document.createElement("button");
       continueBtn.textContent = "Continue";
       continueBtn.className = "reveal-roles-btn";
@@ -2842,6 +2846,15 @@ function enableHunterRetargetMode() {
     };
 
     votingBox.appendChild(btn);
+  });
+}
+
+function clearContinueButtons() {
+  const buttons = votingBox.querySelectorAll(".reveal-roles-btn");
+  buttons.forEach(btn => {
+    if (btn.textContent === "Continue") {
+      btn.remove();
+    }
   });
 }
 
@@ -3021,6 +3034,8 @@ if (eliminatedPlayer.role === "Shield") {
 
     votingBox.innerHTML += voteSummaryHTML;
 
+clearContinueButtons();
+
     const continueBtn = document.createElement("button");
     continueBtn.textContent = "Continue";
     continueBtn.className = "reveal-roles-btn";
@@ -3112,6 +3127,9 @@ if (eliminatedPlayer.role === "Shield") {
         }
 
 // ✅ NOW add Continue button
+
+clearContinueButtons();
+
 const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
 continueBtn.className = "reveal-roles-btn";
@@ -3236,6 +3254,9 @@ if (hunterPendingKill !== null) {
 }
 
   // ✅ Continue button
+
+clearContinueButtons();
+
   const continueBtn = document.createElement("button");
   continueBtn.textContent = "Continue";
   continueBtn.className = "reveal-roles-btn";
@@ -3318,6 +3339,8 @@ function resolveSheriffAfterShield() {
 function addFinalContinueButton() {
 
   if (checkWinCondition()) return;
+
+clearContinueButtons();
 
   const continueBtn = document.createElement("button");
   continueBtn.textContent = "Continue";
