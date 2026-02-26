@@ -4166,13 +4166,16 @@ function initializePlayers() {
 
   let rolesHTML = `<strong>All Player Roles:</strong><br><br>`;
 
-  players.forEach((player, index) => {
-    rolesHTML += `
-      <div class="mastermind-player-role">
-        ${player.name}: ${player.role}
-      </div>
-    `;
-  });
+  players.forEach((player) => {
+
+  const color = roleColors[player.role] || "#ffffff";
+
+  rolesHTML += `
+    <div class="mastermind-player-role" style="color:${color}; font-weight:bold;">
+      ${player.name} - ${player.role}
+    </div>
+  `;
+});
 
   visionBox.innerHTML = rolesHTML;
 
