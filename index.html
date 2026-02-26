@@ -1138,8 +1138,6 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
-let hunterTarget = null;      // current marked player
-let hunterAction = null;      // "kill" | "spare" | "change"
 let shieldKilledByHunter = false;
 let hunterPendingKill = null;
 let hunterChoosingIndex = null;
@@ -2378,10 +2376,6 @@ function startVotingPhase() {
 }
 
 function showNextVoter() {
-  // Remove ANY hunter interference during voting
-if (players[currentVoterIndex]?.role === "Hunter") {
-  // Do nothing special — Hunter votes normally
-}
 
   // Skip dead players
   while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
@@ -2748,76 +2742,75 @@ if (!sheriff || !sheriff.alive) {
   addContinueButton();
 }
 
-function askHunterDecision() {
-  const hunterIndex = players.findIndex(p => p.role === "Hunter");
-  const hunter = players[hunterIndex];
+function showHunterDecisionScreen() {
 
-  if (!hunter || !hunter.alive) return;
+  const hunterIndex = currentVoterIndex;
+  const targetIndex = hunterMarkedTarget;
 
-  votingBox.innerHTML += `<hr><h3>🏹 Hunter Decision</h3>`;
-
-  const container = document.createElement("div");
-
-  // FORCE target if none
-  if (hunterTarget === null) {
-
-    container.innerHTML += `<p>You must choose a target.</p>`;
-
-    players.forEach((player, index) => {
-      if (!player.alive || index === hunterIndex) return;
-
-      const btn = document.createElement("button");
-      btn.textContent = player.name;
-      btn.className = "reveal-roles-btn";
-
-      btn.onclick = () => {
-        hunterTarget = index;
-        hunterAction = "spare"; // default state
-        askHunterDecision(); // refresh options
-      };
-
-      container.appendChild(btn);
-    });
-
-    votingBox.appendChild(container);
+  // No marked target
+  if (targetIndex === null) {
+    currentVoterIndex++;
+    showNextVoter();
     return;
   }
 
-  // KILL
-  const killBtn = document.createElement("button");
-  killBtn.textContent = "Kill";
-  killBtn.className = "reveal-roles-btn";
+  votingBox.innerHTML = `
+  <div class="roles-reveal-header">
+    <h3>🏹 Hunter Decision</h3>
+  </div>
+  <div class="roles-reveal-content">
+    <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
+    <button id="hunterKill" class="reveal-roles-btn">Kill</button>
+    <button id="hunterSpare" class="reveal-roles-btn">Spare</button>
+    <button id="hunterChange" class="reveal-roles-btn">Change Target</button>
+  </div>
+`;
+document.getElementById("hunterKill").onclick = () => {
+  hunterPendingKill = targetIndex;
+  hunterHasUsedAbility = true;
+  currentVoterIndex++;
+  showNextVoter();
+};
+document.getElementById("hunterSpare").onclick = () => {
+  hunterHasUsedAbility = true;
+  currentVoterIndex++;
+  showNextVoter();
+};
+document.getElementById("hunterChange").onclick = () => {
 
-  killBtn.onclick = () => {
-    hunterAction = "kill";
-    applyHunterKill();
+  hunterCanRetarget = true;
+  hunterHasUsedAbility = false; // allow ability next round
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>Choose New Prey</h3>
+    </div>
+    <div class="roles-reveal-content">
+      <p>Select a new target. You may attempt to kill them next meeting.</p>
+    </div>
+  `;
+
+  enableHunterRetargetMode();
+};
+
+ document.getElementById("hunterYes").onclick = () => {
+
+  // 🏹 Only STORE the kill
+  hunterPendingKill = targetIndex;
+
+  hunterHasUsedAbility = true;
+
+  currentVoterIndex++;
+  showNextVoter();
+};
+
+  document.getElementById("hunterNo").onclick = () => {
+
+    hunterHasUsedAbility = true;
+
+    currentVoterIndex++;
+    showNextVoter();
   };
-
-  // SPARE
-  const spareBtn = document.createElement("button");
-  spareBtn.textContent = "Spare";
-  spareBtn.className = "reveal-roles-btn";
-
-  spareBtn.onclick = () => {
-    hunterAction = "spare";
-    addFinalContinueButton();
-  };
-
-  // CHANGE
-  const changeBtn = document.createElement("button");
-  changeBtn.textContent = "Change Target";
-  changeBtn.className = "reveal-roles-btn";
-
-  changeBtn.onclick = () => {
-    hunterTarget = null;
-    askHunterDecision(); // re-open target selection
-  };
-
-  container.appendChild(killBtn);
-  container.appendChild(spareBtn);
-  container.appendChild(changeBtn);
-
-  votingBox.appendChild(container);
 }
 
 function enableHunterRetargetMode() {
@@ -2838,14 +2831,8 @@ function enableHunterRetargetMode() {
       votingBox.innerHTML = `
         <h3>🎯 New target locked: ${player.name}</h3>
       `;
+
 clearContinueButtons();
-
-// Remove old hunter UI if present
-const oldSection = document.getElementById("hunterDecisionSection");
-if (oldSection) oldSection.remove();
-
-const container = document.createElement("div");
-container.id = "hunterDecisionSection";
 
       const continueBtn = document.createElement("button");
       continueBtn.textContent = "Continue";
@@ -2860,30 +2847,6 @@ container.id = "hunterDecisionSection";
 
     votingBox.appendChild(btn);
   });
-}
-
-function applyHunterKill() {
-
-  if (hunterTarget === null) return;
-
-  const target = players[hunterTarget];
-
-  if (!target.alive) {
-    hunterTarget = null;
-    askHunterDecision();
-    return;
-  }
-
-  target.alive = false;
-
-  votingBox.innerHTML += `
-    <hr>
-    <h3>💀 ${target.name} was hunted down!</h3>
-  `;
-     // clear mark
-  hunterAction = null;
-
-  addFinalContinueButton();
 }
 
 function clearContinueButtons() {
@@ -2961,12 +2924,13 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
   // 🏹 Remove Hunter target vote (but keep them alive for now)
-// If hunter plans to kill someone after vote,
-// temporarily remove their vote influence
-if (hunterTarget !== null && hunterAction === "kill") {
-  players[hunterTarget].vote = null;
-}
+if (hunterPendingKill !== null) {
+  const targetIndex = Array.isArray(hunterPendingKill)
+    ? hunterPendingKill[0]
+    : hunterPendingKill;
 
+  players[targetIndex].vote = null;
+}
 
  // 🔄 Rebuild votes so Dictator cancellation applies
 votes = {};
@@ -3070,6 +3034,18 @@ if (eliminatedPlayer.role === "Shield") {
 
     votingBox.innerHTML += voteSummaryHTML;
 
+clearContinueButtons();
+
+    const continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue";
+    continueBtn.className = "reveal-roles-btn";
+    continueBtn.style.marginTop = "15px";
+    continueBtn.onclick = () => {
+      resolveSheriffAfterShield();
+    };
+
+    votingBox.appendChild(continueBtn);
+
     return; // stop normal Shield logic
   }
 
@@ -3149,6 +3125,17 @@ if (eliminatedPlayer.role === "Shield") {
             </div>
           `;
         }
+
+// ✅ NOW add Continue button
+
+clearContinueButtons();
+
+const continueBtn = document.createElement("button");
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
+
+votingBox.appendChild(continueBtn);
       };
 
       shieldOptions.appendChild(btn);
@@ -3224,9 +3211,12 @@ votingBox.innerHTML += voteSummaryHTML;
   }
 
   // 🎯 Apply Hunter Kill AFTER votes conclude
-if (hunterTarget !== null && hunterAction === "kill") {
+if (hunterPendingKill !== null) {
 
-  const targetIndex = hunterTarget;
+  const targetIndex = Array.isArray(hunterPendingKill)
+    ? hunterPendingKill[0]
+    : hunterPendingKill;
+
   const target = players[targetIndex];
 
   if (target.alive) {
@@ -3257,28 +3247,31 @@ if (hunterTarget !== null && hunterAction === "kill") {
     }
   }
 
-hunterAction = null;
+  hunterPendingKill = null;
 }
 
 // 🧹 Reset round flag
 shieldKilledByHunter = false;
 
-// 🔫 Resolve sheriff
+// 🔫 Resolve sheriff automatically
 resolveSheriffAfterShield();
 
-// 🏹 Ask hunter AFTER sheriff
-const hunter = players.find(p => p.role === "Hunter");
+// 🏁 Check win condition
+if (checkWinCondition()) return;
+// 🔘 Add ONE Continue button AFTER everything is rendered
+clearContinueButtons();
 
-if (hunter && hunter.alive) {
-  askHunterDecision();
-  return; // stop Continue button from being added yet
-}
+const continueBtn = document.createElement("button");
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
 
-// If hunter is dead or no decision needed,
-// we manually add Continue
-if (!players.some(p => p.role === "Hunter" && p.alive)) {
-    addFinalContinueButton();
-}
+continueBtn.onclick = () => {
+  nextRound();
+};
+
+votingBox.appendChild(continueBtn); // ← THIS WAS MISSING
+
 }
 
 function resolveSheriffAfterShield() {
@@ -3345,6 +3338,7 @@ function resolveSheriffAfterShield() {
 
   sheriffShotTarget = null;
 
+  addFinalContinueButton();
 }
 
 function addFinalContinueButton() {
@@ -3360,6 +3354,7 @@ clearContinueButtons();
 
   continueBtn.onclick = () => {
     shieldKilledByHunter = false;
+    hunterPendingKillIndex = null;
     nextRound();
   };
 
@@ -3381,7 +3376,7 @@ function nextRound() {
   viperChoosingPoison = false;
 
   // 🏹 Hunter reset (only if ability already used)
-hunterAction = null;
+  hunterPendingKill = null;
   shieldKilledByHunter = false;
 
   // 🧼 Clear voting box
