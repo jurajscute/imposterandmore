@@ -4232,8 +4232,9 @@ if (hunterChoosingIndex !== null && i !== hunterChoosingIndex) {
   hunterMarkedTarget = i;
 
   const status = document.querySelector(".hunter-status");
+
 if (status) {
-  status.innerHTML = `<strong>Target -</strong> ${playerNames[i]}`;
+  status.innerHTML = `<strong>Target - ${playerNames[i]}</strong>`;
 }
 
   return;
@@ -4514,9 +4515,6 @@ if (status) {
         } else if (word === "Mastermind") {
           specialHint.className = "mastermind-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You are <strong>GENIUS</strong> and deducted everyones roles!`;
-        } else if (word === "Hunter") {
-          specialHint.className = "hunter-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!<br><br>You can select a <strong>target</strong> and later during voting decide if you want to kill them!`;
         } else if (word === "Imposter") {
           specialHint.className = "imposter-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
