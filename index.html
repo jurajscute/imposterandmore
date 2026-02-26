@@ -3364,13 +3364,18 @@ setTimeout(() => {
 
 // 🔄 Add final Continue button after Sheriff (and Hunter if any)
 
+// 🔄 Clear shot
+sheriffShotTarget = null;
+
+// 🔘 Add Continue button AFTER sheriff message
 const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
 continueBtn.className = "reveal-roles-btn";
 continueBtn.style.marginTop = "15px";
 
 continueBtn.onclick = () => {
-  nextRound();
+  shieldKilledByHunter = false; // reset round flag
+  nextRound(); // or whatever advances your game
 };
 
 votingBox.appendChild(continueBtn);
