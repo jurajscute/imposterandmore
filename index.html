@@ -3049,80 +3049,14 @@ if (eliminatedPlayer.role === "Shield") {
           `;
         }
 
-       // 🔫 Resolve Sheriff AFTER Shield retaliation
-if (sheriffShotTarget !== null) {
-
-  const sheriff = players.find(p => p.role === "Sheriff");
-  const target = players[sheriffShotTarget];
-
-  if (target && target.alive) {
-
-    // 🎭 Jester shot = instant win
-    if (target.role === "Jester") {
-      endGame(
-        `<strong>${target.name} the Jester wins!</strong><br>
-         They were shot by the Sheriff!`,
-        "Jester"
-      );
-      return;
-    }
-
-    let sheriffLoverDeath = null;
-
-    if (sheriffAllowedRoles.includes(target.role)) {
-
-      target.alive = false;
-      sheriffLoverDeath = handleLoverChainDeath(sheriffShotTarget);
-
-      votingBox.innerHTML += `
-        <hr>
-        <h3>🔫 ${target.name} was shot by the Sheriff!</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[target.role]}; font-weight:bold;">
-            ${target.role}
-          </span>
-        </p>
-      `;
-
-    } else {
-
-      sheriff.alive = false;
-      const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
-      sheriffLoverDeath = handleLoverChainDeath(sheriffIndex);
-
-      votingBox.innerHTML += `
-        <hr>
-        <h3>❌ The Sheriff shot the wrong person and died!</h3>
-      `;
-    }
-
-    if (sheriffLoverDeath !== null) {
-      const lover = players[sheriffLoverDeath];
-      votingBox.innerHTML += `
-        <div class="lover-death-message">
-          <hr>
-          <h3>💔 ${lover.name} could not live without their lover...</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-              ${lover.role}
-            </span>
-          </p>
-        </div>
-      `;
-    }
-  }
-
-  sheriffShotTarget = null;
-}
-
 // ✅ NOW add Continue button
 const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
 continueBtn.className = "reveal-roles-btn";
 continueBtn.style.marginTop = "15px";
-continueBtn.onclick = nextRound;
+continueBtn.onclick = () => {
+  resolveSheriffAfterShield();
+};
 
 votingBox.appendChild(continueBtn);
       };
@@ -3254,21 +3188,17 @@ if (hunterPendingKill !== null) {
 
 function resolveSheriffAfterShield() {
 
-  if (sheriffShotTarget === null) {
-  addContinueAfterSheriff();
-  return;
-}
-
   const sheriff = players.find(p => p.role === "Sheriff");
   const target = players[sheriffShotTarget];
 
-if (!target || !target.alive) {
-  sheriffShotTarget = null;
-  addContinueAfterSheriff();
-  return;
-}
+  // If no sheriff action, just show continue
+  if (sheriffShotTarget === null || !target || !target.alive) {
+    sheriffShotTarget = null;
+    addFinalContinueButton();
+    return;
+  }
 
-  // 🎭 Jester shot = instant win
+  // 🎭 Jester instant win
   if (target.role === "Jester") {
     endGame(
       `<strong>${target.name} the Jester wins!</strong><br>
@@ -3314,66 +3244,16 @@ if (!target || !target.alive) {
       <div class="lover-death-message">
         <hr>
         <h3>💔 ${lover.name} could not live without their lover...</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-            ${lover.role}
-          </span>
-        </p>
       </div>
     `;
   }
 
   sheriffShotTarget = null;
 
-if (hunterPendingKillIndex !== null) {
-
-  const huntedPlayer = players[hunterPendingKillIndex];
-
-  votingBox.innerHTML += `
-    <hr>
-    <h3>🎯 A Hunter has acted...</h3>
-    <h3>💀 ${huntedPlayer.name} was hunted down!</h3>
-  `;
-
-  // 🎭 Dramatic delayed whisper
-  setTimeout(() => {
-    votingBox.innerHTML += `
-      <p style="margin-top:15px; font-style:italic;">
-        A silent hunter struck first...
-      </p>
-    `;
-  }, 800);
-
-  hunterPendingKillIndex = null;
-}
-// 🧹 Clean up round flags
-shieldKilledByHunter = false;
-hunterPendingKillIndex = null;
-sheriffShotTarget = null;
-
-// 🏁 Check win before allowing continue
-if (checkWinCondition()) return;
-
-// 🔘 Add Continue button
-const continueBtn = document.createElement("button");
-continueBtn.textContent = "Continue";
-continueBtn.className = "reveal-roles-btn";
-continueBtn.style.marginTop = "15px";
-
-continueBtn.onclick = () => {
-  nextRound();
-};
-
-votingBox.appendChild(continueBtn);
-
+  addFinalContinueButton();
 }
 
-function addContinueAfterSheriff() {
-
-  shieldKilledByHunter = false;
-  hunterPendingKillIndex = null;
-  sheriffShotTarget = null;
+function addFinalContinueButton() {
 
   if (checkWinCondition()) return;
 
@@ -3383,6 +3263,8 @@ function addContinueAfterSheriff() {
   continueBtn.style.marginTop = "15px";
 
   continueBtn.onclick = () => {
+    shieldKilledByHunter = false;
+    hunterPendingKillIndex = null;
     nextRound();
   };
 
