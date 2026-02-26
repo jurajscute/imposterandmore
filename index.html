@@ -2876,8 +2876,7 @@ function applyHunterKill() {
     <hr>
     <h3>💀 ${target.name} was hunted down!</h3>
   `;
-
-  hunterTarget = null;      // clear mark
+     // clear mark
   hunterAction = null;
 
   addFinalContinueButton();
@@ -3254,7 +3253,6 @@ if (hunterTarget !== null && hunterAction === "kill") {
     }
   }
 
-  hunterTarget = null;
 hunterAction = null;
 }
 
@@ -3265,7 +3263,12 @@ shieldKilledByHunter = false;
 resolveSheriffAfterShield();
 
 // 🏹 Ask hunter AFTER sheriff
-askHunterDecision();
+const hunter = players.find(p => p.role === "Hunter");
+
+if (hunter && hunter.alive) {
+  askHunterDecision();
+  return; // stop Continue button from being added yet
+}
 
 // If hunter is dead or no decision needed,
 // we manually add Continue
@@ -3374,7 +3377,6 @@ function nextRound() {
   viperChoosingPoison = false;
 
   // 🏹 Hunter reset (only if ability already used)
-  hunterTarget = null;
 hunterAction = null;
   shieldKilledByHunter = false;
 
