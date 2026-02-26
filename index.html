@@ -3801,6 +3801,25 @@ while (imposters < imposterCount) {
   }
 }
 
+// Evil helper roles (can only have ONE)
+const evilHelperPool = [];
+
+if (useManiac) evilHelperPool.push("Maniac");
+if (useCultist) evilHelperPool.push("Cultist");
+if (useShadow) evilHelperPool.push("Shadow");
+// Add future helper roles here
+// if (useSomeNewRole) evilHelperPool.push("SomeNewRole");
+
+let selectedEvilHelper = null;
+
+if (evilHelperPool.length > 0) {
+  const randomIndex = Math.floor(Math.random() * evilHelperPool.length);
+  selectedEvilHelper = evilHelperPool[randomIndex];
+}
+useManiac = selectedEvilHelper === "Maniac";
+useCultist = selectedEvilHelper === "Cultist";
+useShadow = selectedEvilHelper === "Shadow";
+
   // Detective
   let detectiveIndex = null;
   if (useDetective) {
