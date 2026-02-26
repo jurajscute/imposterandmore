@@ -4681,11 +4681,7 @@ if (lockedCards === totalCards) {
 
   if (specialHint) {
   card.appendChild(specialHint);
-
-  // FORCE visibility immediately
-  requestAnimationFrame(() => {
-    specialHint.classList.add("show");
-  });
+  setTimeout(() => specialHint.classList.add('show'), 10);
 }
 }
 
