@@ -2454,6 +2454,17 @@ function castVote(targetIndex) {
     return;
   }
 
+  // 🎯 HUNTER
+if (
+  voter.role === "Hunter" &&
+  hunterMarkedTarget !== null &&
+  !hunterHasUsedAbility &&
+  targetIndex === hunterMarkedTarget
+) {
+  showHunterKillChoice(targetIndex);
+  return;
+}
+
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
@@ -2732,46 +2743,48 @@ if (!sheriff || !sheriff.alive) {
   addContinueButton();
 }
 
-resolveHunterAbility();
+function showHunterKillChoice(targetIndex) {
 
-function resolveHunterAbility() {
+  const target = players[targetIndex];
 
-  if (hunterMarkedTarget === null || hunterHasUsedAbility) return;
-
-  const hunterIndex = players.findIndex(p => p.role === "Hunter" && p.alive);
-  if (hunterIndex === -1) return;
-
-  if (players[hunterIndex].vote === hunterMarkedTarget) {
-
-    const target = players[hunterMarkedTarget];
-
-    votingBox.innerHTML += `
-      <hr>
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
       <h3>🎯 Hunter Decision</h3>
-      <p>Do you want to execute ${target.name}?</p>
-      <button id="hunterYes">Kill</button>
-      <button id="hunterNo">Spare</button>
+    </div>
+    <div class="roles-reveal-content">
+      <p>Do you want to execute <strong>${target.name}</strong>?</p>
+      <button id="hunterYes" class="reveal-roles-btn">Kill</button>
+      <button id="hunterNo" class="reveal-roles-btn">Spare</button>
+    </div>
+  `;
+
+  document.getElementById("hunterYes").onclick = () => {
+
+    target.alive = false;
+    hunterHasUsedAbility = true;
+
+    votingBox.innerHTML = `
+      <h3>💀 ${target.name} was hunted down!</h3>
     `;
 
-    document.getElementById("hunterYes").onclick = () => {
-      target.alive = false;
-      hunterHasUsedAbility = true;
-
-      votingBox.innerHTML += `
-        <h3>💀 ${target.name} was hunted down!</h3>
-      `;
-
-      addContinueButton();
+    const continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue";
+    continueBtn.className = "reveal-roles-btn";
+    continueBtn.onclick = () => {
+      currentVoterIndex++;
+      showNextVoter();
     };
 
-    document.getElementById("hunterNo").onclick = () => {
-      hunterHasUsedAbility = true;
-      addContinueButton();
-    };
+    votingBox.appendChild(continueBtn);
+  };
 
-  } else {
-    addContinueButton();
-  }
+  document.getElementById("hunterNo").onclick = () => {
+
+    hunterHasUsedAbility = true;
+
+    currentVoterIndex++;
+    showNextVoter();
+  };
 }
 
 function showSheriffShootOptions(voteTargetIndex) {
