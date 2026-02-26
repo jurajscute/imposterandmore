@@ -3283,13 +3283,13 @@ shieldKilledByHunter = false;
 
 // 🔫 Resolve sheriff automatically
 resolveSheriffAfterShield();
+askHunterDecision();
+
 
 // 🏁 Check win condition
 if (checkWinCondition()) return;
 // 🔘 Add ONE Continue button AFTER everything is rendered
 clearContinueButtons();
-
-askHunterDecision();
 
 const continueBtn = document.createElement("button");
 continueBtn.textContent = "Continue";
