@@ -4226,22 +4226,33 @@ function initializePlayers() {
 
   const color = roleColors[player.role] || "#ffffff";
 
+  players.forEach((player) => {
+
+  const color = roleColors[player.role] || "#ffffff";
+
+  const isCivilian = player.role === "Civilian";
+
   rolesHTML += `
-  <div class="mastermind-player-role">
-    ${player.name} -  
-    <span style="
-      color:${color};
-      font-weight:bold;
-      text-shadow:
-        -1px -1px 0 #fff,
-         1px -1px 0 #fff,
-        -1px  1px 0 #fff,
-         1px  1px 0 #fff;
-    ">
-      ${player.role}
-    </span>
-  </div>
-`;
+    <div class="mastermind-player-role">
+      ${player.name}: 
+      <span 
+        style="
+          color:${color};
+          font-weight:bold;
+          ${!isCivilian ? `
+            text-shadow:
+              -1px -1px 0 #fff,
+               1px -1px 0 #fff,
+              -1px  1px 0 #fff,
+               1px  1px 0 #fff;
+          ` : ""}
+        "
+      >
+        ${player.role}
+      </span>
+    </div>
+  `;
+});
 });
 
   visionBox.innerHTML = rolesHTML;
