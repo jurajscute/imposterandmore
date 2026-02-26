@@ -4207,7 +4207,7 @@ function initializePlayers() {
           roleText.className = "dictator-role";
           roleText.textContent = "Dictator";
           wordBox.appendChild(roleText);
-        } else if (word === "Mastermind") {{
+        } else if (word === "Mastermind") {
 
   wordBox.textContent = "???";
 
@@ -4216,36 +4216,41 @@ function initializePlayers() {
   roleText.textContent = "Mastermind";
   wordBox.appendChild(roleText);
 
-  // 🚫 Prevent duplicates
-  const existingVision = wordBox.querySelector(".mastermind-vision");
-  if (existingVision) existingVision.remove();
-
   // 🧠 MASTER VISION
   const visionBox = document.createElement("div");
   visionBox.className = "mastermind-vision";
 
-  let rolesHTML = "<strong>All Player Roles:</strong><br><br>";
+  let rolesHTML = `<strong>All Player Roles:</strong><br><br>`;
 
   players.forEach((player) => {
-    const color = roleColors[player.role] || "#ffffff";
 
-    const outline = player.role !== "Civilian"
-      ? "text-shadow:-1px -1px 0 #fff,1px -1px 0 #fff,-1px 1px 0 #fff,1px 1px 0 #fff;"
-      : "";
+  const color = roleColors[player.role] || "#ffffff";
 
-    rolesHTML += `
-      <div class="mastermind-player-role">
-        ${player.name}: 
-        <span style="color:${color}; font-weight:bold; ${outline}">
-          ${player.role}
-        </span>
-      </div>
-    `;
-        });
+  const isCivilian = player.role === "Civilian";
+
+  rolesHTML += `
+    <div class="mastermind-player-role">
+      ${player.name}: 
+      <span 
+        style="
+          color:${color};
+          font-weight:bold;
+          ${!isCivilian ? `
+            text-shadow:
+              -1px -1px 0 #fff,
+               1px -1px 0 #fff,
+              -1px  1px 0 #fff,
+               1px  1px 0 #fff;
+          ` : ""}
+        "
+      >
+        ${player.role}
+      </span>
+    </div>
+  `;
+});
 
   visionBox.innerHTML = rolesHTML;
-  wordBox.appendChild(visionBox);
-      }
 
   wordBox.appendChild(visionBox);
         } else if (word === "Detective") {
