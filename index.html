@@ -2952,13 +2952,12 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
   // 🏹 Remove Hunter target vote (but keep them alive for now)
+// If hunter plans to kill someone after vote,
+// temporarily remove their vote influence
 if (hunterTarget !== null && hunterAction === "kill") {
-  const targetIndex = Array.isArray(hunterPendingKill)
-    ? hunterPendingKill[0]
-    : hunterPendingKill;
-
-  players[targetIndex].vote = null;
+  players[hunterTarget].vote = null;
 }
+
 
  // 🔄 Rebuild votes so Dictator cancellation applies
 votes = {};
@@ -3241,10 +3240,7 @@ votingBox.innerHTML += voteSummaryHTML;
   // 🎯 Apply Hunter Kill AFTER votes conclude
 if (hunterTarget !== null && hunterAction === "kill") {
 
-  const targetIndex = Array.isArray(hunterPendingKill)
-    ? hunterPendingKill[0]
-    : hunterPendingKill;
-
+  const targetIndex = hunterTarget;
   const target = players[targetIndex];
 
   if (target.alive) {
@@ -3275,7 +3271,8 @@ if (hunterTarget !== null && hunterAction === "kill") {
     }
   }
 
-  hunterPendingKill = null;
+  hunterTarget = null;
+hunterAction = null;
 }
 
 // 🧹 Reset round flag
@@ -3384,7 +3381,6 @@ clearContinueButtons();
 
   continueBtn.onclick = () => {
     shieldKilledByHunter = false;
-    hunterPendingKillIndex = null;
     nextRound();
   };
 
@@ -3406,7 +3402,8 @@ function nextRound() {
   viperChoosingPoison = false;
 
   // 🏹 Hunter reset (only if ability already used)
-  hunterPendingKill = null;
+  hunterTarget = null;
+hunterAction = null;
   shieldKilledByHunter = false;
 
   // 🧼 Clear voting box
