@@ -3255,20 +3255,18 @@ if (hunterPendingKill !== null) {
 function resolveSheriffAfterShield() {
 
   if (sheriffShotTarget === null) {
-    nextRound();
-    shieldKilledByHunter = false;
-    return;
-  }
+  addContinueAfterSheriff();
+  return;
+}
 
   const sheriff = players.find(p => p.role === "Sheriff");
   const target = players[sheriffShotTarget];
 
-  if (!target || !target.alive) {
-    sheriffShotTarget = null;
-    nextRound();
-    shieldKilledByHunter = false;
-    return;
-  }
+if (!target || !target.alive) {
+  sheriffShotTarget = null;
+  addContinueAfterSheriff();
+  return;
+}
 
   // 🎭 Jester shot = instant win
   if (target.role === "Jester") {
@@ -3369,6 +3367,26 @@ continueBtn.onclick = () => {
 
 votingBox.appendChild(continueBtn);
 
+}
+
+function addContinueAfterSheriff() {
+
+  shieldKilledByHunter = false;
+  hunterPendingKillIndex = null;
+  sheriffShotTarget = null;
+
+  if (checkWinCondition()) return;
+
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
+
+  continueBtn.onclick = () => {
+    nextRound();
+  };
+
+  votingBox.appendChild(continueBtn);
 }
 
 function nextRound() {
