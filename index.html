@@ -445,6 +445,23 @@
   box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
 }
 
+.mastermind-vision {
+  margin-top: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, #1a0000, #4d0000);
+  border-radius: 10px;
+  font-size: 13px;
+  max-height: 160px;
+  overflow-y: auto;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
+  color: white;
+}
+
+.mastermind-player-role {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -4135,11 +4152,31 @@ function initializePlayers() {
           roleText.textContent = "Dictator";
           wordBox.appendChild(roleText);
         } else if (word === "Mastermind") {
-          wordBox.textContent = "???";
-          const roleText = document.createElement("div");
-          roleText.className = "mastermind-role";
-          roleText.textContent = "Mastermind";
-          wordBox.appendChild(roleText);
+
+  wordBox.textContent = "???";
+
+  const roleText = document.createElement("div");
+  roleText.className = "mastermind-role";
+  roleText.textContent = "Mastermind";
+  wordBox.appendChild(roleText);
+
+  // 🧠 MASTER VISION
+  const visionBox = document.createElement("div");
+  visionBox.className = "mastermind-vision";
+
+  let rolesHTML = `<strong>All Player Roles:</strong><br><br>`;
+
+  players.forEach((player, index) => {
+    rolesHTML += `
+      <div class="mastermind-player-role">
+        ${player.name}: ${player.role}
+      </div>
+    `;
+  });
+
+  visionBox.innerHTML = rolesHTML;
+
+  wordBox.appendChild(visionBox);
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
