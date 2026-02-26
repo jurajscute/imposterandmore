@@ -2944,7 +2944,6 @@ voteSummaryHTML += `</div>`;
       return;
     }
 
-  // 🛡️ SHIELD REVENGE (Shield survives)
 // 🛡️ SHIELD CHECK
 if (eliminatedPlayer.role === "Shield") {
 
@@ -2979,8 +2978,6 @@ if (eliminatedPlayer.role === "Shield") {
     return; // stop normal Shield logic
   }
 
-  // 🟢 Normal Shield retaliation continues below (your existing logic)
-}
 
   const voters = players
     .map((player, index) => ({ player, index }))
@@ -3203,7 +3200,7 @@ votingBox.innerHTML += voteSummaryHTML;
   const alivePlayers = players.filter(p => p.alive);
   const loversAlive = alivePlayers.filter(p => p.isLover);
 
-  if (loversAlive.length === 2 && alivePlayers.length === 2) {{
+  if (loversAlive.length === 2 && alivePlayers.length === 2) {
     endGame(`<strong>The Lovers win!</strong>`, "Lovers");
     return;
   }
@@ -3296,44 +3293,26 @@ function resolveSheriffAfterShield() {
 
   sheriffShotTarget = null;
 
- // 🎯 Reveal Hunter Kill After Votes
-if (hunterPendingKill !== null) {
+if (hunterPendingKillIndex !== null) {
 
-  if (Array.isArray(hunterPendingKill)) {
+  const huntedPlayer = players[hunterPendingKillIndex];
 
-    const [mainTarget, loverTarget] = hunterPendingKill;
-
-    votingBox.innerHTML += `
-      <hr>
-      <h3>💀 ${players[mainTarget].name} was hunted down!</h3>
-    `;
-
-    if (loverTarget !== null) {
-      votingBox.innerHTML += `
-        <div class="lover-death-message">
-          <h3>💔 ${players[loverTarget].name} collapsed from heartbreak...</h3>
-        </div>
-      `;
-    }
-
-  } else {
-
-    votingBox.innerHTML += `
-      <hr>
-      <h3>💀 ${players[hunterPendingKill].name} was hunted down!</h3>
-    `;
-  }
+  votingBox.innerHTML += `
+    <hr>
+    <h3>🎯 A Hunter has acted...</h3>
+    <h3>💀 ${huntedPlayer.name} was hunted down!</h3>
+  `;
 
   // 🎭 Dramatic delayed whisper
   setTimeout(() => {
     votingBox.innerHTML += `
-      <p style="margin-top:15px; font-style:italic; opacity:0.8;">
+      <p style="margin-top:15px; font-style:italic;">
         A silent hunter struck first...
       </p>
     `;
   }, 800);
 
-  hunterPendingKill = null;
+  hunterPendingKillIndex = null;
 }
 
 }
