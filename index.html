@@ -2939,7 +2939,7 @@ voteSummaryHTML += `</div>`;
     }
 
 // 🛡️ SHIELD CHECK
-if (eliminatedPlayer.role === "Shield" && !shieldKilledByHunter)
+if (eliminatedPlayer.role === "Shield") {
 
   // 💀 Shield was hunted earlier this round
   if (shieldKilledByHunter) {
@@ -3187,9 +3187,6 @@ votingBox.innerHTML += voteSummaryHTML;
       );
       return;
     }
-
-shieldKilledByHunter = false;
-
   }
 
 
@@ -3252,6 +3249,7 @@ if (hunterPendingKill !== null) {
 };
 
   votingBox.appendChild(continueBtn);
+  shieldKilledByHunter = false;
 }
 
 function resolveSheriffAfterShield() {
