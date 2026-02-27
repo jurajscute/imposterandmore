@@ -1151,7 +1151,6 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
-let shieldKilledByHunter = false;
 let hunterPendingKill = null;
 let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
@@ -3109,8 +3108,18 @@ if (hunterPendingKill !== null) {
   if (target.alive) {
 
     if (target.role === "Shield") {
-      shieldKilledByHunter = true;
-    }
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3 style="color:${roleColors["Shield"]}">
+        🛡️ ${target.name}'s Shield shattered...
+      </h3>
+      <p>The Shield was pierced before it could activate.</p>
+    </div>
+  `;
+
+}
 
     target.alive = false;
 
@@ -3157,26 +3166,6 @@ if (hunterPendingKill !== null) {
 
 // 🛡️ SHIELD CHECK
 if (eliminatedPlayer.role === "Shield") {
-
-  // 💀 Shield was hunted earlier this round
-  if (!eliminatedPlayer.alive) {
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2 style="color:${roleColors["Shield"]}">
-        🛡️ ${eliminatedPlayer.name}'s Shield shattered...
-      </h2>
-    </div>
-    <div class="roles-reveal-content">
-      <p>The Shield was pierced before it could activate.</p>
-    </div>
-  `;
-
-  votingBox.innerHTML += voteSummaryHTML;
-
-  addContinueButton();
-  return;
-}
-
 
   const voters = players
     .map((player, index) => ({ player, index }))
@@ -3342,8 +3331,6 @@ votingBox.innerHTML += voteSummaryHTML;
     return;
   }
 
-// 🧹 Reset round flag
-shieldKilledByHunter = false;
 
 // 🔫 Resolve sheriff automatically
 resolveSheriffAfterShield();
@@ -3466,7 +3453,6 @@ clearContinueButtons();
   continueBtn.style.marginTop = "15px";
 
   continueBtn.onclick = () => {
-    shieldKilledByHunter = false;
     hunterPendingKillIndex = null;
     nextRound();
   };
@@ -3527,7 +3513,6 @@ if (
 
   // 🏹 Hunter reset (only if ability already used)
   hunterPendingKill = null;
-  shieldKilledByHunter = false;
 
   // 🧼 Clear voting box
   votingBox.innerHTML = "";
@@ -3823,7 +3808,6 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
-shieldKilledByHunter = false;
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 hunterMarkedTarget = null;
