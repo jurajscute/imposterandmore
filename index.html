@@ -1138,6 +1138,7 @@ let players = [];
 let currentVoterIndex = 0;
 let votes = {};
 
+let viperAnnouncedPoison = null; // announced but not yet killed
 let poisonedTarget = null;
 let viperChoosingPoison = false;
 let viperNextPoison = null;     // selected this meeting
@@ -2449,7 +2450,7 @@ function showViperCooldownScreen() {
   currentVoterIndex++;
   setTimeout(() => {
     showNextVoter();
-  }, 1300);
+  }, 4500);
 }
 
 function castVote(targetIndex) {
@@ -2974,6 +2975,30 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
 
+  // 🐍 Poison Warning Announcement
+if (
+  viperAnnouncedPoison !== null &&
+  players[viperAnnouncedPoison] &&
+  players[viperAnnouncedPoison].alive
+) {
+
+  const target = players[viperAnnouncedPoison];
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🐍 ${target.name} doesn't feel too well...</h3>
+      <p style="font-style: italic; margin-top: 8px;">
+        Their future doesn't look bright.
+      </p>
+    </div>
+  `;
+
+  // Move to kill state for NEXT round
+  viperActivePoison = viperAnnouncedPoison;
+  viperAnnouncedPoison = null;
+}
+
 // 🐍 Apply poison from PREVIOUS meeting
 if (
   viperActivePoison !== null &&
@@ -3362,7 +3387,7 @@ if (
 
 // 🐍 Prepare poison for NEXT meeting
 if (viperNextPoison !== null) {
-  viperActivePoison = viperNextPoison;
+  viperAnnouncedPoison = viperNextPoison;
   viperNextPoison = null;
 }
 
