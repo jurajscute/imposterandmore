@@ -94,7 +94,7 @@
     .role-card.hunter { border-left-color: #dc2626; } .hunter .role-icon { background: #dc2626; }
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
     .role-card.jester { border-left-color: #00a008; } .jester .role-icon { background: #00a008; }
-    .role-card.jackal { border-left-color: #cecb43; } .jackal .role-icon { background: #cecb43; }
+    .role-card.jackal { border-left-color: #fffb00; } .jackal .role-icon { background: #fffb00; }
     .role-card.arsonist { border-left-color: #ff5e00; } .arsonist .role-icon { background: #ff5e00; }
     .role-card.viper { border-left-color: #004b16; } .viper.role-icon { background: #004b16; }
     .role-card.shield { border-left-color: #0025a0; } .shield .role-icon { background: #0025a0; }
@@ -225,7 +225,7 @@
     .mastermind-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }ž
     .hunter-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jester-role { color: #00a008; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .jackal-role { color: #cecb43; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .jackal-role { color: #fffb00; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .arsonist-role { color: #ff5e00; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .viper-role { color: #004b16; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shield-role { color: #0025a0; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -256,7 +256,7 @@
     .hunter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
     .jester-hint { color: #00a008; background: #d7ffd4; border-color: #00a008; }
-    .jackal-hint { color: #cecb43; background: #fff0d4; border-color: #cecb43; }
+    .jackal-hint { color: #fffb00; background: #fff0d4; border-color: #fffb00; }
     .arsonist-hint { color: #ff5e00; background: #ffdfca; border-color: #ff5e00; }
     .viper-hint { color: #004b16; background: #9cc597; border-color: #004b16; }
     .shield-hint { color: #0025a0; background: #e0e0ff; border-color: #0025a0; }
@@ -321,7 +321,7 @@
     .role-list .hunter-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
     .role-list .jester-role { background: #caffcd; color: #00a008; border-left-color: #00a008; }
-    .role-list .jackal-role { background: #fff0d4; color: #cecb43; border-left-color: #cecb43; }
+    .role-list .jackal-role { background: #fff0d4; color: #fffb00; border-left-color: #fffb00; }
     .role-list .arsonist-role { background: #ffdfca; color: #ff5e00; border-left-color: #ff5e00; }
     .role-list .viper-role { background: #9cc597; color: #004b16; border-left-color: #004b16; }
     .role-list .shield-role { background: #e0e0ff; color: #0025a0; border-left-color: #0025a0; }
@@ -1222,11 +1222,6 @@ let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
 let isHunterChoosing = false;
 
-let arsonistDoused = new Set(); // stores player indexes
-let arsonistRevealed = false;
-let arsonistCanDouse = false;
-let arsonistChoosingIndex = null;
-
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
 let activeDetectiveCardElement = null;
@@ -1315,7 +1310,7 @@ const roleColors = {
   "Idiot": "#d9ff00",
   "Shield": "#0025a0",
 
-  "Jackal": "#cecb43",
+  "Jackal": "#fffb00",
   "Arsonist": "#ff5e00",
   "Viper": "#004b16",
   "Jester": "#00a008",
@@ -1334,7 +1329,7 @@ const roleThemes = {
   Dictator: "#e74c3c",
   Mastermind: "#e74c3c",
   Hunter: "#e74c3c",
-  Jackal: "#cecb43",
+  Jackal: "#fffb00",
   Arsonist: "#ff5e00",
   Viper: "#004b16",
   Assassin: "#9b59b6",
@@ -2591,12 +2586,6 @@ if (voter.role === "Hunter") {
   return;
 }
 
-  // 🔥 ARSONIST
-if (player.role === "Arsonist" && !arsonistChoosing) {
-   showArsonistDouseDuringVoting();
-   return;
-}
-
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
@@ -3301,14 +3290,6 @@ if (sheriffShotTarget !== null) {
 
   sheriffShotTarget = null;
 }
-const arsonistIndex = players.findIndex(p => p.role === "Arsonist");
-
-if (
-  arsonistIndex !== -1 &&
-  players[arsonistIndex].alive
-) {
-  arsonistCanDouse = true;
-}
 
   // =====================================================
   // 🛡 PHASE 4 — RESOLVE VOTE
@@ -3524,19 +3505,6 @@ function renderShieldRetaliation(eliminatedIndex) {
 
     shieldOptions.appendChild(btn);
   });
-
-const aliveNonArsonists = players.filter(p =>
-  p.alive && p.role !== "Arsonist"
-);
-
-const allDoused = aliveNonArsonists.every(p =>
-  arsonistDousedPlayers.includes(players.indexOf(p))
-);
-
-if (allDoused && aliveNonArsonists.length > 0) {
-  showArsonistBurnButton();
-}
-
 }
 
 function resolveSheriffAfterShield() {
@@ -3697,42 +3665,6 @@ const impostorsAlive = alivePlayers.filter(p =>
     endGame(`<strong>Evil wins!</strong>`, "Imposter");
     return true;
   }
-/* ==============================
-     🔥 ARSONIST WIN
-     ============================== */
-const arsonist = alivePlayers.find(p => p.role === "Arsonist");
-
-if (arsonist) {
-
-  const arsonistIndex = players.findIndex(p => p.role === "Arsonist");
-
-  const othersAlive = alivePlayers.filter(p => p.role !== "Arsonist");
-
-  const allDoused = othersAlive.every(p =>
-    arsonistDoused.has(players.indexOf(p))
-  );
-
-  if (othersAlive.length > 0 && allDoused) {
-
-    votingBox.innerHTML += `
-      <button id="igniteBtn" class="reveal-roles-btn" style="background:#ff3300;">
-        🔥 Ignite
-      </button>
-    `;
-
-    document.getElementById("igniteBtn").onclick = () => {
-
-      othersAlive.forEach(p => p.alive = false);
-
-      endGame(
-        `<strong>${arsonist.name} the Arsonist burns everyone alive!</strong>`,
-        "Arsonist"
-      );
-    };
-
-    return true;
-  }
-}
 
   /* ==============================
      🐺 JACKAL WIN
@@ -3986,50 +3918,6 @@ function updateRoleVisuals() {
   });
 }
 
-function showArsonistDouseScreen() {
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header" style="background:#ff6600;">
-      <h2>🔥 Choose someone to Douse</h2>
-    </div>
-    <div class="roles-reveal-content" id="arsonistOptions"></div>
-  `;
-
-  const container = document.getElementById("arsonistOptions");
-
-  players.forEach((player, index) => {
-
-    if (!player.alive) return;
-    if (player.role === "Arsonist") return;
-    if (arsonistDoused.has(index)) return;
-
-    const btn = document.createElement("button");
-    btn.textContent = player.name;
-    btn.className = "reveal-roles-btn";
-
-    btn.onclick = () => {
-
-      arsonistDoused.add(index);
-
-      votingBox.innerHTML = `
-        <h3>🔥 ${player.name} has been doused in gasoline...</h3>
-      `;
-
-      const continueBtn = document.createElement("button");
-      continueBtn.textContent = "Continue";
-      continueBtn.className = "reveal-roles-btn";
-      continueBtn.onclick = () => {
-        currentVoterIndex++;
-        showNextVoter();
-      };
-
-      votingBox.appendChild(continueBtn);
-    };
-
-    container.appendChild(btn);
-  });
-}
-
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
   // 🐍 Reset Viper state
@@ -4038,12 +3926,6 @@ viperAnnouncedPoison = null;
 viperNextPoison = null;
 viperCooldown = false;
 viperChoosingPoison = false;
-
-// 🔥 Reset Arsonist state
-arsonistDousedPlayers = [];
-arsonistRevealed = false;
-arsonistChoosing = false;
-arsonistWinReady = false;
 
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
@@ -5041,34 +4923,9 @@ if (status) {
         } else if (word === "Jackal") {
           specialHint.className = "jackal-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
-
-} else if (word === "Arsonist") {{
-
-  wordBox.textContent = "..." + secretItem.trim().slice(-1);
-
-  const roleText = document.createElement("div");
-  roleText.className = "arsonist-role";
-  roleText.textContent = "Arsonist";
-  wordBox.appendChild(roleText);
-
-  arsonistChoosingIndex = i;
-
-  // 🔥 Immediately allow first douse
-  arsonistChoosing = true;
-
-  const arsonistHint = document.createElement("div");
-  arsonistHint.className = "arsonist-hint show";
-  arsonistHint.innerHTML = `
-    <strong>Your Mission:</strong><br>
-    Douse everyone in gasoline.<br><br>
-    Choose someone to douse.
-  `;
-
-  card.appendChild(arsonistHint);
-
-  showArsonistDouseScreen(i); // pass player index
-}
-
+        } else if (word === "Arsonist") {
+          specialHint.className = "arsonist-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
         } else if (word === "Viper") {
           specialHint.className = "viper-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone, instead of voting you may <strong>poison</strong> people! They die by the next vote!`;
