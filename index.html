@@ -1133,6 +1133,8 @@ let currentVoterIndex = 0;
 let votes = {};
 let poisonedTarget = null;
 let viperChoosingPoison = false;
+let viperNextPoison = null;     // selected this meeting
+let viperActivePoison = null;   // kills NEXT meeting
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
 
@@ -2615,9 +2617,9 @@ function showPoisonScreen() {
       btn.textContent = player.name;
       btn.className = "reveal-roles-btn poison-btn";
 
-      btn.onclick = () => {
+     btn.onclick = () => {
 
-  viperPoisonTarget = index; // store for NEXT round
+  viperNextPoison = index; // store for NEXT meeting
 
   currentVoterIndex++;
   setTimeout(() => {
@@ -2930,6 +2932,42 @@ skipBtn.onclick = () => {
 }
 
 function finishVoting() {
+
+// 🐍 Apply poison from PREVIOUS meeting
+if (
+  viperActivePoison !== null &&
+  players[viperActivePoison] &&
+  players[viperActivePoison].alive
+) {
+
+  const poisoned = players[viperActivePoison];
+  poisoned.alive = false;
+
+  const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
+
+  votingBox.innerHTML += `
+    <hr>
+    <h3>🧪 ${poisoned.name} succumbed to poison...</h3>
+    <p>
+      They were the 
+      <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+        ${poisoned.role}
+      </span>
+    </p>
+  `;
+
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} could not live without their lover...</h3>
+      </div>
+    `;
+  }
+
+  viperActivePoison = null;
+}
+
   // 🏹 Remove Hunter target vote (but keep them alive for now)
 if (hunterPendingKill !== null) {
   const targetIndex = Array.isArray(hunterPendingKill)
@@ -3271,18 +3309,11 @@ if (
   hunterMarkedTarget = null;
 }
 
-// 🐍 Move poison forward one round
-if (viperPoisonTarget !== null) {
-  viperDelayedPoison = viperPoisonTarget;
-  viperPoisonTarget = null;
+// 🐍 Prepare poison for NEXT meeting
+if (viperNextPoison !== null) {
+  viperActivePoison = viperNextPoison;
+  viperNextPoison = null;
 }
-
-// 🐍 Apply delayed poison
-if (
-  viperDelayedPoison !== null &&
-  players[viperDelayedPoison] &&
-  players[viperDelayedPoison].alive
-) {
 
   const poisoned = players[viperDelayedPoison];
   poisoned.alive = false;
