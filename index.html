@@ -1212,6 +1212,11 @@ let viperActivePoison = null;   // kills NEXT meeting
 let meetingMessages = "";
 let viperCooldown = false; // true = refueling, cannot poison
 
+let arsonistIndex = null;              // who the arsonist is
+let arsonistDoused = [];               // array of player indexes
+let arsonistRevealed = false;          // first reveal trigger
+let arsonistJustVoted = false;         // meeting douse trigger
+
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
 
@@ -2462,7 +2467,6 @@ function startVotingPhase() {
 }
 
 function showNextVoter() {
-
   // Skip dead players
   while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
     currentVoterIndex++;
@@ -2501,6 +2505,42 @@ votingBox.classList.add("vote-fade-in");
 
       voteOptions.appendChild(btn);
     }
+  });
+  if (currentVoterIndex === arsonistIndex) {
+  arsonistJustVoted = true;
+}
+if (arsonistJustVoted) {
+  arsonistJustVoted = false;
+  showArsonistMeetingDouse();
+  return;
+}
+
+}
+
+function showArsonistMeetingDouse() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:orange;">🔥 Choose someone to douse</h2>
+    </div>
+  `;
+
+  players.forEach((p, index) => {
+    if (!p.alive) return;
+    if (index === arsonistIndex) return;
+    if (arsonistDoused.includes(index)) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = p.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+      arsonistDoused.push(index);
+      currentVoterIndex++;
+      showNextVoter();
+    };
+
+    votingBox.appendChild(btn);
   });
 }
 
@@ -2881,6 +2921,32 @@ if (!sheriff || !sheriff.alive) {
   sheriffShotTarget = null;
 
   addContinueButton();
+}
+
+function showArsonistDouseScreen() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:orange;">🔥 Choose someone to douse</h2>
+    </div>
+  `;
+
+  players.forEach((p, index) => {
+    if (!p.alive || index === arsonistIndex) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = p.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+      if (!arsonistDoused.includes(index)) {
+        arsonistDoused.push(index);
+      }
+      nextCard(); // or whatever continues your reveal flow
+    };
+
+    votingBox.appendChild(btn);
+  });
 }
 
 function showHunterDecisionScreen() {
@@ -3397,6 +3463,33 @@ votingBox.innerHTML += `
     `).join("")}
   </div>
 `;
+
+if (arsonistIndex !== null && players[arsonistIndex].alive) {
+
+  const aliveOthers = players.filter((p, i) =>
+    p.alive && i !== arsonistIndex
+  );
+
+  const allDoused = aliveOthers.every(p =>
+    arsonistDoused.includes(players.indexOf(p))
+  );
+
+  if (aliveOthers.length > 0 && allDoused) {
+
+    const igniteBtn = document.createElement("button");
+    igniteBtn.textContent = "🔥 Ignite Everyone";
+    igniteBtn.className = "reveal-roles-btn";
+
+    igniteBtn.onclick = () => {
+      endGame(
+        `<strong>${players[arsonistIndex].name} the Arsonist burned everyone!</strong>`,
+        "Arsonist"
+      );
+    };
+
+    votingBox.appendChild(igniteBtn);
+  }
+}
 
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
@@ -3920,6 +4013,12 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+
+arsonistIndex = null;
+arsonistDoused = [];
+arsonistRevealed = false;
+arsonistJustVoted = false;
+
   // 🐍 Reset Viper state
 viperActivePoison = null;
 viperAnnouncedPoison = null;
@@ -4775,6 +4874,28 @@ if (status) {
 
   card.appendChild(hunterHint);
 
+   } else if (word === "Arsonist") {
+
+  wordBox.textContent = "..." + secretItem.trim().slice(-1);;
+
+  const roleText = document.createElement("div");
+  roleText.className = "arsonist-role";
+  roleText.textContent = "Arsonist";
+  wordBox.appendChild(roleText);
+
+  arsonistIndex = i;
+
+  const arsonistHint = document.createElement("div");
+  arsonistHint.className = "arsonist-hint show"; // show immediately
+
+  arsonistHint.innerHTML = `
+    <strong>Your Mission:</strong><br>
+    Burn the world.<br><br>
+    You can select a player and <strong>DOUSE</strong> them!<br><br>`;
+
+  card.appendChild(arsonistHint);
+
+
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
@@ -4792,12 +4913,6 @@ if (status) {
           const roleText = document.createElement("div");
           roleText.className = "jackal-role";
           roleText.textContent = "Jackal";
-          wordBox.appendChild(roleText);
-          } else if (word === "Arsonist") {
-          wordBox.textContent = "..." + secretItem.trim().slice(-1);
-          const roleText = document.createElement("div");
-          roleText.className = "arsonist-role";
-          roleText.textContent = "Arsonist";
           wordBox.appendChild(roleText);
           } else if (word === "Viper") {
           wordBox.textContent = "???";
@@ -4922,9 +5037,6 @@ if (status) {
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
         } else if (word === "Jackal") {
           specialHint.className = "jackal-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
-        } else if (word === "Arsonist") {
-          specialHint.className = "arsonist-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
         } else if (word === "Viper") {
           specialHint.className = "viper-hint";
@@ -5059,6 +5171,10 @@ if (loverIndexes.includes(i)) {
           statusLabel.textContent = "Locked";
           
           lockedCards++;
+
+          if (word === "Arsonist") {
+  arsonistIndex = i;
+}
 
 if (lockedCards === totalCards) {
   console.log("Triggering first player...");
