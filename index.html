@@ -276,7 +276,12 @@
     .reveal-roles-btn:hover { box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
     .reveal-roles-btn:active { transform: scale(0.96); }
     .reveal-roles-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
-    
+
+    .reveal-evil-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #3a0000, #7e0000); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-evil-btn:hover { box-shadow: 0 6px 16px rgba(168, 0, 0, 0.6); }
+    .reveal-evil-btn:active { transform: scale(0.96); }
+    .reveal-evil-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+    yo hi
     .king-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #eab308, #ca8a04); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
     .king-announcement.show { opacity: 1; transform: translateY(0); }
 
@@ -437,7 +442,7 @@
   text-align: center;
   animation: loverFade 0.6s ease;
 }
-
+yo hi
 .dictator-screen {
   background: linear-gradient(135deg, #3a0000, #7e0000);
   border-radius: 12px;
@@ -2596,7 +2601,7 @@ if (voter.role === "Hunter") {
     if (!player.alive || index === currentVoterIndex) return;
 
     const btn = document.createElement("button");
-    btn.className = "reveal-roles-btn";
+    btn.className = "reveal-evil-btn";
     btn.textContent = `Cancel ${player.name}'s vote`;
 
     btn.onclick = () => {
@@ -2834,7 +2839,7 @@ function showHunterDecisionScreen() {
     if (!player.alive || index === currentVoterIndex) return;
 
     const btn = document.createElement("button");
-    btn.className = "reveal-roles-btn";
+    btn.className = "reveal-evil-btn";
     btn.textContent = player.name;
 
     btn.onclick = () => {
@@ -2863,9 +2868,9 @@ function showHunterDecisionScreen() {
     </div>
     <div class="roles-reveal-content">
       <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
-      <button id="hunterKill" class="reveal-roles-btn">Kill</button>
-      <button id="hunterSpare" class="reveal-roles-btn">Spare</button>
-      <button id="hunterChange" class="reveal-roles-btn">Change Target</button>
+      <button id="hunterKill" class="reveal-evil-btn">Kill</button>
+      <button id="hunterSpare" class="reveal-evil-btn">Spare</button>
+      <button id="hunterChange" class="reveal-evil-btn">Change Target</button>
     </div>
   `;
 
