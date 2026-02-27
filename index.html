@@ -4733,6 +4733,29 @@ if (status) {
 
   return;
 }
+// 🔥 ARSONIST DOUSE SELECTION (AT REVEAL)
+if (arsonistIndex !== null && i !== arsonistIndex) {
+
+  // prevent double dousing
+  if (!arsonistDoused.includes(i)) {
+    arsonistDoused.push(i);
+  }
+
+  const status = document.querySelector(".arsonist-hint");
+
+  if (status) {
+    status.innerHTML = `
+      <strong>Your Mission:</strong><br>
+      Burn the world.<br><br>
+      <strong>Doused - </strong> ${playerNames[i]}
+    `;
+  }
+
+  // stop choosing after first pick
+  arsonistIndex = null;
+
+  return;
+}
       // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
       if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
         
