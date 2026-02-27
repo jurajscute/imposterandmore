@@ -2685,19 +2685,10 @@ function handleLoverChainDeath(deadIndex) {
 
   if (otherLoverIndex !== -1) {
     players[otherLoverIndex].alive = false;
-    handleDeathCleanup(index);
     return otherLoverIndex; // 🔥 return who died
   }
 
   return null;
-}
-
-function handleDeathCleanup(index) {
-
-  if (hunterMarkedTarget === index) {
-    hunterMarkedTarget = null;
-  }
-
 }
 
 function resolveSheriffNow() {
@@ -2738,7 +2729,6 @@ function resolveSheriffNow() {
   if (sheriffAllowedRoles.includes(target.role)) {
 
     target.alive = false;
-    handleDeathCleanup(index);
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -2755,7 +2745,6 @@ function resolveSheriffNow() {
   } else {
 
     sheriff.alive = false;
-    handleDeathCleanup(index);
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     const sheriff = players.find(p => p.role === "Sheriff");
 
@@ -2998,7 +2987,6 @@ function finishVoting() {
   ) {
     const poisoned = players[viperActivePoison];
     poisoned.alive = false;
-    handleDeathCleanup(index);
 
     const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
@@ -3071,7 +3059,6 @@ function finishVoting() {
 
     if (target && target.alive) {
       target.alive = false;
-      handleDeathCleanup(index);
       hunterKilledIndex = targetIndex;
 
       const loverDeathIndex = handleLoverChainDeath(targetIndex);
@@ -3162,7 +3149,6 @@ function finishVoting() {
       // 🗳 Normal elimination
       if (eliminatedPlayer.alive) {
         eliminatedPlayer.alive = false;
-        handleDeathCleanup(index);
         handleLoverChainDeath(eliminatedIndex);
       }
 
@@ -3258,7 +3244,6 @@ function renderShieldRetaliation(eliminatedIndex) {
 
   const killedPlayer = obj.player;
   killedPlayer.alive = false;
-  handleDeathCleanup(index);
 
   const loverDeathIndex = handleLoverChainDeath(obj.index);
 
@@ -3330,7 +3315,6 @@ function resolveSheriffAfterShield() {
   if (sheriffAllowedRoles.includes(target.role)) {
 
     target.alive = false;
-    handleDeathCleanup(index);
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -3347,7 +3331,6 @@ function resolveSheriffAfterShield() {
   } else {
 
     sheriff.alive = false;
-    handleDeathCleanup(index);
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
