@@ -2454,7 +2454,7 @@ function showViperCooldownScreen() {
   currentVoterIndex++;
   setTimeout(() => {
     showNextVoter();
-  }, 4500);
+  }, 3500);
 }
 
 function castVote(targetIndex) {
@@ -3026,14 +3026,6 @@ if (
 
   const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
-  meetingMessages += `
-    <hr>
-    <div class="poison-death">
-      <h3>🧪 ${poisoned.name} throws up violently...</h3>
-      <p>Their future doesn't look bright.</p>
-    </div>
-  `;
-
   // 🔥 Second message (role reveal)
   meetingMessages += `
     <div class="poison-death">
@@ -3144,7 +3136,7 @@ if (viperNextPoison !== null) {
   meetingMessages += `
     <hr>
     <div class="roles-reveal-content">
-      <h3>🧪 ${players[viperNextPoison].name} doesn't feel too well...</h3>
+      <h3>🧪 ${players[viperNextPoison].name} throws up violently...</h3>
       <p>Their future doesn't look so bright.</p>
     </div>
   `;
@@ -3470,43 +3462,6 @@ clearContinueButtons();
 }
 
 function nextRound() {
-
-  
-  // 🐍 Poison Warning Announcement
-// 🐍 Poison Announcement at start of meeting
-if (
-  viperAnnouncedPoison !== null &&
-  players[viperAnnouncedPoison] &&
-  players[viperAnnouncedPoison].alive
-) {
-
-  const target = players[viperAnnouncedPoison];
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-content">
-      <h3>🐍 ${target.name} doesn't feel too well.</h3>
-      <p style="font-style: italic;">
-        Their future doesn't look bright.
-      </p>
-    </div>
-  `;
-
-  viperActivePoison = viperAnnouncedPoison;
-  viperAnnouncedPoison = null;
-
-  // Add Continue button before voting starts
-  const continueBtn = document.createElement("button");
-  continueBtn.textContent = "Continue";
-  continueBtn.className = "reveal-roles-btn";
-
-  continueBtn.onclick = () => {
-    startVotingPhase();
-  };
-
-  votingBox.appendChild(continueBtn);
-
-  return; // IMPORTANT: stop normal nextRound flow here
-}
 
   // 🔄 Reset per-round vote data
   players.forEach(player => {
