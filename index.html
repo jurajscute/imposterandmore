@@ -4026,6 +4026,12 @@ viperNextPoison = null;
 viperCooldown = false;
 viperChoosingPoison = false;
 
+// 🔥 Reset Arsonist state
+arsonistDousedPlayers = [];
+arsonistRevealed = false;
+arsonistChoosing = false;
+arsonistWinReady = false;
+
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 hunterMarkedTarget = null;
@@ -4897,11 +4903,6 @@ if (status) {
           const roleText = document.createElement("div");
           roleText.className = "arsonist-role";
           roleText.textContent = "Arsonist";
-          if (player.role === "Arsonist" && !arsonistRevealed) {
-  arsonistRevealed = true;
-  showArsonistDouseScreen();
-  return;
-}
           wordBox.appendChild(roleText);
           } else if (word === "Viper") {
           wordBox.textContent = "???";
@@ -5027,9 +5028,32 @@ if (status) {
         } else if (word === "Jackal") {
           specialHint.className = "jackal-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
-        } else if (word === "Arsonist") {
-          specialHint.className = "arsonist-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
+
+} else if (word === "Arsonist") {{
+
+  wordBox.textContent = "..." + secretItem.trim().slice(-1);
+
+  const roleText = document.createElement("div");
+  roleText.className = "arsonist-role";
+  roleText.textContent = "Arsonist";
+  wordBox.appendChild(roleText);
+
+  // 🔥 Immediately allow first douse
+  arsonistChoosing = true;
+
+  const arsonistHint = document.createElement("div");
+  arsonistHint.className = "arsonist-hint show";
+  arsonistHint.innerHTML = `
+    <strong>Your Mission:</strong><br>
+    Douse everyone in gasoline.<br><br>
+    Choose someone to douse.
+  `;
+
+  card.appendChild(arsonistHint);
+
+  showArsonistDouseScreen(i); // pass player index
+}
+
         } else if (word === "Viper") {
           specialHint.className = "viper-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone, instead of voting you may <strong>poison</strong> people! They die by the next vote!`;
