@@ -3166,12 +3166,6 @@ votingBox.appendChild(continueBtn);
 
     // 🗳 Normal elimination
     eliminatedPlayer.alive = false;
-     if (
-  hunterMarkedTarget !== null &&
-  !players[hunterMarkedTarget]?.alive
-) {
-  hunterMarkedTarget = null;
-}
 
     const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
 
@@ -3280,6 +3274,14 @@ shieldKilledByHunter = false;
 
 // 🔫 Resolve sheriff automatically
 resolveSheriffAfterShield();
+
+// 🏹 If Hunter's target died this meeting, clear it
+if (
+  hunterMarkedTarget !== null &&
+  (!players[hunterMarkedTarget] || !players[hunterMarkedTarget].alive)
+) {
+  hunterMarkedTarget = null;
+}
 
 // 🏁 Check win condition
 if (checkWinCondition()) return;
