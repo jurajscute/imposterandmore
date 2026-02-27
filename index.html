@@ -1138,7 +1138,6 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
-let hunterJustSelectedTarget = false;
 let shieldKilledByHunter = false;
 let hunterPendingKill = null;
 let hunterChoosingIndex = null;
@@ -2743,16 +2742,6 @@ if (!sheriff || !sheriff.alive) {
 }
 
 function showHunterDecisionScreen() {
-  if (hunterJustSelectedTarget) {
-  hunterJustSelectedTarget = false;
-
-  currentVoterIndex++;
-  setTimeout(() => {
-    showNextVoter();
-  }, 150);
-
-  return;
-}
 
   const hunterIndex = currentVoterIndex;
 
@@ -2770,7 +2759,7 @@ function showHunterDecisionScreen() {
 
   players.forEach((player, index) => {
 
-    if (!player.alive || index === hunterIndex) return;
+    if (!player.alive || index === currentVoterIndex) return;
 
     const btn = document.createElement("button");
     btn.className = "reveal-roles-btn";
@@ -2779,8 +2768,9 @@ function showHunterDecisionScreen() {
     btn.onclick = () => {
 
       hunterMarkedTarget = index;
-      hunterJustSelectedTarget = true; // 🔥 mark that this is a fresh target
 
+      // 🔥 IMPORTANT:
+      // After picking target, continue voting immediately.
       currentVoterIndex++;
       setTimeout(() => {
         showNextVoter();
