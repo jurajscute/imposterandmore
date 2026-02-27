@@ -2975,30 +2975,6 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
 
-  // 🐍 Poison Warning Announcement
-if (
-  viperAnnouncedPoison !== null &&
-  players[viperAnnouncedPoison] &&
-  players[viperAnnouncedPoison].alive
-) {
-
-  const target = players[viperAnnouncedPoison];
-
-  meetingMessages += `
-    <hr>
-    <div class="roles-reveal-content">
-      <h3>🐍 ${target.name} doesn't feel too well...</h3>
-      <p style="font-style: italic; margin-top: 8px;">
-        Their future doesn't look bright.
-      </p>
-    </div>
-  `;
-
-  // Move to kill state for NEXT round
-  viperActivePoison = viperAnnouncedPoison;
-  viperAnnouncedPoison = null;
-}
-
 // 🐍 Apply poison from PREVIOUS meeting
 if (
   viperActivePoison !== null &&
@@ -3504,6 +3480,43 @@ clearContinueButtons();
 }
 
 function nextRound() {
+
+  
+  // 🐍 Poison Warning Announcement
+// 🐍 Poison Announcement at start of meeting
+if (
+  viperAnnouncedPoison !== null &&
+  players[viperAnnouncedPoison] &&
+  players[viperAnnouncedPoison].alive
+) {
+
+  const target = players[viperAnnouncedPoison];
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-content">
+      <h3>🐍 ${target.name} doesn't feel too well.</h3>
+      <p style="font-style: italic;">
+        Their future doesn't look bright.
+      </p>
+    </div>
+  `;
+
+  viperActivePoison = viperAnnouncedPoison;
+  viperAnnouncedPoison = null;
+
+  // Add Continue button before voting starts
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+
+  continueBtn.onclick = () => {
+    startVotingPhase();
+  };
+
+  votingBox.appendChild(continueBtn);
+
+  return; // IMPORTANT: stop normal nextRound flow here
+}
 
   // 🔄 Reset per-round vote data
   players.forEach(player => {
