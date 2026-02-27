@@ -2754,35 +2754,38 @@ function showHunterDecisionScreen() {
   // 🔥 FORCE target selection if none exists
   if (hunterMarkedTarget === null) {
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h3>🏹 Choose Your Prey</h3>
-      </div>
-      <div class="roles-reveal-content" id="hunterTargetOptions"></div>
-    `;
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>🏹 Choose Your Prey</h3>
+    </div>
+    <div class="roles-reveal-content" id="hunterTargetOptions"></div>
+  `;
 
-    const optionsBox = document.getElementById("hunterTargetOptions");
+  const optionsBox = document.getElementById("hunterTargetOptions");
 
-    players.forEach((player, index) => {
+  players.forEach((player, index) => {
 
-      if (!player.alive || index === hunterIndex) return;
+    if (!player.alive || index === currentVoterIndex) return;
 
-      const btn = document.createElement("button");
-      btn.className = "reveal-roles-btn";
-      btn.textContent = player.name;
+    const btn = document.createElement("button");
+    btn.className = "reveal-roles-btn";
+    btn.textContent = player.name;
 
-      btn.onclick = () => {
-        hunterMarkedTarget = index;
+    btn.onclick = () => {
 
-        // After choosing target, reopen decision screen
-        showHunterDecisionScreen();
-      };
+      hunterMarkedTarget = index;
 
-      optionsBox.appendChild(btn);
-    });
+      // ⚠ IMPORTANT FIX:
+      // Do NOT call showNextVoter yet.
+      // Re-open decision screen instead.
+      showHunterDecisionScreen();
+    };
 
-    return;
-  }
+    optionsBox.appendChild(btn);
+  });
+
+  return;
+}
 }
 
   votingBox.innerHTML = `
@@ -2799,11 +2802,15 @@ function showHunterDecisionScreen() {
 document.getElementById("hunterKill").onclick = () => {
   hunterPendingKill = targetIndex;
   currentVoterIndex++;
+setTimeout(() => {
   showNextVoter();
+}, 150);
 };
 document.getElementById("hunterSpare").onclick = () => {
   currentVoterIndex++;
+setTimeout(() => {
   showNextVoter();
+}, 150);
 };
 document.getElementById("hunterChange").onclick = () => {
 
