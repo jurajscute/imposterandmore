@@ -3198,6 +3198,88 @@ function finishVoting() {
   votingBox.appendChild(btn);
 
 }
+
+function renderShieldRetaliation(eliminatedIndex) {
+
+  const eliminatedPlayer = players[eliminatedIndex];
+
+  const voters = players
+    .map((player, index) => ({ player, index }))
+    .filter(obj => obj.player.alive && obj.player.vote === eliminatedIndex);
+
+  if (voters.length === 0) {
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2>${eliminatedPlayer.name} was voted!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>But no one can be punished.</p>
+      </div>
+    `;
+
+    addContinueButton();
+    return;
+  }
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Shield"]}">
+        🛡️ ${eliminatedPlayer.name}'s Shield activates!
+      </h2>
+      <p>Choose one player to eliminate:</p>
+    </div>
+    <div class="roles-reveal-content" id="shieldOptions"></div>
+  `;
+
+  const shieldOptions = document.getElementById("shieldOptions");
+
+  voters.forEach(obj => {
+
+    const btn = document.createElement("button");
+    btn.textContent = obj.player.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+
+      const killedPlayer = obj.player;
+      killedPlayer.alive = false;
+
+      const loverDeathIndex = handleLoverChainDeath(obj.index);
+
+      votingBox.innerHTML = `
+        <div class="roles-reveal-header">
+          <h3 style="color:${roleColors["Shield"]}">
+            🛡️ ${eliminatedPlayer.name} retaliates!
+          </h3>
+        </div>
+        <div class="roles-reveal-content">
+          <h3>${killedPlayer.name} has been smushed into pieces!</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
+              ${killedPlayer.role}
+            </span>
+          </p>
+        </div>
+      `;
+
+      if (loverDeathIndex !== null) {
+        const lover = players[loverDeathIndex];
+        votingBox.innerHTML += `
+          <div class="lover-death-message">
+            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          </div>
+        `;
+      }
+
+      addContinueButton();
+    };
+
+    shieldOptions.appendChild(btn);
+  });
+}
+
 function resolveSheriffAfterShield() {
 
   const sheriff = players.find(p => p.role === "Sheriff");
