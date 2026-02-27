@@ -3109,6 +3109,11 @@ if (hunterPendingKill !== null) {
 
     if (target.role === "Shield") {
 
+  // 💀 ACTUALLY KILL THE SHIELD
+  target.alive = false;
+
+  const loverDeathIndex = handleLoverChainDeath(targetIndex);
+
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
       <h2 style="color:${roleColors["Shield"]}">
@@ -3120,29 +3125,35 @@ if (hunterPendingKill !== null) {
     </div>
     <hr>
     <div class="roles-reveal-content">
-      <h3>💀 ${target.name} was massacred!</h3>
+      <h3>💀 ${target.name} was hunted down!</h3>
       <p style="font-style: italic;">
-        A silent hunter gored the shield during the meeting...
+        The hunter broke down the shield in a fit of rage...
       </p>
     </div>
   `;
+
+  // 💔 Lover chain if needed
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      </div>
+    `;
+  }
 
   clearContinueButtons();
 
   const continueBtn = document.createElement("button");
   continueBtn.textContent = "Continue";
   continueBtn.className = "reveal-roles-btn";
-  continueBtn.style.marginTop = "15px";
-
-  continueBtn.onclick = () => {
-    nextRound();
-  };
+  continueBtn.onclick = () => nextRound();
 
   votingBox.appendChild(continueBtn);
 
   hunterPendingKill = null;
 
-  return; // 🚨 VERY IMPORTANT
+  return;
 }
 
     target.alive = false;
