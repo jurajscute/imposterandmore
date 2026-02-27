@@ -2617,15 +2617,13 @@ function showPoisonScreen() {
 
       btn.onclick = () => {
 
-        poisonedTarget = index;
-        viperChoosingPoison = false;
+  viperPoisonTarget = index; // store for NEXT round
 
-        currentVoterIndex++; // increment ONLY after poison chosen
-
-        setTimeout(() => {
-          showNextVoter();
-        }, 150);
-      };
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+};
 
       poisonOptions.appendChild(btn);
     }
@@ -3271,6 +3269,47 @@ if (
   (!players[hunterMarkedTarget] || !players[hunterMarkedTarget].alive)
 ) {
   hunterMarkedTarget = null;
+}
+
+// 🐍 Move poison forward one round
+if (viperPoisonTarget !== null) {
+  viperDelayedPoison = viperPoisonTarget;
+  viperPoisonTarget = null;
+}
+
+// 🐍 Apply delayed poison
+if (
+  viperDelayedPoison !== null &&
+  players[viperDelayedPoison] &&
+  players[viperDelayedPoison].alive
+) {
+
+  const poisoned = players[viperDelayedPoison];
+  poisoned.alive = false;
+
+  const loverDeathIndex = handleLoverChainDeath(viperDelayedPoison);
+
+  votingBox.innerHTML += `
+    <hr>
+    <h3>☠️ ${poisoned.name} succumbed to poison...</h3>
+    <p>
+      They were the 
+      <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+        ${poisoned.role}
+      </span>
+    </p>
+  `;
+
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} could not live without their lover...</h3>
+      </div>
+    `;
+  }
+
+  viperDelayedPoison = null;
 }
 
 // 🏁 Check win condition
