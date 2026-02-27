@@ -1225,6 +1225,7 @@ let isHunterChoosing = false;
 let arsonistDoused = new Set(); // stores player indexes
 let arsonistRevealed = false;
 let arsonistCanDouse = false;
+let arsonistChoosingIndex = null;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -2591,10 +2592,9 @@ if (voter.role === "Hunter") {
 }
 
   // 🔥 ARSONIST
-if (player.role === "Arsonist" && arsonistCanDouse) {
-  showArsonistDouseScreen();
-  arsonistCanDouse = false;
-  return;
+if (player.role === "Arsonist" && !arsonistChoosing) {
+   showArsonistDouseDuringVoting();
+   return;
 }
 
   // ✅ Normal advance
@@ -3524,6 +3524,19 @@ function renderShieldRetaliation(eliminatedIndex) {
 
     shieldOptions.appendChild(btn);
   });
+
+const aliveNonArsonists = players.filter(p =>
+  p.alive && p.role !== "Arsonist"
+);
+
+const allDoused = aliveNonArsonists.every(p =>
+  arsonistDousedPlayers.includes(players.indexOf(p))
+);
+
+if (allDoused && aliveNonArsonists.length > 0) {
+  showArsonistBurnButton();
+}
+
 }
 
 function resolveSheriffAfterShield() {
@@ -5037,6 +5050,8 @@ if (status) {
   roleText.className = "arsonist-role";
   roleText.textContent = "Arsonist";
   wordBox.appendChild(roleText);
+
+  arsonistChoosingIndex = i;
 
   // 🔥 Immediately allow first douse
   arsonistChoosing = true;
