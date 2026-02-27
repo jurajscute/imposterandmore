@@ -1222,6 +1222,10 @@ let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
 let isHunterChoosing = false;
 
+let arsonistDoused = new Set(); // stores player indexes
+let arsonistRevealed = false;
+let arsonistCanDouse = false;
+
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
 let activeDetectiveCardElement = null;
@@ -2586,6 +2590,13 @@ if (voter.role === "Hunter") {
   return;
 }
 
+  // 🔥 ARSONIST
+if (player.role === "Arsonist" && arsonistCanDouse) {
+  showArsonistDouseScreen();
+  arsonistCanDouse = false;
+  return;
+}
+
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
@@ -3290,6 +3301,14 @@ if (sheriffShotTarget !== null) {
 
   sheriffShotTarget = null;
 }
+const arsonistIndex = players.findIndex(p => p.role === "Arsonist");
+
+if (
+  arsonistIndex !== -1 &&
+  players[arsonistIndex].alive
+) {
+  arsonistCanDouse = true;
+}
 
   // =====================================================
   // 🛡 PHASE 4 — RESOLVE VOTE
@@ -3665,6 +3684,42 @@ const impostorsAlive = alivePlayers.filter(p =>
     endGame(`<strong>Evil wins!</strong>`, "Imposter");
     return true;
   }
+/* ==============================
+     🔥 ARSONIST WIN
+     ============================== */
+const arsonist = alivePlayers.find(p => p.role === "Arsonist");
+
+if (arsonist) {
+
+  const arsonistIndex = players.findIndex(p => p.role === "Arsonist");
+
+  const othersAlive = alivePlayers.filter(p => p.role !== "Arsonist");
+
+  const allDoused = othersAlive.every(p =>
+    arsonistDoused.has(players.indexOf(p))
+  );
+
+  if (othersAlive.length > 0 && allDoused) {
+
+    votingBox.innerHTML += `
+      <button id="igniteBtn" class="reveal-roles-btn" style="background:#ff3300;">
+        🔥 Ignite
+      </button>
+    `;
+
+    document.getElementById("igniteBtn").onclick = () => {
+
+      othersAlive.forEach(p => p.alive = false);
+
+      endGame(
+        `<strong>${arsonist.name} the Arsonist burns everyone alive!</strong>`,
+        "Arsonist"
+      );
+    };
+
+    return true;
+  }
+}
 
   /* ==============================
      🐺 JACKAL WIN
@@ -3915,6 +3970,50 @@ function updateRoleVisuals() {
       pill.style.borderColor = "transparent";
     }
 
+  });
+}
+
+function showArsonistDouseScreen() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header" style="background:#ff6600;">
+      <h2>🔥 Choose someone to Douse</h2>
+    </div>
+    <div class="roles-reveal-content" id="arsonistOptions"></div>
+  `;
+
+  const container = document.getElementById("arsonistOptions");
+
+  players.forEach((player, index) => {
+
+    if (!player.alive) return;
+    if (player.role === "Arsonist") return;
+    if (arsonistDoused.has(index)) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = player.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+
+      arsonistDoused.add(index);
+
+      votingBox.innerHTML = `
+        <h3>🔥 ${player.name} has been doused in gasoline...</h3>
+      `;
+
+      const continueBtn = document.createElement("button");
+      continueBtn.textContent = "Continue";
+      continueBtn.className = "reveal-roles-btn";
+      continueBtn.onclick = () => {
+        currentVoterIndex++;
+        showNextVoter();
+      };
+
+      votingBox.appendChild(continueBtn);
+    };
+
+    container.appendChild(btn);
   });
 }
 
@@ -4798,6 +4897,11 @@ if (status) {
           const roleText = document.createElement("div");
           roleText.className = "arsonist-role";
           roleText.textContent = "Arsonist";
+          if (player.role === "Arsonist" && !arsonistRevealed) {
+  arsonistRevealed = true;
+  showArsonistDouseScreen();
+  return;
+}
           wordBox.appendChild(roleText);
           } else if (word === "Viper") {
           wordBox.textContent = "???";
