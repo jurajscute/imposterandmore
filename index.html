@@ -3109,16 +3109,40 @@ if (hunterPendingKill !== null) {
 
     if (target.role === "Shield") {
 
-  meetingMessages += `
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Shield"]}">
+        🛡️ ${target.name}'s Shield shattered...
+      </h2>
+    </div>
+    <div class="roles-reveal-content">
+      <p>The Shield was pierced before it could activate.</p>
+    </div>
     <hr>
     <div class="roles-reveal-content">
-      <h3 style="color:${roleColors["Shield"]}">
-        🛡️ ${target.name}'s Shield shattered...
-      </h3>
-      <p>The Shield was pierced before it could activate.</p>
+      <h3>💀 ${target.name} was massacred!</h3>
+      <p style="font-style: italic;">
+        A silent hunter gored the shield during the meeting...
+      </p>
     </div>
   `;
 
+  clearContinueButtons();
+
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
+
+  continueBtn.onclick = () => {
+    nextRound();
+  };
+
+  votingBox.appendChild(continueBtn);
+
+  hunterPendingKill = null;
+
+  return; // 🚨 VERY IMPORTANT
 }
 
     target.alive = false;
