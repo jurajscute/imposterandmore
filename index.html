@@ -3131,20 +3131,24 @@ if (eliminatedPlayer.role === "Shield") {
 
     votingBox.innerHTML += voteSummaryHTML;
 
-clearContinueButtons();
-
     const continueBtn = document.createElement("button");
-    continueBtn.textContent = "Continue";
-    continueBtn.className = "reveal-roles-btn";
-    continueBtn.style.marginTop = "15px";
-    continueBtn.onclick = () => {
-      resolveSheriffAfterShield();
-    };
+continueBtn.textContent = "Continue";
+continueBtn.className = "reveal-roles-btn";
+continueBtn.style.marginTop = "15px";
 
-    votingBox.appendChild(continueBtn);
+continueBtn.onclick = () => {
 
-    return; // stop normal Shield logic
-  }
+  // 🧹 Reset round flags
+  shieldKilledByHunter = false;
+  sheriffShotTarget = null;
+
+  // 🧭 Reset voter order
+  currentVoterIndex = 0;
+
+  nextRound();
+};
+
+votingBox.appendChild(continueBtn);
 
 
   const voters = players
