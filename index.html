@@ -2431,7 +2431,7 @@ function showViperCooldownScreen() {
     </div>
     <div class="roles-reveal-content">
       <p>
-        Your poison tan is refueling.
+        You are creating another batch of poison.
       </p>
       <p style="font-style:italic; margin-top:10px;">
         You may poison again next meeting.
@@ -2479,8 +2479,6 @@ function castVote(targetIndex) {
   return;
 }
 
-  }
-
   // ⭐ SHERIFF
   if (voter.role === "Sheriff" && sheriffShotTarget === null) {
     showSheriffShootOptions(targetIndex);
@@ -2504,6 +2502,7 @@ if (voter.role === "Hunter") {
   setTimeout(() => {
     showNextVoter();
   }, 150);
+}
 
   function showDictatorBlockScreen() {
 
@@ -2654,8 +2653,8 @@ function showPoisonScreen() {
 
      btn.onclick = () => {
 
-  viperNextPoison = index; // store for NEXT meeting
-  viperCooldown = true;
+  viperNextPoison = index;
+  viperCooldown = true; // start cooldown
 
   currentVoterIndex++;
   setTimeout(() => {
