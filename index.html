@@ -3221,6 +3221,10 @@ continueBtn.textContent = "Continue";
 continueBtn.className = "reveal-roles-btn";
 continueBtn.style.marginTop = "15px";
 
+continueBtn.onclick = () => {
+  nextRound();
+};
+
 votingBox.appendChild(continueBtn);
       };
 
