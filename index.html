@@ -3166,8 +3166,10 @@ votingBox.appendChild(continueBtn);
 
     // 🗳 Normal elimination
     eliminatedPlayer.alive = false;
-
-    if (hunterMarkedTarget !== null && !players[hunterMarkedTarget].alive) {
+     if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
   hunterMarkedTarget = null;
 }
 
