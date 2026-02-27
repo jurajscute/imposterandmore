@@ -1131,10 +1131,13 @@ let imposterIndex = null;
 let players = [];
 let currentVoterIndex = 0;
 let votes = {};
+
 let poisonedTarget = null;
 let viperChoosingPoison = false;
 let viperNextPoison = null;     // selected this meeting
 let viperActivePoison = null;   // kills NEXT meeting
+let meetingMessages = "";
+
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
 
@@ -2945,24 +2948,21 @@ if (
 
   const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
-  votingBox.innerHTML += `
-    <hr>
-    <div class="roles-reveal-header">
-      <h2>🧪 The poison takes effect...</h2>
-    </div>
-    <div class="roles-reveal-content">
-      <h3>${poisoned.name} has succumbed to poison.</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-          ${poisoned.role}
-        </span>
-      </p>
-      <p style="margin-top:10px; font-style:italic;">
-        The venom silently finished its work...
-      </p>
-    </div>
-  `;
+ meetingMessages += `
+  <hr>
+  <div class="roles-reveal-header">
+    <h2>🧪 The poison takes effect...</h2>
+  </div>
+  <div class="roles-reveal-content">
+    <h3>${poisoned.name} has succumbed to poison.</h3>
+    <p>
+      They were the 
+      <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+        ${poisoned.role}
+      </span>
+    </p>
+  </div>
+`;
 
   if (loverDeathIndex !== null) {
     const lover = players[loverDeathIndex];
@@ -3329,6 +3329,8 @@ if (viperNextPoison !== null) {
   viperActivePoison = viperNextPoison;
   viperNextPoison = null;
 }
+
+votingBox.innerHTML += meetingMessages;
 
 // 🏁 Check win condition
 if (checkWinCondition()) return;
