@@ -1215,7 +1215,8 @@ let viperCooldown = false; // true = refueling, cannot poison
 let arsonistIndex = null;              // who the arsonist is
 let arsonistDoused = [];               // array of player indexes
 let arsonistRevealed = false;          // first reveal trigger
-let arsonistJustVoted = false;         // meeting douse trigger
+let arsonistJustVoted = false;   
+let arsonistChoosingMeeting = false;      // meeting douse trigger
 
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
@@ -2506,15 +2507,7 @@ votingBox.classList.add("vote-fade-in");
       voteOptions.appendChild(btn);
     }
   });
-  if (currentVoterIndex === arsonistIndex) {
-  arsonistJustVoted = true;
-}
-if (arsonistJustVoted) {
-  arsonistJustVoted = false;
-  showArsonistMeetingDouse();
-  return;
-}
-
+  
 }
 
 function showArsonistMeetingDouse() {
@@ -2536,12 +2529,25 @@ function showArsonistMeetingDouse() {
 
     btn.onclick = () => {
       arsonistDoused.push(index);
+
+      // resume voting
       currentVoterIndex++;
       showNextVoter();
     };
 
     votingBox.appendChild(btn);
   });
+
+  // Optional skip button
+  const skip = document.createElement("button");
+  skip.textContent = "Skip";
+  skip.className = "reveal-roles-btn";
+  skip.onclick = () => {
+    currentVoterIndex++;
+    showNextVoter();
+  };
+
+  votingBox.appendChild(skip);
 }
 
 function showViperCooldownScreen() {
@@ -2626,6 +2632,11 @@ if (voter.role === "Hunter") {
   return;
 }
 
+// 🔥 ARSONIST
+if (voter.role === "Arsonist") {
+  showArsonistMeetingDouse();
+  return;
+}
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
