@@ -3563,6 +3563,46 @@ function getRandomItemFromArray(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function saveRoleToggles() {
+
+  const toggles = document.querySelectorAll("input[type='checkbox']");
+
+  const toggleStates = {};
+
+  toggles.forEach(toggle => {
+    toggleStates[toggle.id] = toggle.checked;
+  });
+
+  localStorage.setItem("roleToggles", JSON.stringify(toggleStates));
+}
+
+function loadRoleToggles() {
+
+  const saved = JSON.parse(localStorage.getItem("roleToggles"));
+
+  if (!saved) return;
+
+  Object.keys(saved).forEach(id => {
+
+    const toggle = document.getElementById(id);
+    if (toggle) {
+      toggle.checked = saved[id];
+    }
+
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  loadRoleToggles();
+
+  const toggles = document.querySelectorAll("input[type='checkbox']");
+  toggles.forEach(toggle => {
+    toggle.addEventListener("change", saveRoleToggles);
+  });
+
+});
+
 const roleToggleMap = {
   Philosopher: "philosopherToggle",
   Sheriff: "sheriffToggle",
