@@ -3155,31 +3155,23 @@ if (viperNextPoison !== null) {
 }
 
 // =====================================================
-// ⭐ PHASE 3B — APPLY SHERIFF KILL BEFORE SHIELD
-// =====================================================
-
-// =====================================================
 // ⭐ PHASE 3B — APPLY SHERIFF ACTION
 // =====================================================
 
-if (sheriffPendingKill !== null && sheriffIndex !== null) {
+if (sheriffShotTarget !== null) {
 
+  const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
   const sheriff = players[sheriffIndex];
-  const target = players[sheriffPendingKill];
+  const target = players[sheriffShotTarget];
 
   if (sheriff && sheriff.alive && target && target.alive) {
 
-    const isEvil =
-      target.role === "Impostor" ||
-      target.role === "Viper" ||
-      target.role === "Maniac";
+    const isEvil = sheriffAllowedRoles.includes(target.role);
 
     if (isEvil) {
 
-      // ✅ Sheriff successful kill
       target.alive = false;
-
-      const loverDeathIndex = handleLoverChainDeath(sheriffPendingKill);
+      const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
       meetingMessages += `
         <hr>
@@ -3205,18 +3197,13 @@ if (sheriffPendingKill !== null && sheriffIndex !== null) {
 
     } else {
 
-      // ❌ Sheriff MISFIRE
       sheriff.alive = false;
-
       const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
       meetingMessages += `
         <hr>
         <div class="roles-reveal-content">
-          <h3>💥 The Sheriff shot an innocent!</h3>
-          <p>
-            ${sheriff.name} has died from the misfire.
-          </p>
+          <h3>🪦 ${sheriff.name} the Sheriff shot an innocent person and died!</h3>
         </div>
       `;
 
@@ -3231,7 +3218,7 @@ if (sheriffPendingKill !== null && sheriffIndex !== null) {
     }
   }
 
-  sheriffPendingKill = null;
+  sheriffShotTarget = null;
 }
 
   // =====================================================
@@ -3264,8 +3251,6 @@ if (sheriffPendingKill !== null && sheriffIndex !== null) {
       );
       return;
     }
-
-resolveSheriffAfterShield()
 
     // 🛡 Shield logic
     if (eliminatedPlayer.role === "Shield") {
