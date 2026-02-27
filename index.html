@@ -3116,22 +3116,25 @@ if (hunterPendingKill !== null) {
 
     const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
-    votingBox.innerHTML += `
-      <hr>
-      <h3>💀 ${target.name} was hunted down!</h3>
-      <p style="font-style: italic;">
-        A silent hunter struck during the meeting...
-      </p>
-    `;
+    meetingMessages += `
+  <hr>
+  <div class="roles-reveal-content">
+    <h3>💀 ${target.name} was hunted down!</h3>
+    <p style="font-style: italic;">
+      A silent hunter struck during the meeting...
+    </p>
+  </div>
+`;
 
     if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-      votingBox.innerHTML += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-        </div>
-      `;
-    }
+  const lover = players[loverDeathIndex];
+
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+    </div>
+  `;
+}
   }
 
   hunterPendingKill = null;
@@ -3156,27 +3159,23 @@ if (hunterPendingKill !== null) {
 if (eliminatedPlayer.role === "Shield") {
 
   // 💀 Shield was hunted earlier this round
-  if (shieldKilledByHunter) {
+  if (!eliminatedPlayer.alive) {
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Shield"]}">
+        🛡️ ${eliminatedPlayer.name}'s Shield shattered...
+      </h2>
+    </div>
+    <div class="roles-reveal-content">
+      <p>The Shield was pierced before it could activate.</p>
+    </div>
+  `;
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2 style="color:${roleColors["Shield"]}">
-          🛡️ ${eliminatedPlayer.name}'s Shield shattered...
-        </h2>
-      </div>
-      <div class="roles-reveal-content">
-        <p>
-          The Shield was pierced before it could activate.
-        </p>
-      </div>
-    `;
+  votingBox.innerHTML += voteSummaryHTML;
 
-    votingBox.innerHTML += voteSummaryHTML;
-
-    if (target.role === "Shield") {
-   // shield effect
+  addContinueButton();
+  return;
 }
-  }
 
 
   const voters = players
