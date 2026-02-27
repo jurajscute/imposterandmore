@@ -1138,6 +1138,7 @@ let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
 
+let hunterJustSelectedTarget = false;
 let shieldKilledByHunter = false;
 let hunterPendingKill = null;
 let hunterChoosingIndex = null;
@@ -2742,41 +2743,55 @@ if (!sheriff || !sheriff.alive) {
 }
 
 function showHunterDecisionScreen() {
+  if (hunterJustSelectedTarget) {
+  hunterJustSelectedTarget = false;
+
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+
+  return;
+}
 
   const hunterIndex = currentVoterIndex;
 
   // 🔥 FORCE target selection if none exists
-  if (hunterMarkedTarget === null) {
+ if (hunterMarkedTarget === null) {
 
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h3>🏹 Choose Your Prey</h3>
-      </div>
-      <div class="roles-reveal-content" id="hunterTargetOptions"></div>
-    `;
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>🏹 Choose Your Prey</h3>
+    </div>
+    <div class="roles-reveal-content" id="hunterTargetOptions"></div>
+  `;
 
-    const optionsBox = document.getElementById("hunterTargetOptions");
+  const optionsBox = document.getElementById("hunterTargetOptions");
 
-    players.forEach((player, index) => {
+  players.forEach((player, index) => {
 
-      if (!player.alive || index === hunterIndex) return;
+    if (!player.alive || index === hunterIndex) return;
 
-      const btn = document.createElement("button");
-      btn.className = "reveal-roles-btn";
-      btn.textContent = player.name;
+    const btn = document.createElement("button");
+    btn.className = "reveal-roles-btn";
+    btn.textContent = player.name;
 
-      btn.onclick = () => {
-        hunterMarkedTarget = index;
+    btn.onclick = () => {
 
-        // After selecting target, reopen decision screen
-        showHunterDecisionScreen();
-      };
+      hunterMarkedTarget = index;
+      hunterJustSelectedTarget = true; // 🔥 mark that this is a fresh target
 
-      optionsBox.appendChild(btn);
-    });
+      currentVoterIndex++;
+      setTimeout(() => {
+        showNextVoter();
+      }, 150);
+    };
 
-    return;
-  }
+    optionsBox.appendChild(btn);
+  });
+
+  return;
+}
 
   const targetIndex = hunterMarkedTarget;
 
