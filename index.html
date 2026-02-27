@@ -2518,19 +2518,51 @@ function showArsonistMeetingDouse() {
     </div>
   `;
 
-  players.forEach((p, index) => {
-    if (!p.alive) return;
-    if (index === arsonistIndex) return;
-    if (arsonistDoused.includes(index)) return;
+  const aliveOthers = players
+    .map((p, i) => ({ player: p, index: i }))
+    .filter(obj => 
+      obj.player.alive && obj.index !== arsonistIndex
+    );
+
+  const allDoused = aliveOthers.length > 0 &&
+    aliveOthers.every(obj => 
+      arsonistDoused.includes(obj.index)
+    );
+
+  // 🔥 IF ALL ALIVE PLAYERS ARE DOUSED → SHOW IGNITE
+  if (allDoused) {
+
+    const igniteBtn = document.createElement("button");
+    igniteBtn.textContent = "🔥 IGNITE EVERYONE";
+    igniteBtn.className = "reveal-roles-btn";
+    igniteBtn.style.background = "#ff3b30";
+    igniteBtn.style.color = "white";
+    igniteBtn.style.fontWeight = "bold";
+
+    igniteBtn.onclick = () => {
+      endGame(
+        `<strong>${players[arsonistIndex].name} the Arsonist burned everyone alive!</strong>`,
+        "Arsonist"
+      );
+    };
+
+    votingBox.appendChild(igniteBtn);
+
+    return; // stop here — no need to show douse buttons
+  }
+
+  // 🔥 OTHERWISE SHOW DOUSE OPTIONS
+  aliveOthers.forEach(obj => {
+
+    if (arsonistDoused.includes(obj.index)) return;
 
     const btn = document.createElement("button");
-    btn.textContent = p.name;
+    btn.textContent = obj.player.name;
     btn.className = "reveal-roles-btn";
 
     btn.onclick = () => {
-      arsonistDoused.push(index);
+      arsonistDoused.push(obj.index);
 
-      // resume voting
       currentVoterIndex++;
       showNextVoter();
     };
@@ -2538,7 +2570,7 @@ function showArsonistMeetingDouse() {
     votingBox.appendChild(btn);
   });
 
-  // Optional skip button
+  // Optional skip
   const skip = document.createElement("button");
   skip.textContent = "Skip";
   skip.className = "reveal-roles-btn";
