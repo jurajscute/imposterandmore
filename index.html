@@ -3210,8 +3210,8 @@ resolveSheriffAfterShield()
         // (Keep your existing shield retaliation logic here)
         // Just render it and return early
 
-        renderShieldRetaliation(eliminatedIndex);
-        return;
+        const shieldMessage = renderShieldRetaliation(eliminatedIndex);
+screenHTML = shieldMessage;
       }
 
     } else {
