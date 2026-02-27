@@ -2685,6 +2685,12 @@ function handleLoverChainDeath(deadIndex) {
 
   if (otherLoverIndex !== -1) {
     players[otherLoverIndex].alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
     return otherLoverIndex; // 🔥 return who died
   }
 
@@ -2729,6 +2735,12 @@ function resolveSheriffNow() {
   if (sheriffAllowedRoles.includes(target.role)) {
 
     target.alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -2745,6 +2757,12 @@ function resolveSheriffNow() {
   } else {
 
     sheriff.alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     const sheriff = players.find(p => p.role === "Sheriff");
 
@@ -2987,6 +3005,12 @@ function finishVoting() {
   ) {
     const poisoned = players[viperActivePoison];
     poisoned.alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
 
     const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
@@ -3059,6 +3083,12 @@ function finishVoting() {
 
     if (target && target.alive) {
       target.alive = false;
+      if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
       hunterKilledIndex = targetIndex;
 
       const loverDeathIndex = handleLoverChainDeath(targetIndex);
@@ -3149,6 +3179,12 @@ function finishVoting() {
       // 🗳 Normal elimination
       if (eliminatedPlayer.alive) {
         eliminatedPlayer.alive = false;
+        if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
         handleLoverChainDeath(eliminatedIndex);
       }
 
@@ -3244,6 +3280,12 @@ function renderShieldRetaliation(eliminatedIndex) {
 
   const killedPlayer = obj.player;
   killedPlayer.alive = false;
+  if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
 
   const loverDeathIndex = handleLoverChainDeath(obj.index);
 
@@ -3315,6 +3357,12 @@ function resolveSheriffAfterShield() {
   if (sheriffAllowedRoles.includes(target.role)) {
 
     target.alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -3331,6 +3379,12 @@ function resolveSheriffAfterShield() {
   } else {
 
     sheriff.alive = false;
+    if (
+  hunterMarkedTarget !== null &&
+  !players[hunterMarkedTarget]?.alive
+) {
+  hunterMarkedTarget = null;
+}
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
