@@ -279,6 +279,11 @@
     .reveal-roles-btn:active { transform: scale(0.96); }
     .reveal-roles-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
 
+    .reveal-sheriff-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #a89d00, #5f4400); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-sheriff-btn:hover { box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
+    .reveal-sheriff-btn:active { transform: scale(0.96); }
+    .reveal-sheriff-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+
     .reveal-evil-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #af0101, #7e0000); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-evil-btn:hover { box-shadow: 0 6px 16px rgba(168, 0, 0, 0.6); }
     .reveal-evil-btn:active { transform: scale(0.96); }
@@ -451,6 +456,21 @@
 }
 
 /* SCREEN DESIGNS */
+
+.sheriff-screen {
+  background: linear-gradient(135deg, #737500, #4d3800);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.sheriff-screen .roles-reveal-header {
+  background: linear-gradient(135deg, #737500, #4d3800);
+}
+
+.sheriff-screen {
+  box-shadow: 0 0 25px rgba(77, 71, 0, 0.6);
+}
 
 .viper-screen {
   background: linear-gradient(135deg, #003a0e, #145500);
@@ -2973,9 +2993,9 @@ function showSheriffShootOptions(voteTargetIndex) {
   const sheriff = players[currentVoterIndex];
 
   votingBox.innerHTML = `
-  <div class="sheriff-header">
+  <div class="sheriff-screen">
     <h2>Sheriff Action</h2>
-    <p>This decision is yours alone.</p>
+    <p>Choose who to shoot.</p>
   </div>
 
   <div class="sheriff-content" id="sheriffOptions"></div>
@@ -2995,7 +3015,7 @@ function showSheriffShootOptions(voteTargetIndex) {
 
       const btn = document.createElement("button");
       btn.textContent = player.name;
-      btn.className = "reveal-roles-btn sheriff-btn";
+      btn.className = "reveal-sheriff-btn";
       btn.style.marginBottom = "8px";
 
       btn.onclick = () => {
