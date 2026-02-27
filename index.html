@@ -3114,7 +3114,7 @@ voteSummaryHTML += `</div>`;
 if (eliminatedPlayer.role === "Shield") {
 
   // 💀 Shield was hunted earlier this round
-  if (shieldKilledByHunter) {
+  if (shieldKilledByHunter) {}
 
     votingBox.innerHTML = `
       <div class="roles-reveal-header">
@@ -3131,24 +3131,9 @@ if (eliminatedPlayer.role === "Shield") {
 
     votingBox.innerHTML += voteSummaryHTML;
 
-    const continueBtn = document.createElement("button");
-continueBtn.textContent = "Continue";
-continueBtn.className = "reveal-roles-btn";
-continueBtn.style.marginTop = "15px";
-
-continueBtn.onclick = () => {
-
-  // 🧹 Reset round flags
-  shieldKilledByHunter = false;
-  sheriffShotTarget = null;
-
-  // 🧭 Reset voter order
-  currentVoterIndex = 0;
-
-  nextRound();
-};
-
-votingBox.appendChild(continueBtn);
+    if (target.role === "Shield") {
+   // shield effect
+}
 
 
   const voters = players
