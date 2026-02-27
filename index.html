@@ -2442,7 +2442,7 @@ function showViperCooldownScreen() {
     </div>
     <div class="roles-reveal-content">
       <p>
-        You are creating another batch of poison.
+        Another dose is being made.
       </p>
       <p style="font-style:italic; margin-top:10px;">
         You may poison again next meeting.
@@ -2450,11 +2450,19 @@ function showViperCooldownScreen() {
     </div>
   `;
 
-  // Continue voting normally
-  currentVoterIndex++;
-  setTimeout(() => {
+  clearContinueButtons(); // safety
+
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
+
+  continueBtn.onclick = () => {
+    currentVoterIndex++;
     showNextVoter();
-  }, 3500);
+  };
+
+  votingBox.appendChild(continueBtn);
 }
 
 function castVote(targetIndex) {
@@ -3029,7 +3037,7 @@ if (
   // 🔥 Second message (role reveal)
   meetingMessages += `
     <div class="poison-death">
-      <h3>💀 ${poisoned.name} has died from poison.</h3>
+      <h3>🐍 ${poisoned.name}'s heart got torn through by poison'.</h3>
       <p>
         They were the 
         <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
@@ -3049,6 +3057,7 @@ if (
   }
 
   viperActivePoison = null;
+viperCooldown = false;
 }
 
   // =====================================================
