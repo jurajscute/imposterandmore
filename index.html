@@ -2980,22 +2980,23 @@ if (
 
   const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
- meetingMessages += `
-  <hr>
-  <div class="roles-reveal-content">
-    <h3>🧪 ${poisoned.name} has succumbed to poison.</h3>
-    <p>
-      They were the 
-      <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-        ${poisoned.role}
-      </span>
-    </p>
-  </div>
-`;
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🧪 ${poisoned.name} has succumbed to poison.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+          ${poisoned.role}
+        </span>
+      </p>
+    </div>
+  `;
 
   if (loverDeathIndex !== null) {
     const lover = players[loverDeathIndex];
-    votingBox.innerHTML += `
+
+    meetingMessages += `
       <div class="lover-death-message">
         <hr>
         <h3>💔 ${lover.name} could not live without their lover...</h3>
