@@ -1137,6 +1137,7 @@ let viperChoosingPoison = false;
 let viperNextPoison = null;     // selected this meeting
 let viperActivePoison = null;   // kills NEXT meeting
 let meetingMessages = "";
+let viperCooldown = false; // true = refueling, cannot poison
 
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
@@ -2422,6 +2423,29 @@ votingBox.classList.add("vote-fade-in");
   });
 }
 
+function showViperCooldownScreen() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3>🐍 Poison Refueling...</h3>
+    </div>
+    <div class="roles-reveal-content">
+      <p>
+        Your poison tan is refueling.
+      </p>
+      <p style="font-style:italic; margin-top:10px;">
+        You may poison again next meeting.
+      </p>
+    </div>
+  `;
+
+  // Continue voting normally
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+}
+
 function castVote(targetIndex) {
 
   const voter = players[currentVoterIndex];
@@ -2443,9 +2467,18 @@ function castVote(targetIndex) {
 
   // 🐍 VIPER
   if (voter.role === "Viper" && !viperChoosingPoison) {
-    viperChoosingPoison = true;
-    showPoisonScreen();
+
+  // 🐍 If refueling, show cooldown screen instead
+  if (viperCooldown) {
+    showViperCooldownScreen();
     return;
+  }
+
+  viperChoosingPoison = true;
+  showPoisonScreen();
+  return;
+}
+}
   }
 
   // ⭐ SHERIFF
@@ -2623,6 +2656,7 @@ function showPoisonScreen() {
      btn.onclick = () => {
 
   viperNextPoison = index; // store for NEXT meeting
+  viperCooldown = true;
 
   currentVoterIndex++;
   setTimeout(() => {
@@ -2950,11 +2984,8 @@ if (
 
  meetingMessages += `
   <hr>
-  <div class="roles-reveal-header">
-    <h2>🧪 The poison takes effect...</h2>
-  </div>
   <div class="roles-reveal-content">
-    <h3>${poisoned.name} has succumbed to poison.</h3>
+    <h3>🧪 ${poisoned.name} has succumbed to poison.</h3>
     <p>
       They were the 
       <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
@@ -3328,6 +3359,11 @@ if (
 if (viperNextPoison !== null) {
   viperActivePoison = viperNextPoison;
   viperNextPoison = null;
+}
+
+// 🐍 Reduce cooldown after one full meeting
+if (viperCooldown && viperActivePoison === null) {
+  viperCooldown = false;
 }
 
 votingBox.innerHTML += meetingMessages;
