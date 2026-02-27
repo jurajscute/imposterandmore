@@ -3003,6 +3003,12 @@ function finishVoting() {
   // 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
   // =====================================================
 
+// 🐍 Activate poison scheduled last round
+if (viperAnnouncedPoison !== null) {
+  viperActivePoison = viperAnnouncedPoison;
+  viperAnnouncedPoison = null;
+}
+
   // 🐍 Activate previously announced poison
 if (
   viperActivePoison !== null &&
