@@ -3154,6 +3154,86 @@ if (viperNextPoison !== null) {
   viperCooldown = true;
 }
 
+// =====================================================
+// ⭐ PHASE 3B — APPLY SHERIFF KILL BEFORE SHIELD
+// =====================================================
+
+// =====================================================
+// ⭐ PHASE 3B — APPLY SHERIFF ACTION
+// =====================================================
+
+if (sheriffPendingKill !== null && sheriffIndex !== null) {
+
+  const sheriff = players[sheriffIndex];
+  const target = players[sheriffPendingKill];
+
+  if (sheriff && sheriff.alive && target && target.alive) {
+
+    const isEvil =
+      target.role === "Impostor" ||
+      target.role === "Viper" ||
+      target.role === "Maniac";
+
+    if (isEvil) {
+
+      // ✅ Sheriff successful kill
+      target.alive = false;
+
+      const loverDeathIndex = handleLoverChainDeath(sheriffPendingKill);
+
+      meetingMessages += `
+        <hr>
+        <div class="roles-reveal-content">
+          <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[target.role]}; font-weight:bold;">
+              ${target.role}
+            </span>
+          </p>
+        </div>
+      `;
+
+      if (loverDeathIndex !== null) {
+        const lover = players[loverDeathIndex];
+        meetingMessages += `
+          <div class="lover-death-message">
+            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          </div>
+        `;
+      }
+
+    } else {
+
+      // ❌ Sheriff MISFIRE
+      sheriff.alive = false;
+
+      const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
+
+      meetingMessages += `
+        <hr>
+        <div class="roles-reveal-content">
+          <h3>💥 The Sheriff shot an innocent!</h3>
+          <p>
+            ${sheriff.name} has died from the misfire.
+          </p>
+        </div>
+      `;
+
+      if (loverDeathIndex !== null) {
+        const lover = players[loverDeathIndex];
+        meetingMessages += `
+          <div class="lover-death-message">
+            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          </div>
+        `;
+      }
+    }
+  }
+
+  sheriffPendingKill = null;
+}
+
   // =====================================================
   // 🛡 PHASE 4 — RESOLVE VOTE
   // =====================================================
@@ -3210,8 +3290,8 @@ resolveSheriffAfterShield()
         // (Keep your existing shield retaliation logic here)
         // Just render it and return early
 
-        const shieldMessage = renderShieldRetaliation(eliminatedIndex);
-screenHTML = shieldMessage;
+        renderShieldRetaliation(eliminatedIndex);
+        return;
       }
 
     } else {
