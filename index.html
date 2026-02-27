@@ -2744,104 +2744,76 @@ if (!sheriff || !sheriff.alive) {
 function showHunterDecisionScreen() {
 
   const hunterIndex = currentVoterIndex;
-  const targetIndex = hunterMarkedTarget;
-
-  // No marked target
-  function showHunterDecisionScreen() {
-
-  const hunterIndex = currentVoterIndex;
 
   // 🔥 FORCE target selection if none exists
   if (hunterMarkedTarget === null) {
 
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h3>🏹 Choose Your Prey</h3>
-    </div>
-    <div class="roles-reveal-content" id="hunterTargetOptions"></div>
-  `;
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h3>🏹 Choose Your Prey</h3>
+      </div>
+      <div class="roles-reveal-content" id="hunterTargetOptions"></div>
+    `;
 
-  const optionsBox = document.getElementById("hunterTargetOptions");
+    const optionsBox = document.getElementById("hunterTargetOptions");
 
-  players.forEach((player, index) => {
+    players.forEach((player, index) => {
 
-    if (!player.alive || index === currentVoterIndex) return;
+      if (!player.alive || index === hunterIndex) return;
 
-    const btn = document.createElement("button");
-    btn.className = "reveal-roles-btn";
-    btn.textContent = player.name;
+      const btn = document.createElement("button");
+      btn.className = "reveal-roles-btn";
+      btn.textContent = player.name;
 
-    btn.onclick = () => {
+      btn.onclick = () => {
+        hunterMarkedTarget = index;
 
-      hunterMarkedTarget = index;
+        // After selecting target, reopen decision screen
+        showHunterDecisionScreen();
+      };
 
-      // ⚠ IMPORTANT FIX:
-      // Do NOT call showNextVoter yet.
-      // Re-open decision screen instead.
-      showHunterDecisionScreen();
-    };
+      optionsBox.appendChild(btn);
+    });
 
-    optionsBox.appendChild(btn);
-  });
+    return;
+  }
 
-  return;
-}
-}
-
-  votingBox.innerHTML = `
-  <div class="roles-reveal-header">
-    <h3>🏹 Hunter Decision</h3>
-  </div>
-  <div class="roles-reveal-content">
-    <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
-    <button id="hunterKill" class="reveal-roles-btn">Kill</button>
-    <button id="hunterSpare" class="reveal-roles-btn">Spare</button>
-    <button id="hunterChange" class="reveal-roles-btn">Change Target</button>
-  </div>
-`;
-document.getElementById("hunterKill").onclick = () => {
-  hunterPendingKill = targetIndex;
-  currentVoterIndex++;
-setTimeout(() => {
-  showNextVoter();
-}, 150);
-};
-document.getElementById("hunterSpare").onclick = () => {
-  currentVoterIndex++;
-setTimeout(() => {
-  showNextVoter();
-}, 150);
-};
-document.getElementById("hunterChange").onclick = () => {
-
-  hunterCanRetarget = true; // allow ability next round
+  const targetIndex = hunterMarkedTarget;
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
-      <h3>Choose New Prey</h3>
+      <h3>🏹 Hunter Decision</h3>
     </div>
     <div class="roles-reveal-content">
-      <p>Select a new target. You may attempt to kill them next meeting.</p>
+      <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
+      <button id="hunterKill" class="reveal-roles-btn">Kill</button>
+      <button id="hunterSpare" class="reveal-roles-btn">Spare</button>
+      <button id="hunterChange" class="reveal-roles-btn">Change Target</button>
     </div>
   `;
 
-  enableHunterRetargetMode();
-};
-
- document.getElementById("hunterYes").onclick = () => {
-
-  // 🏹 Only STORE the kill
-  hunterPendingKill = targetIndex;
-
-  currentVoterIndex++;
-  showNextVoter();
-};
-
-  document.getElementById("hunterNo").onclick = () => {
-
+  document.getElementById("hunterKill").onclick = () => {
+    hunterPendingKill = targetIndex;
 
     currentVoterIndex++;
-    showNextVoter();
+    setTimeout(() => {
+      showNextVoter();
+    }, 150);
+  };
+
+  document.getElementById("hunterSpare").onclick = () => {
+
+    currentVoterIndex++;
+    setTimeout(() => {
+      showNextVoter();
+    }, 150);
+  };
+
+  document.getElementById("hunterChange").onclick = () => {
+
+    hunterMarkedTarget = null;
+
+    showHunterDecisionScreen(); // re-force selection
   };
 }
 
