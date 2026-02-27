@@ -3508,6 +3508,7 @@ votingBox.innerHTML += `
   </div>
 `;
 
+
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
 
@@ -3862,6 +3863,16 @@ function shadeColor(color, percent) {
 }
 
 function endGame(message, winningRole = null) {
+
+  if (winningRole === "Arsonist") {
+    gameOver = true;
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2 style="color:orange;">🔥 ${message}</h2>
+      </div>
+    `;
+    return;
+  }
 
   let color = "#ffffff";
 
