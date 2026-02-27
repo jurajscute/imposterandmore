@@ -2947,20 +2947,35 @@ if (
 
   votingBox.innerHTML += `
     <hr>
-    <h3>🧪 ${poisoned.name} succumbed to poison...</h3>
-    <p>
-      They were the 
-      <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-        ${poisoned.role}
-      </span>
-    </p>
+    <div class="roles-reveal-header">
+      <h2>🧪 The poison takes effect...</h2>
+    </div>
+    <div class="roles-reveal-content">
+      <h3>${poisoned.name} has succumbed to poison.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+          ${poisoned.role}
+        </span>
+      </p>
+      <p style="margin-top:10px; font-style:italic;">
+        The venom silently finished its work...
+      </p>
+    </div>
   `;
 
   if (loverDeathIndex !== null) {
     const lover = players[loverDeathIndex];
     votingBox.innerHTML += `
       <div class="lover-death-message">
+        <hr>
         <h3>💔 ${lover.name} could not live without their lover...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+            ${lover.role}
+          </span>
+        </p>
       </div>
     `;
   }
