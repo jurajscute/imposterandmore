@@ -1142,7 +1142,6 @@ let shieldKilledByHunter = false;
 let hunterPendingKill = null;
 let hunterChoosingIndex = null;
 let hunterMarkedTarget = null;
-let hunterHasUsedAbility = false;
 let isHunterChoosing = false;
 
 // NEW: State for detective interaction
@@ -2457,7 +2456,7 @@ function castVote(targetIndex) {
   }
 
   // 🏹 HUNTER
-if (voter.role === "Hunter" && !hunterHasUsedAbility) {
+if (voter.role === "Hunter") {
   showHunterDecisionScreen();
   return;
 }
@@ -2748,11 +2747,43 @@ function showHunterDecisionScreen() {
   const targetIndex = hunterMarkedTarget;
 
   // No marked target
-  if (targetIndex === null) {
-    currentVoterIndex++;
-    showNextVoter();
+  function showHunterDecisionScreen() {
+
+  const hunterIndex = currentVoterIndex;
+
+  // 🔥 FORCE target selection if none exists
+  if (hunterMarkedTarget === null) {
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h3>🏹 Choose Your Prey</h3>
+      </div>
+      <div class="roles-reveal-content" id="hunterTargetOptions"></div>
+    `;
+
+    const optionsBox = document.getElementById("hunterTargetOptions");
+
+    players.forEach((player, index) => {
+
+      if (!player.alive || index === hunterIndex) return;
+
+      const btn = document.createElement("button");
+      btn.className = "reveal-roles-btn";
+      btn.textContent = player.name;
+
+      btn.onclick = () => {
+        hunterMarkedTarget = index;
+
+        // After choosing target, reopen decision screen
+        showHunterDecisionScreen();
+      };
+
+      optionsBox.appendChild(btn);
+    });
+
     return;
   }
+}
 
   votingBox.innerHTML = `
   <div class="roles-reveal-header">
@@ -2767,19 +2798,16 @@ function showHunterDecisionScreen() {
 `;
 document.getElementById("hunterKill").onclick = () => {
   hunterPendingKill = targetIndex;
-  hunterHasUsedAbility = true;
   currentVoterIndex++;
   showNextVoter();
 };
 document.getElementById("hunterSpare").onclick = () => {
-  hunterHasUsedAbility = true;
   currentVoterIndex++;
   showNextVoter();
 };
 document.getElementById("hunterChange").onclick = () => {
 
-  hunterCanRetarget = true;
-  hunterHasUsedAbility = false; // allow ability next round
+  hunterCanRetarget = true; // allow ability next round
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
@@ -2798,15 +2826,12 @@ document.getElementById("hunterChange").onclick = () => {
   // 🏹 Only STORE the kill
   hunterPendingKill = targetIndex;
 
-  hunterHasUsedAbility = true;
-
   currentVoterIndex++;
   showNextVoter();
 };
 
   document.getElementById("hunterNo").onclick = () => {
 
-    hunterHasUsedAbility = true;
 
     currentVoterIndex++;
     showNextVoter();
@@ -3147,6 +3172,10 @@ votingBox.appendChild(continueBtn);
 
     // 🗳 Normal elimination
     eliminatedPlayer.alive = false;
+
+    if (hunterMarkedTarget !== null && !players[hunterMarkedTarget].alive) {
+  hunterMarkedTarget = null;
+}
 
     const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
 
@@ -3637,7 +3666,6 @@ shieldKilledByHunter = false;
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 hunterMarkedTarget = null;
-hunterHasUsedAbility = false;
 hunterChoosingIndex = null;
 
   startVotingBtn.style.display = "none";
