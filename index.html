@@ -486,6 +486,11 @@
   border: 2px solid #ff0000;
 }
 
+poison-death.poison-death {
+  color: #600dad;
+  font-style: italic;
+}
+
 /* ===== SHERIFF SCREEN ===== */
 
 .sheriff-header {
@@ -2998,45 +3003,55 @@ function finishVoting() {
   // 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
   // =====================================================
 
+  // 🐍 Activate previously announced poison
+if (
+  viperActivePoison !== null &&
+  players[viperActivePoison] &&
+  players[viperActivePoison].alive
+) {
+  const poisoned = players[viperActivePoison];
+  poisoned.alive = false;
   if (
-    viperActivePoison !== null &&
-    players[viperActivePoison] &&
-    players[viperActivePoison].alive
-  ) {
-    const poisoned = players[viperActivePoison];
-    poisoned.alive = false;
-    if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
 ) {
   hunterMarkedTarget = null;
 }
 
-    const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
+  const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
+  meetingMessages += `
+    <hr>
+    <div class="poison-death">
+      <h3>🧪 ${poisoned.name} throws up violently...</h3>
+      <p>Their future doesn't look bright.</p>
+    </div>
+  `;
+
+  // 🔥 Second message (role reveal)
+  meetingMessages += `
+    <div class="poison-death">
+      <h3>💀 ${poisoned.name} has died from poison.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+          ${poisoned.role}
+        </span>
+      </p>
+    </div>
+  `;
+
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
     meetingMessages += `
-      <hr>
-      <div class="roles-reveal-content">
-        <h3>🧪 ${poisoned.name} has succumbed to poison.</h3>
-        <p>They were the 
-          <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-            ${poisoned.role}
-          </span>
-        </p>
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
       </div>
     `;
-
-    if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-      meetingMessages += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-        </div>
-      `;
-    }
-
-    viperActivePoison = null;
   }
+
+  viperActivePoison = null;
+}
 
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
@@ -3146,6 +3161,24 @@ function finishVoting() {
       );
       return;
     }
+
+resolveSheriffAfterShield()
+
+// 🐍 Schedule poison for next meeting
+if (viperNextPoison !== null) {
+  viperAnnouncedPoison = viperNextPoison;
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🧪 ${players[viperNextPoison].name} doesn't feel too well...</h3>
+      <p>Their future doesn't look so bright.</p>
+    </div>
+  `;
+
+  viperNextPoison = null;
+  viperCooldown = true;
+}
 
     // 🛡 Shield logic
     if (eliminatedPlayer.role === "Shield") {
@@ -3258,6 +3291,11 @@ function renderShieldRetaliation(eliminatedIndex) {
     addContinueButton();
     return;
   }
+
+  // 🐍 Reset cooldown after poison has triggered
+if (viperCooldown && viperActivePoison === null) {
+  viperCooldown = false;
+}
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
