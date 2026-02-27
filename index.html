@@ -3137,6 +3137,22 @@ if (
     hunterPendingKill = null;
   }
 
+  // 🐍 Schedule poison for next meeting
+if (viperNextPoison !== null) {
+  viperAnnouncedPoison = viperNextPoison;
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🧪 ${players[viperNextPoison].name} doesn't feel too well...</h3>
+      <p>Their future doesn't look so bright.</p>
+    </div>
+  `;
+
+  viperNextPoison = null;
+  viperCooldown = true;
+}
+
   // =====================================================
   // 🛡 PHASE 4 — RESOLVE VOTE
   // =====================================================
@@ -3169,22 +3185,6 @@ if (
     }
 
 resolveSheriffAfterShield()
-
-// 🐍 Schedule poison for next meeting
-if (viperNextPoison !== null) {
-  viperAnnouncedPoison = viperNextPoison;
-
-  meetingMessages += `
-    <hr>
-    <div class="roles-reveal-content">
-      <h3>🧪 ${players[viperNextPoison].name} doesn't feel too well...</h3>
-      <p>Their future doesn't look so bright.</p>
-    </div>
-  `;
-
-  viperNextPoison = null;
-  viperCooldown = true;
-}
 
     // 🛡 Shield logic
     if (eliminatedPlayer.role === "Shield") {
@@ -3297,11 +3297,6 @@ function renderShieldRetaliation(eliminatedIndex) {
     addContinueButton();
     return;
   }
-
-  // 🐍 Reset cooldown after poison has triggered
-if (viperCooldown && viperActivePoison === null) {
-  viperCooldown = false;
-}
 
   votingBox.innerHTML = `
     <div class="roles-reveal-header">
