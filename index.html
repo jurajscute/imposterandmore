@@ -3242,39 +3242,47 @@ function renderShieldRetaliation(eliminatedIndex) {
 
     btn.onclick = () => {
 
-      const killedPlayer = obj.player;
-      killedPlayer.alive = false;
+  const killedPlayer = obj.player;
+  killedPlayer.alive = false;
 
-      const loverDeathIndex = handleLoverChainDeath(obj.index);
+  const loverDeathIndex = handleLoverChainDeath(obj.index);
 
-      votingBox.innerHTML = `
-        <div class="roles-reveal-header">
-          <h3 style="color:${roleColors["Shield"]}">
-            🛡️ ${eliminatedPlayer.name} retaliates!
-          </h3>
-        </div>
-        <div class="roles-reveal-content">
-          <h3>${killedPlayer.name} has been smushed into pieces!</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
-              ${killedPlayer.role}
-            </span>
-          </p>
-        </div>
-      `;
+  // Replace screen with retaliation result
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h3 style="color:${roleColors["Shield"]}">
+        🛡️ ${eliminatedPlayer.name} retaliates!
+      </h3>
+    </div>
+    <div class="roles-reveal-content">
+      <h3>${killedPlayer.name} has been smushed into pieces!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[killedPlayer.role]}; font-weight:bold;">
+          ${killedPlayer.role}
+        </span>
+      </p>
+    </div>
+  `;
 
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
-        votingBox.innerHTML += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-          </div>
-        `;
-      }
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    votingBox.innerHTML += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      </div>
+    `;
+  }
 
-      addContinueButton();
-    };
+  // ✅ Add Continue button HERE
+  const continueBtn = document.createElement("button");
+  continueBtn.textContent = "Continue";
+  continueBtn.className = "reveal-roles-btn";
+  continueBtn.style.marginTop = "15px";
+  continueBtn.onclick = () => nextRound();
+
+  votingBox.appendChild(continueBtn);
+};
 
     shieldOptions.appendChild(btn);
   });
