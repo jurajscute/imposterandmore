@@ -3019,14 +3019,6 @@ if (
   viperActivePoison = null;
 }
 
-  // 🏹 Remove Hunter target vote (but keep them alive for now)
-if (hunterPendingKill !== null) {
-  const targetIndex = Array.isArray(hunterPendingKill)
-    ? hunterPendingKill[0]
-    : hunterPendingKill;
-
-  players[targetIndex].vote = null;
-}
 
  // 🔄 Rebuild votes so Dictator cancellation applies
 votes = {};
@@ -3096,6 +3088,15 @@ voteSummaryHTML += `</div>`;
 
   }
   
+// 🏹 Remove Hunter target vote (but keep them alive for now)
+if (hunterPendingKill !== null) {
+  const targetIndex = Array.isArray(hunterPendingKill)
+    ? hunterPendingKill[0]
+    : hunterPendingKill;
+
+  players[targetIndex].vote = null;
+}
+
    // 🎯 Apply Hunter Kill AFTER votes conclude
 if (hunterPendingKill !== null) {
 
