@@ -1217,6 +1217,7 @@ let arsonistDoused = [];               // array of player indexes
 let arsonistRevealed = false;          // first reveal trigger
 let arsonistJustVoted = false;   
 let arsonistChoosingMeeting = false;      // meeting douse trigger
+let arsonistMeetingActive = false;
 
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
@@ -3506,33 +3507,6 @@ votingBox.innerHTML += `
     `).join("")}
   </div>
 `;
-
-if (arsonistIndex !== null && players[arsonistIndex].alive) {
-
-  const aliveOthers = players.filter((p, i) =>
-    p.alive && i !== arsonistIndex
-  );
-
-  const allDoused = aliveOthers.every(p =>
-    arsonistDoused.includes(players.indexOf(p))
-  );
-
-  if (aliveOthers.length > 0 && allDoused) {
-
-    const igniteBtn = document.createElement("button");
-    igniteBtn.textContent = "🔥 Ignite Everyone";
-    igniteBtn.className = "reveal-roles-btn";
-
-    igniteBtn.onclick = () => {
-      endGame(
-        `<strong>${players[arsonistIndex].name} the Arsonist burned everyone!</strong>`,
-        "Arsonist"
-      );
-    };
-
-    votingBox.appendChild(igniteBtn);
-  }
-}
 
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
