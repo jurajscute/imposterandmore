@@ -4889,6 +4889,31 @@ if (useLovers && playerCount >= 2) {
       if (indices[i] === kingPlayer) { newKingIndex = i; break; }
     }
     kingPlayer = newKingIndex;
+
+    if (useFrozen && frozenPlayer !== null) {
+  let newFrozenIndex = null;
+
+  for (let i = 0; i < indices.length; i++) {
+    if (indices[i] === frozenPlayer) {
+      newFrozenIndex = i;
+      break;
+    }
+  }
+
+  frozenPlayer = newFrozenIndex;
+}
+if (useLovers && loverIndexes.length === 2) {
+
+  loverIndexes = loverIndexes.map(oldIndex => {
+    for (let i = 0; i < indices.length; i++) {
+      if (indices[i] === oldIndex) {
+        return i;
+      }
+    }
+    return oldIndex;
+  });
+
+}
   }
 
 
