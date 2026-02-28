@@ -3074,7 +3074,7 @@ function canArsonistIgnite(arsonistIndex) {
 function showArsonistIgniteScreen(arsonistIndex) {
 
   votingBox.innerHTML = `
-    <div class="arsonist-screen">
+    <div class="dictator-screen">
       <h3>Everyone is covered in gasoline...</h3>
     </div>
     <div class="roles-reveal-content">
@@ -4789,11 +4789,14 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
   arsonistMarkedTarget = i;
 
+  // 🔥 ADD THIS LINE
+  arsonistDoused.add(i);
+
   const status = document.querySelector(".arsonist-status");
 
-if (status) {
-  status.innerHTML = `<strong>Doused - ${playerNames[i]}</strong>`;
-}
+  if (status) {
+    status.innerHTML = `<strong>Doused - ${playerNames[i]}</strong>`;
+  }
 
   return;
 }
@@ -4940,7 +4943,7 @@ if (status) {
 
        } else if (word === "Arsonist") {
 
-  wordBox.textContent = "???";
+  wordBox.textContent = "..." + secretItem.trim().slice(-1);
 
   const roleText = document.createElement("div");
   roleText.className = "arsonist-role";
@@ -4978,12 +4981,6 @@ if (status) {
           const roleText = document.createElement("div");
           roleText.className = "jackal-role";
           roleText.textContent = "Jackal";
-          wordBox.appendChild(roleText);
-          } else if (word === "Arsonist") {
-          wordBox.textContent = "..." + secretItem.trim().slice(-1);
-          const roleText = document.createElement("div");
-          roleText.className = "arsonist-role";
-          roleText.textContent = "Arsonist";
           wordBox.appendChild(roleText);
           } else if (word === "Viper") {
           wordBox.textContent = "???";
