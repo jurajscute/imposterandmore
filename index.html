@@ -2325,20 +2325,25 @@ function updateTracker() {
 
 /* ===== ANNOUNCE KING PLAYER ===== */
 function announceKingPlayer() {
-  // Check the global flags (set during generation) instead of current toggle state
-  // because randomizer might have enabled it internally for this round
-  const isKingActive = words.some((_, i) => i === kingPlayer);
-  
+
   if (kingPlayer !== null) {
+
     const playerName = playerNames[kingPlayer] || `Player ${kingPlayer + 1}`;
-    
+
     setTimeout(() => {
-      kingAnnouncement.textContent = `${playerName} is the King!\nThey get 2 votes!`;
+      kingAnnouncement.textContent =
+        `${playerName} is the King!\nThey get 2 votes!`;
+
       kingAnnouncement.classList.add('show');
-      kingAnnouncement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      kingAnnouncement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
     }, 500);
   }
 }
+
 function announceFrozenPlayer() {
   // Check the global flags (set during generation) instead of current toggle state
   // because randomizer might have enabled it internally for this round
