@@ -2344,21 +2344,27 @@ function announceKingPlayer() {
   }
 }
 
-function announceFrozenPlayer() {
-  // Check the global flags (set during generation) instead of current toggle state
-  // because randomizer might have enabled it internally for this round
-  const isFrozenActive = words.some((_, i) => i === frozenPlayer);
-  
+/* ===== ANNOUNCE FROZEN PLAYER ===== */
+function announcefrozenPlayer() {
+
   if (frozenPlayer !== null) {
+
     const playerName = playerNames[frozenPlayer] || `Player ${frozenPlayer + 1}`;
-    
+
     setTimeout(() => {
-      frozenAnnouncement.textContent = `${playerName} is Frozen!\nThey can't say a word in the first round!`;
+      frozenAnnouncement.textContent =
+        `${playerName} is Frozen!\nThey can't say their first word!`;
+
       frozenAnnouncement.classList.add('show');
-      frozenAnnouncement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      frozenAnnouncement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+
     }, 500);
   }
 }
+
 // SELECT FIRST PLAYER //
 function selectFirstPlayer() {
   const randomPlayer = Math.floor(Math.random() * totalCards) + 1;
@@ -2378,6 +2384,10 @@ setTimeout(() => {
 }, 300);
 
   }, 500);
+
+announceKingPlayer();
+announcefrozenPlayer();
+
 }
 
 /* ===== REVEAL ALL ROLES ===== */
