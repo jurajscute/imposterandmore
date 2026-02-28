@@ -93,7 +93,7 @@
     .role-card.mastermind { border-left-color: #dc2626; } .mastermind .role-icon { background: #dc2626; }
     .role-card.hunter { border-left-color: #dc2626; } .hunter .role-icon { background: #dc2626; }
     .role-card.detective { border-left-color: #10b981; } .detective .role-icon { background: #10b981; }
-    .role-card.jester { border-left-color: #00a008; } .jester .role-icon { background: #00a008; }
+    .role-card.jester { border-left-color: #e100ff; } .jester .role-icon { background: #e100ff; }
     .role-card.jackal { border-left-color: #5d3b6d; } .jackal .role-icon { background: #5d3b6d; }
     .role-card.arsonist { border-left-color: #ff5e00; } .arsonist .role-icon { background: #ff5e00; }
     .role-card.viper { border-left-color: #004b16; } .viper.role-icon { background: #004b16; }
@@ -108,6 +108,7 @@
     .role-card.sheriff { border-left-color: #977d08; } .sheriff .role-icon { background: #977d08; }
     .role-card.idiot { border-left-color: #d9ff00; } .idiot .role-icon { background: #d9ff00; }
     .role-card.philosopher { border-left-color: #2b99ff; } .philosopher .role-icon { background: #2b99ff; }
+    .role-card.medic { border-left-color: #6df779; } .medic .role-icon { background: #6df779; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
     .role-card.cultist { border-left-color: #c47070; } .cultist .role-icon { background: #c47070; }
     .role-card.shadow { border-left-color: #2b2b2b; } .shadow .role-icon { background: #2b2b2b; }
@@ -226,7 +227,7 @@
     .dictator-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .mastermind-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }ž
     .hunter-role { color: #ff0000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .jester-role { color: #00a008; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .jester-role { color: #e100ff; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .jackal-role { color: #5d3b6d; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .arsonist-role { color: #ff5e00; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .viper-role { color: #004b16; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -240,6 +241,7 @@
     .sheriff-role { color: #977d08; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .idiot-role { color: #d6c800; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .philosopher-role { color: #2b99ff; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .medic-role { color: #6df779; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .maniac-role { color: #530000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .cultist-role { color: #c47070; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shadow-role { color: #2b2b2b; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -252,14 +254,14 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .imposter-hint, .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .frozen-hint, .lovers-hint, .sheriff-hint, .echo-hint, .psychic-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .cultist-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint, .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .frozen-hint, .lovers-hint, .sheriff-hint, .echo-hint, .psychic-hint, .idiot-hint, .philosopher-hint, .medic-hint, .maniac-hint, .cultist-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .dictator-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .mastermind-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .hunter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .assassin-hint { color: #8b5cf6; background: #f5f3ff; border-color: #ddd6fe; }
-    .jester-hint { color: #00a008; background: #d7ffd4; border-color: #00a008; }
+    .jester-hint { color: #e100ff; background: #f8d4ff; border-color: #e100ff; }
     .jackal-hint { color: #5d3b6d; background: #edceff; border-color: #5d3b6d; }
     .arsonist-hint { color: #ff5e00; background: #ffdfca; border-color: #ff5e00; }
     .viper-hint { color: #004b16; background: #9cc597; border-color: #004b16; }
@@ -272,6 +274,7 @@
     .sheriff-hint { color: #977d08; background: #fff4b9; border-color: #977d08; }
     .idiot-hint { color: #d6c800; background: #f1f8b16e; border-color: #d6c800; }
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
+    .medic-hint { color: #6df779; background: #d0ffdc; border-color: #6df779; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .cultist-hint { color: #c47070; background: #ffefef; border-color: #c47070; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
@@ -334,7 +337,7 @@
     .role-list .mastermind-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .hunter-role { background: #fee2e2; color: #dc2626; border-left-color: #dc2626; }
     .role-list .detective-role { background: #d1fae5; color: #10b981; border-left-color: #10b981; }
-    .role-list .jester-role { background: #caffcd; color: #00a008; border-left-color: #00a008; }
+    .role-list .jester-role { background: #f6caff; color: #e100ff; border-left-color: #e100ff; }
     .role-list .jackal-role { background: #eed4ff; color: #5d3b6d; border-left-color: #5d3b6d; }
     .role-list .arsonist-role { background: #ffdfca; color: #ff5e00; border-left-color: #ff5e00; }
     .role-list .viper-role { background: #9cc597; color: #004b16; border-left-color: #004b16; }
@@ -349,6 +352,7 @@
     .role-list .sheriff-role { background: #fff4b9; color: #977d08; border-left-color: #977d08; }
     .role-list .idiot-role { background: #f1f8b16e; color: #d6c800; border-left-color: #d6c800; }
     .role-list .philosopher-role { background: #d0eeff; color: #2b99ff; border-left-color: #2b99ff; }
+    .role-list .medic-role { background: #d0ffe0; color: #6df779; border-left-color: #6df779; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
     .role-list .cultist-role { background: #ffefef; color: #c47070; border-left-color: #c47070; }
     .role-list .shadow-role { background: #e2e2e2; color: #2b2b2b; border-left-color: #2b2b2b; }
@@ -890,6 +894,7 @@ poison-death.poison-death {
             <div class="role-card sheriff"><h4><span class="role-icon">🌵</span>Sheriff</h4><p>You have the option to eliminate someone! Be careful, with great power comes great responsibility.</p><div class="goal">Goal: Eliminate impostors, by any means necessary.</div></div>
             <div class="role-card idiot"><h4><span class="role-icon">🐔</span>Idiot</h4><p>You have no idea what the word is.</p><div class="goal">Goal: Eliminate impostors.</div></div>
             <div class="role-card philosopher"><h4><span class="role-icon">💭</span>Philosopher</h4><p>You are able to ask a single Yes or No question, the target must answer it honestly (Unless they're a jester!).</p><div class="goal">Goal: Eliminate impostors, question your enemies.</div></div>
+            <div class="role-card medic"><h4><span class="role-icon">⚕️</span>Medic</h4><p>Select a target to protect from being killed next round!</p><div class="goal">Goal: Eliminate impostor and defend your teammates.</div></div>
             <div class="role-card maniac"><h4><span class="role-icon">💢</span>Maniac</h4><p>Help the impostor win, but without using a vote!</p><div class="goal">Goal: Win with the Impostor.</div></div>
             <div class="role-card cultist"><h4><span class="role-icon">🪬</span>Cultist</h4><p>Worship your unknown leader!</p><div class="goal">Goal: Win with the Impostor.</div></div>
             <div class="role-card shadow"><h4><span class="role-icon">🐈‍⬛</span>Shadow</h4><p>Figure out the word and help the impostor!</p><div class="goal">Goal: Win with the Impostor.</div></div>
@@ -1088,6 +1093,13 @@ poison-death.poison-death {
       <label>
         <input id="philosopherToggle" type="checkbox" name="philosopher">
         Philosopher
+      </label>
+    </div>
+
+    <div class="role-pill medic-toggle" id="medicContainer">
+      <label>
+        <input id="medicToggle" type="checkbox" name="medic">
+        Medic
       </label>
     </div>
 
@@ -1398,6 +1410,7 @@ const psychicToggle = document.getElementById("psychicToggle");
 const sheriffToggle = document.getElementById("sheriffToggle");
 const idiotToggle = document.getElementById("idiotToggle");
 const philosopherToggle = document.getElementById("philosopherToggle");
+const medicToggle = document.getElementById("medicToggle");
 const maniacToggle = document.getElementById("maniacToggle");
 const cultistToggle = document.getElementById("cultistToggle");
 const shadowToggle = document.getElementById("shadowToggle");
@@ -1415,6 +1428,7 @@ const roleColors = {
 
   "Detective": "#10b981",
   "Philosopher": "#2b99ff",
+  "Medic": "#6df779",
   "Clueless": "#06b6d4",
   "Echo": "#6368ba",
   "Psychic": "#b79dff",
@@ -1425,7 +1439,7 @@ const roleColors = {
   "Jackal": "#5d3b6d",
   "Arsonist": "#ff5e00",
   "Viper": "#004b16",
-  "Jester": "#00a008",
+  "Jester": "#e100ff",
   "Assassin": "#8b5cf6",
 
   "Lovers": "#ff7abc",
@@ -1446,7 +1460,7 @@ const roleThemes = {
   Arsonist: "#ff5e00",
   Viper: "#004b16",
   Assassin: "#9b59b6",
-  Jester: "#00a008",
+  Jester: "#e100ff",
   Lovers: "#ff7abc"
 };
 
@@ -1457,22 +1471,23 @@ const roleData = {
   sheriff:    { team: "Crew" },
   shield:     { team: "Crew" },
   philosopher:{ team: "Crew" },
+  medic:      { team: "Crew" },
   echo:       { team: "Crew" },
-  psychic:       { team: "Crew" },
+  psychic:    { team: "Crew" },
   clueless:   { team: "Crew" },
   idiot:      { team: "Crew" },
 
   imposter:   { team: "Evil" },
   dictator:   { team: "Evil" },
-  mastermind:   { team: "Evil" },
-  hunter:   { team: "Evil" },
+  mastermind: { team: "Evil" },
+  hunter:     { team: "Evil" },
 
   maniac:     { team: "Evil" },
-  cultist:     { team: "Evil" },
+  cultist:    { team: "Evil" },
   shadow:     { team: "Evil" },
 
   jackal:     { team: "Neutral" },
-  arsonist:     { team: "Neutral" },
+  arsonist:   { team: "Neutral" },
   viper:      { team: "Neutral" },
   assassin:   { team: "Neutral" },
   jester:     { team: "Neutral" }
@@ -1498,6 +1513,7 @@ const echoContainer = document.getElementById("echoContainer");
 const psychicContainer = document.getElementById("psychicContainer");
 const idiotContainer = document.getElementById("idiotContainer");
 const philosopherContainer = document.getElementById("philosopherContainer");
+const medicContainer = document.getElementById("medicContainer");
 const sheriffContainer = document.getElementById("sheriffContainer");
 const maniacContainer = document.getElementById("maniacContainer");
 const cultistContainer = document.getElementById("cultistContainer");
@@ -1836,6 +1852,7 @@ echoToggle.checked = JSON.parse(localStorage.getItem("echoEnabled")) || false;
 psychicToggle.checked = JSON.parse(localStorage.getItem("psychicEnabled")) || false;
 idiotToggle.checked = JSON.parse(localStorage.getItem("idiotEnabled")) || false;
 philosopherToggle.checked = JSON.parse(localStorage.getItem("philosopherEnabled")) || false;
+medicToggle.checked = JSON.parse(localStorage.getItem("medicEnabled")) || false;
 sheriffToggle.checked = JSON.parse(localStorage.getItem("sheriffEnabled")) || false;
 maniacToggle.checked = JSON.parse(localStorage.getItem("maniacEnabled")) || false;
 cultistToggle.checked = JSON.parse(localStorage.getItem("cultistEnabled")) || false;
@@ -2523,6 +2540,9 @@ function revealAllRoles() {
     }  else if (word === "Philosopher") {
       roleName = "Philosopher";
       roleClass = "philosopher-role";
+    }  else if (word === "Medic") {
+      roleName = "Medic";
+      roleClass = "medic-role";
     }  else if (word === "Sheriff") {
       roleName = "Sheriff";
       roleClass = "sheriff-role";
@@ -4104,6 +4124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const roleToggleMap = {
   Philosopher: "philosopherToggle",
+  Medic: "medicToggle",
   Sheriff: "sheriffToggle",
   Detective: "detectiveToggle",
   Clueless: "cluelessToggle",
@@ -4346,6 +4367,7 @@ firstPlayerBox.textContent = "";
   let usePsychic = psychicToggle.checked;
   let useIdiot = idiotToggle.checked;
   let usePhilosopher = philosopherToggle.checked;
+  let useMedic = medicToggle.checked;
   let useSheriff = sheriffToggle.checked;
   let useManiac = maniacToggle.checked;
   let useCultist = cultistToggle.checked;
@@ -4369,6 +4391,7 @@ useEcho = false;
 usePsychic = false;
 useIdiot = false;
 usePhilosopher = false;
+useMedic = false;
 useSheriff = false;
 useManiac = false;
 useCultist = false;
@@ -4394,6 +4417,7 @@ if (echoToggle.checked) rolePool.push('echo');
 if (psychicToggle.checked) rolePool.push('psychic');
 if (idiotToggle.checked) rolePool.push('idiot');
 if (philosopherToggle.checked) rolePool.push('philosopher');
+if (medicToggle.checked) rolePool.push('medic');
 if (sheriffToggle.checked) rolePool.push('sheriff');
 if (maniacToggle.checked) rolePool.push('maniac');
 if (cultistToggle.checked) rolePool.push('cultist');
@@ -4466,6 +4490,7 @@ selectedRoles.forEach(role => {
   if (role === 'psychic') usePsychic = true;
   if (role === 'idiot') useIdiot = true;
   if (role === 'philosopher') usePhilosopher = true;
+  if (role === 'medic') useMedic = true;
   if (role === 'sheriff') useSheriff = true;
   if (role === 'maniac') useManiac = true;
   if (role === 'cultist') useCultist = true;
@@ -4512,6 +4537,7 @@ if (frozenToggle.checked) {
       if (usePsychic) specialRolesCount++;
       if (useIdiot) specialRolesCount++;
       if (usePhilosopher) specialRolesCount++;
+      if (useMedic) specialRolesCount++;
       if (useSheriff) specialRolesCount++;
       if (useManiac) specialRolesCount++;
       if (useCultist) specialRolesCount++;
@@ -4733,6 +4759,17 @@ useShadow = selectedEvilHelper === "Shadow";
       }
     }
   }
+  // Medic
+  if (useMedic) {
+    let assigned = false;
+    while (!assigned) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (words[idx] === "Civilian") {
+        words[idx] = "Medic";
+        assigned = true;
+      }
+    }
+  }
   // Sheriff
   if (useSheriff) {
     let assigned = false;
@@ -4860,7 +4897,7 @@ if (useLovers && playerCount >= 2) {
     
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
       for (let i = 0; i < words.length; i++) {
-        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Dictator" && words[i] !== "Mastermind" && words[i] !== "Hunter"  && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Arsonist" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Psychic" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Sheriff" && words[i] !== "Maniac" && words[i] !== "Cultist" && words[i] !== "Shadow" ) {
+        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Dictator" && words[i] !== "Mastermind" && words[i] !== "Hunter"  && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Arsonist" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Psychic" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Medic" && words[i] !== "Sheriff" && words[i] !== "Maniac" && words[i] !== "Cultist" && words[i] !== "Shadow" ) {
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
           assassinTarget = i + 1;
           break;
@@ -4891,7 +4928,7 @@ function initializePlayers() {
     // If it's not a special role, it's Civilian
     const specialRoles = [
       "Imposter","Dictator","Mastermind","Hunter","Detective","Jester","Jackal","Arsonist","Viper", "Shield",
-      "Assassin","Clueless","Echo","Psychic","Idiot","Philosopher",
+      "Assassin","Clueless","Echo","Psychic","Idiot","Philosopher","Medic",
       "Maniac","Cultist","Shadow","Sheriff"
     ];
 
@@ -4991,9 +5028,10 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
         else if (targetWord === "Assassin") roleReveal = "Evil";
         else if (targetWord === "Clueless") roleReveal = "Crew";
         else if (targetWord === "Echo") roleReveal = "an Echo";
-        else if (targetWord === "Psychic") roleReveal = "an Psychic";
+        else if (targetWord === "Psychic") roleReveal = "a Psychic";
         else if (targetWord === "Idiot") roleReveal = "Mentally ill";
         else if (targetWord === "Philosopher") roleReveal = "a Philosopher";
+        else if (targetWord === "Medic") roleReveal = "a Medic";
         else if (targetWord === "Sheriff") roleReveal = "a Sheriff";
         else if (targetWord === "Maniac") roleReveal = "Mentally ill";
         else if (targetWord === "Cultist") roleReveal = "Mentally ill";
@@ -5250,6 +5288,12 @@ shuffledRoles.forEach(([role, count]) => {
           roleText.className = "philosopher-role";
           roleText.textContent = "Philosopher";
           wordBox.appendChild(roleText);
+          } else if (word === "Medic") {
+          wordBox.textContent = secretItem;
+          const roleText = document.createElement("div");
+          roleText.className = "medic-role";
+          roleText.textContent = "Medic";
+          wordBox.appendChild(roleText);
           } else if (word === "Sheriff") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
@@ -5366,6 +5410,9 @@ shuffledRoles.forEach(([role, count]) => {
         } else if (word === "Idiot") {
           specialHint.className = "idiot-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>You're an idiot and forgot what the word is...<br>Eliminate impostor!`;
+        } else if (word === "Medic") {
+          specialHint.className = "medic-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Heal and protect your teammates!<br>You can select one person to<strong>HEAL</strong> or<strong>PROTECT</strong>!`;
         } else if (word === "Philosopher") {
           specialHint.className = "philosopher-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Question the enemies!<br>You can ask one<br><strong> YES</strong> or<strong> NO</strong> question!`;
@@ -5704,6 +5751,10 @@ idiotToggle.addEventListener("change", () => {
 
 philosopherToggle.addEventListener("change", () => {
   localStorage.setItem("philosopherEnabled", philosopherToggle.checked);
+});
+
+medicToggle.addEventListener("change", () => {
+  localStorage.setItem("medicEnabled", medicToggle.checked);
 });
 
 sheriffToggle.addEventListener("change", () => {
