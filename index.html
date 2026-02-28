@@ -565,6 +565,23 @@
   font-weight: 700;
 }
 
+.status-section {
+  position: relative;
+}
+
+.announcement-overlay {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 90%;
+  max-width: 600px;
+  z-index: 5;
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -1196,8 +1213,10 @@ poison-death.poison-death {
   
   <div class="status-section">
     <div id="revealTracker" class="reveal-tracker"></div>
-    <div id="kingAnnouncement" class="king-announcement"></div>
-    <div id="frozenAnnouncement" class="frozen-announcement"></div>
+  <div class="announcement-overlay">
+       <div id="kingAnnouncement" class="king-announcement"></div>
+       <div id="frozenAnnouncement" class="frozen-announcement"></div>
+  </div>
     <div id="firstPlayer" class="first-player"></div>
     <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
     <div id="rolesRevealBox" class="roles-reveal-box"></div>
