@@ -595,7 +595,7 @@
 .psychic-vision {
   margin-top: 10px;
   padding: 10px;
-  background: linear-gradient(135deg, #c4aaff, #c277ff);
+  background: linear-gradient(135deg, #cab4ff, #582196);
   border-radius: 10px;
   font-size: 13px;
   max-height: 160px;
@@ -5169,7 +5169,7 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
           wordBox.appendChild(roleText);
         } else if (word === "Psychic") {
 
-  wordBox.textContent = "~~~";
+  wordBox.textContent = secretItem;
 
   const roleText = document.createElement("div");
   roleText.className = "psychic-role";
@@ -5194,11 +5194,22 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
     rolesHTML += `
       <div class="psychic-player-role">
-        <span style="color:${color}; font-weight:bold;">
-          ${role}
-        </span>
-        ${count > 1 ? ` x${count}` : ""}
-      </div>
+        <span 
+        style="
+          color:${color};
+          font-weight:bold;
+          ${!isCivilian ? `
+            text-shadow:
+              -1px -1px 0 #fff,
+               1px -1px 0 #fff,
+              -1px  1px 0 #fff,
+               1px  1px 0 #fff;
+          ` : ""}
+        "
+      >
+        ${role}
+      </span>
+    </div>
     `;
   });
 
