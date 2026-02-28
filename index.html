@@ -5169,7 +5169,9 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
           wordBox.appendChild(roleText);
         } else if (word === "Psychic") {
 
-  wordBox.textContent = secretItem;
+ } else if (word === "Psychic") {
+
+  wordBox.textContent = "~~~";
 
   const roleText = document.createElement("div");
   roleText.className = "psychic-role";
@@ -5180,7 +5182,7 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
   const visionBox = document.createElement("div");
   visionBox.className = "psychic-vision";
 
-  let rolesHTML = `<strong>Something is telling you there's a:</strong><br><br>`;
+  let rolesHTML = `<strong>You sense the roles in this game:</strong><br><br>`;
 
   const roleCounts = {};
 
@@ -5190,11 +5192,12 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
   Object.entries(roleCounts).forEach(([role, count]) => {
 
-    const color = roleColors[role] || "#ffffff";
+  const color = roleColors[role] || "#ffffff";
+  const isCivilian = role === "Civilian";
 
-    rolesHTML += `
-      <div class="psychic-player-role">
-        <span 
+  rolesHTML += `
+    <div class="psychic-player-role">
+      <span
         style="
           color:${color};
           font-weight:bold;
@@ -5207,14 +5210,15 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
           ` : ""}
         "
       >
-        ${role}
+        ${role}${count > 1 ? ` x${count}` : ""}
       </span>
     </div>
-    `;
-  });
+  `;
+});
 
   visionBox.innerHTML = rolesHTML;
   wordBox.appendChild(visionBox);
+
 
 
           } else if (word === "Echo") {
