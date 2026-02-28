@@ -2440,21 +2440,16 @@ function selectFirstPlayer() {
     firstPlayerBox.textContent = `${playerName} goes first!`;
     firstPlayerBox.classList.add('show');
 
-    // 👇 SHOW START VOTING BUTTON HERE
+    // Show voting button
     startVotingBtn.style.display = "block";
-startVotingBtn.classList.add("show");
-console.log("Button shown");
-setTimeout(() => {
-  console.log("After 300ms:", window.getComputedStyle(startVotingBtn).opacity);
-  console.log("Parent opacity:", window.getComputedStyle(startVotingBtn.parentElement).opacity);
-}, 300);
+    startVotingBtn.classList.add("show");
+
+    // 🔥 MOVE ANNOUNCEMENTS HERE
+    announceKingPlayer();
+    announceLovers();
+    announcefrozenPlayer();
 
   }, 500);
-
-announceKingPlayer();
-announceLovers();
-announcefrozenPlayer();
-
 }
 
 /* ===== REVEAL ALL ROLES ===== */
