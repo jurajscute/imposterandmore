@@ -5170,7 +5170,11 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
  } else if (word === "Psychic") {
 
-  wordBox.textContent = "~~~";
+  const trimmed = secretItem.trim();
+wordBox.textContent =
+  trimmed.slice(0, 2).charAt(0).toUpperCase() +
+  trimmed.slice(1, 2).toLowerCase() +
+  "...";
 
   const roleText = document.createElement("div");
   roleText.className = "psychic-role";
