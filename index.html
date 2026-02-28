@@ -3060,28 +3060,6 @@ function showArsonistDecisionScreen() {
   });
 }
 
-function showArsonistIgniteScreen(arsonistIndex) {
-
-  votingBox.innerHTML = `
-    <div class="arsonist-screen">
-      <h3>🔥 Everyone is covered in gasoline...</h3>
-    </div>
-    <div class="roles-reveal-content">
-      <button id="igniteBtn" class="reveal-evil-btn">
-        🔥 IGNITE 🔥
-      </button>
-    </div>
-  `;
-
-  document.getElementById("igniteBtn").onclick = () => {
-
-    endGame(
-      `<strong>${players[arsonistIndex].name} the Arsonist burns everyone and wins!</strong>`,
-      "Arsonist"
-    );
-  };
-}
-
 function canArsonistIgnite(arsonistIndex) {
 
   const aliveOthers = players
@@ -3097,7 +3075,7 @@ function showArsonistIgniteScreen(arsonistIndex) {
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h3>🔥 Everyone smells gasoline...</h3>
+      <h3>The room is covered in the smell of gasoline...</h3>
     </div>
     <div class="roles-reveal-content">
       <button id="igniteBtn" class="reveal-evil-btn">
