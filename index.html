@@ -3548,11 +3548,6 @@ votingBox.innerHTML += `
   </div>
 `;
 
-if (players[currentVoterIndex].role === "Arsonist") {
-  showArsonistDecisionScreen();
-  return;
-}
-
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
 
@@ -3647,11 +3642,6 @@ arsonistMarkedTarget = null;
       </div>
     `;
   }
-
-  if (players[currentVoterIndex].role === "Arsonist") {
-  showArsonistDecisionScreen();
-  return;
-}
 
   // ✅ Add Continue button HERE
    votingBox.innerHTML += meetingMessages;
@@ -3753,7 +3743,7 @@ function addFinalContinueButton() {
 
   if (checkWinCondition()) return;
 
-clearContinueButtons();
+  clearContinueButtons();
 
   const continueBtn = document.createElement("button");
   continueBtn.textContent = "Continue";
@@ -3761,11 +3751,15 @@ clearContinueButtons();
   continueBtn.style.marginTop = "15px";
 
   continueBtn.onclick = () => {
-    hunterPendingKillIndex = null;
-    if (players[currentVoterIndex].role === "Arsonist") {
-  showArsonistDecisionScreen();
-  return;
-}
+
+    // 🔥 If next player is Arsonist, show douse/ignite instead of nextRound
+    const nextPlayer = players[currentVoterIndex];
+
+    if (nextPlayer && nextPlayer.alive && nextPlayer.role === "Arsonist") {
+      showArsonistDecisionScreen();
+      return;
+    }
+
     nextRound();
   };
 
@@ -3817,33 +3811,6 @@ const impostorsAlive = alivePlayers.filter(p =>
   const crewAlive = alivePlayers.filter(p =>
     !["Imposter","Dictator","Mastermind","Hunter","Jackal","Arsonist","Viper"].includes(p.role)
   );
-
-/* ==============================
-   🔥 ARSONIST IGNITE WIN
-   ============================== */
-
-const arsonistPlayer = alivePlayers.find(p => p.role === "Arsonist");
-
-if (arsonistPlayer) {
-
-  const arsonistIndex = players.indexOf(arsonistPlayer);
-
-  const aliveOthers = players
-    .map((p, i) => ({ p, i }))
-    .filter(obj => obj.p.alive && obj.i !== arsonistIndex);
-
-  const canIgnite =
-    aliveOthers.length > 0 &&
-    aliveOthers.every(obj => arsonistDoused.has(obj.i));
-
-  if (canIgnite) {
-    endGame(
-      `<strong>${arsonistPlayer.name} the Arsonist ignites everyone and wins!</strong>`,
-      "Arsonist"
-    );
-    return true;
-  }
-}
 
   /* ==============================
      👹 IMPOSTORS WIN
