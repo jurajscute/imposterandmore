@@ -2450,6 +2450,7 @@ setTimeout(() => {
   }, 500);
 
 announceKingPlayer();
+announceLovers();
 announcefrozenPlayer();
 
 }
@@ -4195,13 +4196,16 @@ function updateRoleVisuals() {
 }
 
 function announceLovers() {
-  const loversCount = words.filter(role => role === "Lover").length;
 
-  if (loversCount >= 2) {
-    loversAnnouncement.textContent = 
-      "Love is in the air…";
+  if (useLovers && loverIndexes.length === 2) {
 
-    loversAnnouncement.classList.add("show");
+    setTimeout(() => {
+      loversAnnouncement.textContent =
+        "Two souls are secretly bound together...";
+
+      loversAnnouncement.classList.add('show');
+
+    }, 500);
   }
 }
 
