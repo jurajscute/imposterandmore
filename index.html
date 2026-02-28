@@ -1226,6 +1226,8 @@ let arsonistPendingKill = null;
 let arsonistChoosingIndex = null;
 let arsonistMarkedTarget = null;
 let isArsonistChoosing = false;
+let arsonistDoused = new Set();
+let arsonistAlive = true;
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -2785,6 +2787,7 @@ function handleLoverChainDeath(deadIndex) {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
     return otherLoverIndex; // 🔥 return who died
   }
 
@@ -2835,6 +2838,7 @@ function resolveSheriffNow() {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -2857,6 +2861,7 @@ function resolveSheriffNow() {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     const sheriff = players.find(p => p.role === "Sheriff");
 
@@ -2979,12 +2984,15 @@ function showArsonistDecisionScreen() {
 
   const arsonistIndex = currentVoterIndex;
 
-  // 🔥 FORCE target selection if none exists
- if (arsonistMarkedTarget === null) {
+  // 🔥 Check if ignite is available
+  if (canArsonistIgnite(arsonistIndex)) {
+    showArsonistIgniteScreen(arsonistIndex);
+    return;
+  }
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h3>🔥 Choose who to douse!</h3>
+      <h3>🔥 Choose someone to Douse</h3>
     </div>
     <div class="roles-reveal-content" id="arsonistTargetOptions"></div>
   `;
@@ -2993,66 +3001,52 @@ function showArsonistDecisionScreen() {
 
   players.forEach((player, index) => {
 
-    if (!player.alive || index === currentVoterIndex) return;
+    if (!player.alive) return;
+    if (index === arsonistIndex) return;
+    if (arsonistDoused.has(index)) return; // prevent redousing
 
     const btn = document.createElement("button");
     btn.className = "reveal-evil-btn";
     btn.textContent = player.name;
 
     btn.onclick = () => {
-
-      arsonistMarkedTarget = index;
-
-      // 🔥 IMPORTANT:
-      // After picking target, continue voting immediately.
-      currentVoterIndex++;
-      setTimeout(() => {
-        showNextVoter();
-      }, 150);
-    };
+  arsonistDoused.add(index);
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+};
 
     optionsBox.appendChild(btn);
   });
-
-  return;
 }
 
-  const targetIndex = arsonistMarkedTarget;
+function canArsonistIgnite(arsonistIndex) {
+
+  const aliveOthers = players
+    .map((p, i) => ({ p, i }))
+    .filter(obj => obj.p.alive && obj.i !== arsonistIndex);
+
+  if (aliveOthers.length === 0) return false;
+
+  return aliveOthers.every(obj => arsonistDoused.has(obj.i));
+}
+
+function showArsonistIgniteScreen(arsonistIndex) {
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h3>🔥 Arsonist Decision</h3>
+      <h3>🔥 Everyone smells gasoline...</h3>
     </div>
     <div class="roles-reveal-content">
-      <p>Your current prey: <strong>${players[targetIndex].name}</strong></p>
-      <button id="arsonistKill" class="reveal-evil-btn">Kill</button>
-      <button id="arsonistSpare" class="reveal-evil-btn">Spare</button>
-      <button id="arsonistChange" class="reveal-evil-btn">Change Target</button>
+      <button id="igniteBtn" class="reveal-evil-btn">
+        🔥 IGNITE 🔥
+      </button>
     </div>
   `;
 
-  document.getElementById("arsonistKill").onclick = () => {
-    arsonistPendingKill = targetIndex;
-
-    currentVoterIndex++;
-    setTimeout(() => {
-      showNextVoter();
-    }, 150);
-  };
-
-  document.getElementById("arsonistSpare").onclick = () => {
-
-    currentVoterIndex++;
-    setTimeout(() => {
-      showNextVoter();
-    }, 150);
-  };
-
-  document.getElementById("arsonistChange").onclick = () => {
-
-    arsonistMarkedTarget = null;
-
-    showArsonistDecisionScreen(); // re-force selection
+  document.getElementById("igniteBtn").onclick = () => {
+    arsonistWin();
   };
 }
 
@@ -3070,42 +3064,6 @@ function enableHunterRetargetMode() {
 
       hunterMarkedTarget = index;
       hunterCanRetarget = false;
-
-      votingBox.innerHTML = `
-        <h3>🎯 New target locked: ${player.name}</h3>
-      `;
-
-clearContinueButtons();
-
-      const continueBtn = document.createElement("button");
-      continueBtn.textContent = "Continue";
-      continueBtn.className = "reveal-roles-btn";
-      continueBtn.onclick = () => {
-        currentVoterIndex++;
-        showNextVoter();
-      };
-
-      votingBox.appendChild(continueBtn);
-    };
-
-    votingBox.appendChild(btn);
-  });
-}
-
-function enableArsonistRetargetMode() {
-
-  players.forEach((player, index) => {
-
-    if (!player.alive) return;
-
-    const btn = document.createElement("button");
-    btn.textContent = player.name;
-    btn.className = "reveal-roles-btn";
-
-    btn.onclick = () => {
-
-      arsonistMarkedTarget = index;
-      arsonistCanRetarget = false;
 
       votingBox.innerHTML = `
         <h3>🎯 New target locked: ${player.name}</h3>
@@ -3229,6 +3187,7 @@ if (
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
 
   const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
@@ -3309,6 +3268,7 @@ viperCooldown = false;
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
       hunterKilledIndex = targetIndex;
 
       const loverDeathIndex = handleLoverChainDeath(targetIndex);
@@ -3488,6 +3448,7 @@ if (sheriffShotTarget !== null) {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
         handleLoverChainDeath(eliminatedIndex);
       }
 
@@ -3590,6 +3551,7 @@ function renderShieldRetaliation(eliminatedIndex) {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
 
   const loverDeathIndex = handleLoverChainDeath(obj.index);
 
@@ -3668,6 +3630,7 @@ function resolveSheriffAfterShield() {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
     loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
     votingBox.innerHTML += `
@@ -3690,6 +3653,7 @@ function resolveSheriffAfterShield() {
 ) {
   hunterMarkedTarget = null;
 }
+arsonistMarkedTarget = null;
     const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
@@ -3778,6 +3742,33 @@ const impostorsAlive = alivePlayers.filter(p =>
   const crewAlive = alivePlayers.filter(p =>
     !["Imposter","Dictator","Mastermind","Hunter","Jackal","Arsonist","Viper"].includes(p.role)
   );
+
+/* ==============================
+   🔥 ARSONIST IGNITE WIN
+   ============================== */
+
+const arsonistPlayer = alivePlayers.find(p => p.role === "Arsonist");
+
+if (arsonistPlayer) {
+
+  const arsonistIndex = players.indexOf(arsonistPlayer);
+
+  const aliveOthers = players
+    .map((p, i) => ({ p, i }))
+    .filter(obj => obj.p.alive && obj.i !== arsonistIndex);
+
+  const canIgnite =
+    aliveOthers.length > 0 &&
+    aliveOthers.every(obj => arsonistDoused.has(obj.i));
+
+  if (canIgnite) {
+    endGame(
+      `<strong>${arsonistPlayer.name} the Arsonist ignites everyone and wins!</strong>`,
+      "Arsonist"
+    );
+    return true;
+  }
+}
 
   /* ==============================
      👹 IMPOSTORS WIN
@@ -4058,6 +4049,7 @@ viperChoosingPoison = false;
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 hunterMarkedTarget = null;
+arsonistMarkedTarget = null;
 hunterChoosingIndex = null;
 arsonistMarkedTarget = null;
 arsonistChoosingIndex = null;
