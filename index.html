@@ -282,11 +282,6 @@
     .reveal-roles-btn:active { transform: scale(0.96); }
     .reveal-roles-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
 
-    .reveal-arsonist-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #ffdf76, #b33900); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
-    .reveal-arsonist-btn:hover { box-shadow: 0 6px 16px rgba(211, 134, 0, 0.3); }
-    .reveal-arsonist-btn:active { transform: scale(0.96); }
-    .reveal-arsonist-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
-
     .reveal-sheriff-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #1d1b01, #3a2900); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-sheriff-btn:hover { box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
     .reveal-sheriff-btn:active { transform: scale(0.96); }
@@ -466,21 +461,7 @@
 
 /* SCREEN DESIGNS */
 
-.arsonist-screen {
-  background: linear-gradient(135deg, #cf4318, #c59700);
-  border-radius: 12px;
-  padding: 20px;
-  color: white;
-}
-
-.arsonist-screen .roles-reveal-header {
-  background: linear-gradient(135deg, #cf4318, #c59700);
-}
-
-.arsonist-screen {
-  box-shadow: 0 0 25px rgba(77, 28, 0, 0.6);
-
-.arsonist-screen {
+.sheriff-screen {
   background: linear-gradient(135deg, #737500, #4d3800);
   border-radius: 12px;
   padding: 20px;
@@ -1230,14 +1211,6 @@ let viperNextPoison = null;     // selected this meeting
 let viperActivePoison = null;   // kills NEXT meeting
 let meetingMessages = "";
 let viperCooldown = false; // true = refueling, cannot poison
-
-let arsonistIndex = null;              // who the arsonist is
-let arsonistDoused = [];               // array of player indexes
-let arsonistRevealed = false;          // first reveal trigger
-let arsonistJustVoted = false;   
-let arsonistChoosingMeeting = false;      // meeting douse trigger
-let arsonistMeetingActive = false;
-let arsonistIgnited = false;
 
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
@@ -2489,6 +2462,7 @@ function startVotingPhase() {
 }
 
 function showNextVoter() {
+
   // Skip dead players
   while (currentVoterIndex < players.length && !players[currentVoterIndex].alive) {
     currentVoterIndex++;
@@ -2528,77 +2502,6 @@ votingBox.classList.add("vote-fade-in");
       voteOptions.appendChild(btn);
     }
   });
-  
-}
-
-function showArsonistMeetingDouse() {
-
-  votingBox.innerHTML = `
-    <div class="arsonist-screen">
-      <h2 style="color:orange;">🔥 Choose someone to douse</h2>
-    </div>
-  `;
-
-  const aliveOthers = players
-    .map((p, i) => ({ player: p, index: i }))
-    .filter(obj => 
-      obj.player.alive && obj.index !== arsonistIndex
-    );
-
-  const allDoused = aliveOthers.length > 0 &&
-    aliveOthers.every(obj => 
-      arsonistDoused.includes(obj.index)
-    );
-
-  // 🔥 IF ALL ALIVE PLAYERS ARE DOUSED → SHOW IGNITE
-  if (allDoused) {
-
-    const igniteBtn = document.createElement("button");
-    igniteBtn.textContent = "🔥 IGNITE EVERYONE";
-    igniteBtn.className = "reveal-roles-btn";
-    igniteBtn.style.background = "#ff3b30";
-    igniteBtn.style.color = "white";
-    igniteBtn.style.fontWeight = "bold";
-
-    igniteBtn.onclick = () => {
-  arsonistIgnited = true;
-  nextRound(); // trigger win check properly
-};
-
-    votingBox.appendChild(igniteBtn);
-
-    return; // stop here — no need to show douse buttons
-  }
-
-  // 🔥 OTHERWISE SHOW DOUSE OPTIONS
-  aliveOthers.forEach(obj => {
-
-    if (arsonistDoused.includes(obj.index)) return;
-
-    const btn = document.createElement("button");
-    btn.textContent = obj.player.name;
-    btn.className = "reveal-arsonist-btn";
-
-    btn.onclick = () => {
-      arsonistDoused.push(obj.index);
-
-      currentVoterIndex++;
-      showNextVoter();
-    };
-
-    votingBox.appendChild(btn);
-  });
-
-  // Optional skip
-  const skip = document.createElement("button");
-  skip.textContent = "Skip";
-  skip.className = "reveal-roles-btn";
-  skip.onclick = () => {
-    currentVoterIndex++;
-    showNextVoter();
-  };
-
-  votingBox.appendChild(skip);
 }
 
 function showViperCooldownScreen() {
@@ -2683,11 +2586,6 @@ if (voter.role === "Hunter") {
   return;
 }
 
-// 🔥 ARSONIST
-if (voter.role === "Arsonist") {
-  showArsonistMeetingDouse();
-  return;
-}
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
@@ -2750,7 +2648,7 @@ if (voter.role === "Arsonist") {
   // 🎭 Render Screen
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h2>
+      <h2 style="color:white">
         👑 ${dictator.name}, you control the narrative.
       </h2>
       <p>Silence one voice… or let chaos unfold.</p>
@@ -2983,32 +2881,6 @@ if (!sheriff || !sheriff.alive) {
   sheriffShotTarget = null;
 
   addContinueButton();
-}
-
-function showArsonistDouseScreen() {
-
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h3>🔥 Choose someone to douse</h3>
-    </div>
-  `;
-
-  players.forEach((p, index) => {
-    if (!p.alive || index === arsonistIndex) return;
-
-    const btn = document.createElement("button");
-    btn.textContent = p.name;
-    btn.className = "reveal-roles-btn";
-
-    btn.onclick = () => {
-      if (!arsonistDoused.includes(index)) {
-        arsonistDoused.push(index);
-      }
-      nextCard(); // or whatever continues your reveal flow
-    };
-
-    votingBox.appendChild(btn);
-  });
 }
 
 function showHunterDecisionScreen() {
@@ -3526,7 +3398,6 @@ votingBox.innerHTML += `
   </div>
 `;
 
-
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
 
@@ -3779,22 +3650,6 @@ const impostorsAlive = alivePlayers.filter(p =>
   const crewAlive = alivePlayers.filter(p =>
     !["Imposter","Dictator","Mastermind","Hunter","Jackal","Arsonist","Viper"].includes(p.role)
   );
-
-  /* ==============================
-   🔥 ARSONIST IGNITE WIN
-   ============================== */
-
-if (arsonistIgnited) {
-  const arsonistPlayer = alivePlayers.find(p => p.role === "Arsonist");
-
-  if (arsonistPlayer) {
-    endGame(
-      `<strong>${arsonistPlayer.name} the Arsonist burned everyone!</strong>`,
-      "Arsonist"
-    );
-    return true;
-  }
-}
 
   /* ==============================
      👹 IMPOSTORS WIN
@@ -4065,12 +3920,6 @@ function updateRoleVisuals() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
-
-arsonistIndex = null;
-arsonistDoused = [];
-arsonistRevealed = false;
-arsonistJustVoted = false;
-
   // 🐍 Reset Viper state
 viperActivePoison = null;
 viperAnnouncedPoison = null;
@@ -4785,29 +4634,6 @@ if (status) {
 
   return;
 }
-// 🔥 ARSONIST DOUSE SELECTION (AT REVEAL)
-if (arsonistIndex !== null && i !== arsonistIndex) {
-
-  // prevent double dousing
-  if (!arsonistDoused.includes(i)) {
-    arsonistDoused.push(i);
-  }
-
-  const status = document.querySelector(".arsonist-hint");
-
-  if (status) {
-    status.innerHTML = `
-      <strong>Your Mission:</strong><br>
-      Burn the world.<br><br>
-      <strong>Doused - </strong> ${playerNames[i]}
-    `;
-  }
-
-  // stop choosing after first pick
-  arsonistIndex = null;
-
-  return;
-}
       // Only trigger if detective is currently choosing, this card isn't the detective's, and it's not the button being clicked
       if (isDetectiveChoosing && e.target !== btn && !card.classList.contains('detective-active-card')) {
         
@@ -4949,28 +4775,6 @@ if (arsonistIndex !== null && i !== arsonistIndex) {
 
   card.appendChild(hunterHint);
 
-   } else if (word === "Arsonist") {
-
-  wordBox.textContent = "..." + secretItem.trim().slice(-1);;
-
-  const roleText = document.createElement("div");
-  roleText.className = "arsonist-role";
-  roleText.textContent = "Arsonist";
-  wordBox.appendChild(roleText);
-
-  arsonistIndex = i;
-
-  const arsonistHint = document.createElement("div");
-  arsonistHint.className = "arsonist-hint show"; // show immediately
-
-  arsonistHint.innerHTML = `
-    <strong>Your Mission:</strong><br>
-    Burn the world.<br><br>
-    You can select a player and <strong>DOUSE</strong> them!<br><br>`;
-
-  card.appendChild(arsonistHint);
-
-
         } else if (word === "Detective") {
           wordBox.textContent = secretItem;
           const roleText = document.createElement("div");
@@ -4988,6 +4792,12 @@ if (arsonistIndex !== null && i !== arsonistIndex) {
           const roleText = document.createElement("div");
           roleText.className = "jackal-role";
           roleText.textContent = "Jackal";
+          wordBox.appendChild(roleText);
+          } else if (word === "Arsonist") {
+          wordBox.textContent = "..." + secretItem.trim().slice(-1);
+          const roleText = document.createElement("div");
+          roleText.className = "arsonist-role";
+          roleText.textContent = "Arsonist";
           wordBox.appendChild(roleText);
           } else if (word === "Viper") {
           wordBox.textContent = "???";
@@ -5112,6 +4922,9 @@ if (arsonistIndex !== null && i !== arsonistIndex) {
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and trick everyone!`;
         } else if (word === "Jackal") {
           specialHint.className = "jackal-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
+        } else if (word === "Arsonist") {
+          specialHint.className = "arsonist-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Survive and outlive everyone!`;
         } else if (word === "Viper") {
           specialHint.className = "viper-hint";
@@ -5246,10 +5059,6 @@ if (loverIndexes.includes(i)) {
           statusLabel.textContent = "Locked";
           
           lockedCards++;
-
-          if (word === "Arsonist") {
-  arsonistIndex = i;
-}
 
 if (lockedCards === totalCards) {
   console.log("Triggering first player...");
