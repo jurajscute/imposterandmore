@@ -582,12 +582,12 @@
   margin: 0 auto 16px auto;
 }
 
-.king-announcement,
+.king-announcement, .lovers-announcement,
 .frozen-announcement {
   display: none;
 }
 
-.king-announcement.show,
+.king-announcement.show, .lovers-announcement,
 .frozen-announcement.show {
   display: block;
 }
@@ -1252,6 +1252,7 @@ poison-death.poison-death {
   <div class="announcement-overlay">
        <div id="kingAnnouncement" class="king-announcement"></div>
        <div id="frozenAnnouncement" class="frozen-announcement"></div>
+       <div id="loversAnnouncement" class="lovers-announcement"></div>
   </div>
     <div id="firstPlayer" class="first-player"></div>
     <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
@@ -1355,6 +1356,7 @@ const changeSubjectBtn = document.getElementById("changeSubjectBtn");
 const customSubjectInput = document.getElementById("customSubjectInput");
 const customSubjectBtn = document.getElementById("customSubjectBtn");
 const kingAnnouncement = document.getElementById("kingAnnouncement");
+const loversAnnouncement = document.getElementById("loversAnnouncement");
 const frozenAnnouncement = document.getElementById("frozenAnnouncement");
 
 
@@ -2239,6 +2241,8 @@ function changeSubject() {
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  loversAnnouncement.classList.remove('show');
+  loversAnnouncement.textContent = '';
   frozenAnnouncement.classList.remove('show');
   frozenAnnouncement.textContent = '';
 }
@@ -4195,7 +4199,7 @@ function announceLovers() {
 
   if (loversCount >= 2) {
     loversAnnouncement.textContent = 
-      "Love is in the air";
+      "Love is in the air…";
 
     loversAnnouncement.classList.add("show");
   }
@@ -4260,6 +4264,8 @@ firstPlayerBox.textContent = "";
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  loversAnnouncement.classList.remove('show');
+  loversAnnouncement.textContent = '';
   frozenAnnouncement.classList.remove('show');
   frozenAnnouncement.textContent = '';
   errorBox.textContent = "";
