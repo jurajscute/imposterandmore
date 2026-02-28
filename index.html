@@ -570,16 +570,22 @@
 }
 
 .announcement-overlay {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 90%;
   max-width: 600px;
-  z-index: 5;
+  margin: 0 auto 16px auto;
+}
+
+.king-announcement,
+.frozen-announcement {
+  display: none;
+}
+
+.king-announcement.show,
+.frozen-announcement.show {
+  display: block;
 }
 
 @keyframes loverFade {
