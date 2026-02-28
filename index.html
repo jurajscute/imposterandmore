@@ -2433,6 +2433,7 @@ function announcefrozenPlayer() {
 
     }, 500);
   }
+  console.log("Frozen function actually ran");
 }
 
 // SELECT FIRST PLAYER //
@@ -2449,9 +2450,7 @@ function selectFirstPlayer() {
     startVotingBtn.classList.add("show");
 
     // 🔥 MOVE ANNOUNCEMENTS HERE
-    console.log("King:", kingPlayer);
-console.log("Frozen:", frozenPlayer);
-console.log("Lovers:", loverIndexes);
+    console.log("Calling announcements now");
     announceKingPlayer();
     announceLovers();
     announcefrozenPlayer();
