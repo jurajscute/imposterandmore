@@ -592,6 +592,39 @@
   display: block;
 }
 
+.psychic-vision {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.psychic-scroll-box {
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  border: 2px solid #a78bfa;
+  border-radius: 16px;
+  padding: 14px;
+  width: 100%;
+  max-height: 180px;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.3);
+}
+
+.psychic-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #6d28d9;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.psychic-role-row {
+  padding: 6px 0;
+  font-size: 15px;
+  text-align: center;
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -5159,35 +5192,36 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
   wordBox.appendChild(roleText);
 
   // 🔮 PSYCHIC VISION (sees all roles, not who has them)
-  const visionBox = document.createElement("div");
-  visionBox.className = "psychic-vision";
+ const visionBox = document.createElement("div");
+visionBox.className = "psychic-vision";
 
-  let rolesHTML = `<strong>You sense the roles in this game:</strong><br><br>`;
+let rolesHTML = `
+  <div class="psychic-scroll-box">
+    <div class="psychic-title">All Roles Present</div>
+`;
 
-  // Count how many of each role exist
-  const roleCounts = {};
+const roleCounts = {};
 
-  players.forEach(player => {
-    roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
-  });
+players.forEach(player => {
+  roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
+});
 
-  // Display roles WITHOUT names
-  Object.entries(roleCounts).forEach(([role, count]) => {
+Object.entries(roleCounts).forEach(([role, count]) => {
+  const color = roleColors[role] || "#ffffff";
 
-    const color = roleColors[role] || "#ffffff";
+  rolesHTML += `
+    <div class="psychic-role-row">
+      <span style="color:${color}; font-weight:bold;">
+        ${role}
+      </span>
+      ${count > 1 ? ` x${count}` : ""}
+    </div>
+  `;
+});
 
-    rolesHTML += `
-      <div class="psychic-role-row">
-        <span style="color:${color}; font-weight:bold;">
-          ${role}
-        </span>
-        ${count > 1 ? `x${count}` : ""}
-      </div>
-    `;
-  });
-
-  visionBox.innerHTML = rolesHTML;
-  wordBox.appendChild(visionBox);
+rolesHTML += `</div>`;
+visionBox.innerHTML = rolesHTML;
+wordBox.appendChild(visionBox);
 
           } else if (word === "Echo") {
           wordBox.textContent = secretItem;
