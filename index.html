@@ -4789,9 +4789,6 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
   arsonistMarkedTarget = i;
 
-  // 🔥 ADD THIS LINE
-  arsonistDoused.add(i);
-
   const status = document.querySelector(".arsonist-status");
 
   if (status) {
@@ -5212,8 +5209,6 @@ if (loverIndexes.includes(i)) {
         wordBox.classList.remove("word-revealed");
         categoryBox.classList.remove("category-shown");
 
-        setTimeout(() => {
-
   if (specialHint && specialHint.parentNode)
     specialHint.parentNode.removeChild(specialHint);
 
@@ -5234,9 +5229,17 @@ if (loverIndexes.includes(i)) {
   if (arsonistHint) arsonistHint.remove();
 
   // 🔥 Also cancel arsonist targeting mode if this was Arsonist
-  if (word === "Arsonist") {
-    arsonistChoosingIndex = null;
+ if (word === "Arsonist") {
+
+  // 🔥 Commit final selected target
+  if (arsonistMarkedTarget !== null) {
+    arsonistDoused.add(arsonistMarkedTarget);
   }
+
+  arsonistChoosingIndex = null;
+  arsonistMarkedTarget = null; // reset selection
+}
+  
           
           while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
           
