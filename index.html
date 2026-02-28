@@ -108,7 +108,7 @@
     .role-card.sheriff { border-left-color: #977d08; } .sheriff .role-icon { background: #977d08; }
     .role-card.idiot { border-left-color: #d9ff00; } .idiot .role-icon { background: #d9ff00; }
     .role-card.philosopher { border-left-color: #2b99ff; } .philosopher .role-icon { background: #2b99ff; }
-    .role-card.medic { border-left-color: #6df779; } .medic .role-icon { background: #6df779; }
+    .role-card.medic { border-left-color: #29c26e; } .medic .role-icon { background: #29c26e; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
     .role-card.cultist { border-left-color: #c47070; } .cultist .role-icon { background: #c47070; }
     .role-card.shadow { border-left-color: #2b2b2b; } .shadow .role-icon { background: #2b2b2b; }
@@ -241,7 +241,7 @@
     .sheriff-role { color: #977d08; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .idiot-role { color: #d6c800; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .philosopher-role { color: #2b99ff; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
-    .medic-role { color: #6df779; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .medic-role { color: #29c26e; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .maniac-role { color: #530000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .cultist-role { color: #c47070; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shadow-role { color: #2b2b2b; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -274,7 +274,7 @@
     .sheriff-hint { color: #977d08; background: #fff4b9; border-color: #977d08; }
     .idiot-hint { color: #d6c800; background: #f1f8b16e; border-color: #d6c800; }
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
-    .medic-hint { color: #6df779; background: #d0ffdc; border-color: #6df779; }
+    .medic-hint { color: #29c26e; background: #aad4b5; border-color: #29c26e; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .cultist-hint { color: #c47070; background: #ffefef; border-color: #c47070; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
@@ -352,7 +352,7 @@
     .role-list .sheriff-role { background: #fff4b9; color: #977d08; border-left-color: #977d08; }
     .role-list .idiot-role { background: #f1f8b16e; color: #d6c800; border-left-color: #d6c800; }
     .role-list .philosopher-role { background: #d0eeff; color: #2b99ff; border-left-color: #2b99ff; }
-    .role-list .medic-role { background: #d0ffe0; color: #6df779; border-left-color: #6df779; }
+    .role-list .medic-role { background: #aad4b5; color: #29c26e; border-left-color: #29c26e; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
     .role-list .cultist-role { background: #ffefef; color: #c47070; border-left-color: #c47070; }
     .role-list .shadow-role { background: #e2e2e2; color: #2b2b2b; border-left-color: #2b2b2b; }
@@ -5412,7 +5412,7 @@ shuffledRoles.forEach(([role, count]) => {
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>You're an idiot and forgot what the word is...<br>Eliminate impostor!`;
         } else if (word === "Medic") {
           specialHint.className = "medic-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Heal and protect your teammates!<br>You can select one person to<strong>HEAL</strong> or<strong>PROTECT</strong>!`;
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>Heal and protect your teammates!<br>You can select one person to <strong>HEAL</strong> or <strong>PROTECT</strong>!`;
         } else if (word === "Philosopher") {
           specialHint.className = "philosopher-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Question the enemies!<br>You can ask one<br><strong> YES</strong> or<strong> NO</strong> question!`;
