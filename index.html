@@ -100,6 +100,7 @@
     .role-card.shield { border-left-color: #0025a0; } .shield .role-icon { background: #0025a0; }
     .role-card.assassin { border-left-color: #8b5cf6; } .assassin .role-icon { background: #8b5cf6; }
     .role-card.king { border-left-color: #eab308; } .king .role-icon { background: linear-gradient(135deg, #eab308, #ca8a04); }
+    .role-card.frozen { border-left-color: #6fd1ff; } .frozen .role-icon { background: linear-gradient(135deg, #6fd1ff, #0443ca); }
     .role-card.lovers { border-left-color: #ff7abc; } .lovers .role-icon { background: linear-gradient(135deg, #e874ff, #fdb4ff); }
     .role-card.clueless { border-left-color: #06b6d4; } .clueless .role-icon { background: #06b6d4; }
 	  .role-card.echo { border-left-color: #6368ba; } .echo .role-icon { background: #6368ba; }
@@ -231,6 +232,7 @@
     .shield-role { color: #0025a0; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .assassin-role { color: #8b5cf6; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .king-role { color: #d97706; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .frozen-role { color: #4bc6ff; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .lovers-role { color: #ff78b7; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
 	  .echo-role { color: #6368ba; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .sheriff-role { color: #977d08; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
@@ -248,7 +250,7 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .imposter-hint, .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .lovers-hint, .sheriff-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .cultist-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint, .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .frozen-hint, .lovers-hint, .sheriff-hint, .echo-hint, .idiot-hint, .philosopher-hint, .maniac-hint, .cultist-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .dictator-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
@@ -261,6 +263,7 @@
     .viper-hint { color: #004b16; background: #9cc597; border-color: #004b16; }
     .shield-hint { color: #0025a0; background: #e0e0ff; border-color: #0025a0; }
     .king-hint { color: #d97706; background: #fefce8; border-color: #fde047; }
+    .frozen-hint { color: #4bc6ff; background: #dbfffc; border-color: #5ce7ff; }
     .lovers-hint { color: #ff78b7; background: #ffdcf2; border-color: #ff78b7; }
     .echo-hint { color: #6368ba; background: #d0dbff; border-color: #4338ca; }
     .sheriff-hint { color: #977d08; background: #fff4b9; border-color: #977d08; }
@@ -269,7 +272,7 @@
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .cultist-hint { color: #c47070; background: #ffefef; border-color: #c47070; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
-    .imposter-hint.show, .dictator-hint.show, .mastermind-hint.show, .hunter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .arsonist-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .lovers-hint.show, .echo-hint.show, .sheriff-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .cultist-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
+    .imposter-hint.show, .dictator-hint.show, .mastermind-hint.show, .hunter-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .jackal-hint.show, .arsonist-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .frozen-hint.show, .lovers-hint.show, .echo-hint.show, .sheriff-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .cultist-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -305,6 +308,9 @@
     .king-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #eab308, #ca8a04); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
     .king-announcement.show { opacity: 1; transform: translateY(0); }
 
+    .frozen-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #6fd1ff, #0443ca); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 179, 8, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
+    .frozen-announcement.show { opacity: 1; transform: translateY(0); }
+
     .lovers-announcement { text-align: center; padding: 20px 16px; background: linear-gradient(135deg, #ff3d87, #ff78b7); color: white; border-radius: 18px; font-size: clamp(16px, 4vw, 20px); font-weight: 700; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 6px 20px rgba(234, 8, 121, 0.4); width: 100%; line-height: 1.4; margin-bottom: 16px; }
     .lovers-announcement.show { opacity: 1; transform: translateY(0); }
     
@@ -332,6 +338,7 @@
     .role-list .shield-role { background: #e0e0ff; color: #0025a0; border-left-color: #0025a0; }
     .role-list .assassin-role { background: #f5f3ff; color: #8b5cf6; border-left-color: #8b5cf6; }
     .role-list .king-role { background: #fefce8; color: #d97706; border-left-color: #eab308; }
+    .role-list .frozen-role { background: #e8fdfe; color: #4bc6ff; border-left-color: #5ce7ff; }
     .role-list .lovers-role { background: #fee8f2; color: #ff78b7; border-left-color: #ff3d87; }
     .role-list .clueless-role { background: #ecfeff; color: #0891b2; border-left-color: #0891b2; }
     .role-list .echo-role { background: #d0cbff; color: #6368ba; border-left-color: #6368ba; }
@@ -343,6 +350,7 @@
     .role-list .shadow-role { background: #e2e2e2; color: #2b2b2b; border-left-color: #2b2b2b; }
     .assassin-target { font-size: 12px; color: #8b5cf6; font-weight: 600; margin-top: 4px; background: rgba(139, 92, 246, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .king-badge { font-size: 12px; color: #d97706; font-weight: 600; margin-top: 4px; background: rgba(234, 179, 8, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
+    .frozen-badge { font-size: 12px; color: #06afd9; font-weight: 600; margin-top: 4px; background: rgba(234, 179, 8, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .lovers-badge { font-size: 12px; color: #ff78b7; font-weight: 600; margin-top: 4px; background: rgba(234, 8, 147, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .clueless-word-display { font-size: 12px; color: #0891b2; font-weight: 600; margin-top: 4px; background: rgba(6, 182, 212, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .footer-note { margin-top: 24px; text-align: center; font-size: 13px; color: #666; padding: 0 12px; line-height: 1.5; max-width: 500px; width: 100%; }
@@ -809,7 +817,7 @@ poison-death.poison-death {
             <li><strong>Imposters:</strong> Some players are imposters - they DON'T know the secret word!</li>
             <li><strong>Discussion:</strong> Players discuss to figure out who the imposters are by saying a word related to the secret word they got</li>
             <li><strong>Voting:</strong> Vote to eliminate suspected imposters</li>
-            <li><strong>Winning:</strong> Civilians win if all impostors, the viper, the arsonist and the jackal are eliminated. Impostors win if they survive, same with Jackal and Viper. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. Arsonist needs to douse and set ablaze all players. King gets 2 votes. If lovers both make it to the end and complete atleast one of their goals they win.</li>
+            <li><strong>Winning:</strong> Civilians win if all impostors, the viper, the arsonist and the jackal are eliminated. Impostors win if they survive, same with Jackal and Viper. Jester wins if he/she gets voted out. Assassin wins if their target gets voted out. Arsonist needs to douse and set ablaze all players. King gets 2 votes. Frozen can't say their word on the first round. If lovers both make it to the end and complete atleast one of their goals they win.</li>
           </ol>
         </div>
         
@@ -829,6 +837,7 @@ poison-death.poison-death {
             <div class="role-card shield"><h4><span class="role-icon">🛡️</span>Shield</h4><p>Defend yourself if you're being voted! You can choose to vote out 1 person who voted for you.</p><div class="goal">Goal: Eliminate impostors, defend yourself!</div></div>
             <div class="role-card assassin"><h4><span class="role-icon">🗡️</span>Assassin</h4><p>Eliminate your target.</p><div class="goal">Goal: Get target voted out</div></div>
             <div class="role-card king"><h4><span class="role-icon">👑</span>King</h4><p>You get 2 votes.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
+            <div class="role-card frozen"><h4><span class="role-icon">🧊</span>Frozen</h4><p>You musn't say a word the first round.</p><div class="goal">Goal: Survive and complete your goals!</div></div>
             <div class="role-card lovers"><h4><span class="role-icon">🩷</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">🔊</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
@@ -1158,6 +1167,13 @@ poison-death.poison-death {
         King
       </label>
     </div>
+    
+    <div class="role-pill frozen-toggle" id="frozenContainer">
+      <label>
+        <input id="frozenToggle" type="checkbox" name="frozen">
+        Frozen
+      </label>
+    </div>
 
     <div class="role-pill lovers-toggle" id="loversContainer">
       <label>
@@ -1181,6 +1197,7 @@ poison-death.poison-death {
   <div class="status-section">
     <div id="revealTracker" class="reveal-tracker"></div>
     <div id="kingAnnouncement" class="king-announcement"></div>
+    <div id="frozenAnnouncement" class="frozen-announcement"></div>
     <div id="firstPlayer" class="first-player"></div>
     <button id="revealRolesBtn" class="reveal-roles-btn" style="display: none;">Reveal All Roles</button>
     <div id="rolesRevealBox" class="roles-reveal-box"></div>
@@ -1225,6 +1242,7 @@ let secretCategory = ""; // Store secret category globally for detective
 let assassinTarget = null; // Store assassin's target
 let playerNames = []; // Store custom player names
 let kingPlayer = null; // Store which player is king (index)
+let frozenPlayer = null; // Store which player is king (index)
 let loverIndexes = [];
 let cluelessWord = ""; // Store the wrong word given to the clueless player
 let imposterIndex = null;
@@ -1282,6 +1300,7 @@ const changeSubjectBtn = document.getElementById("changeSubjectBtn");
 const customSubjectInput = document.getElementById("customSubjectInput");
 const customSubjectBtn = document.getElementById("customSubjectBtn");
 const kingAnnouncement = document.getElementById("kingAnnouncement");
+const frozenAnnouncement = document.getElementById("frozenAnnouncement");
 
 
 // Slider elements
@@ -1316,6 +1335,7 @@ const viperToggle = document.getElementById("viperToggle");
 const shieldToggle = document.getElementById("shieldToggle");
 const assassinToggle = document.getElementById("assassinToggle");
 const kingToggle = document.getElementById("kingToggle");
+const frozenToggle = document.getElementById("frozenToggle");
 const loversToggle = document.getElementById("loversToggle");
 const cluelessToggle = document.getElementById("cluelessToggle");
 const echoToggle = document.getElementById("echoToggle");
@@ -1353,6 +1373,7 @@ const roleColors = {
 
   "Lovers": "#ff7abc",
   "King": "#eab308",
+  "Frozen": "#6fd1ff",
 
   "Crew": "#3b82f6"
 };
@@ -1412,6 +1433,7 @@ const viperContainer = document.getElementById("viperContainer");
 const shieldContainer = document.getElementById("shieldContainer");
 const assassinContainer = document.getElementById("assassinContainer");
 const kingContainer = document.getElementById("kingContainer");
+const frozenContainer = document.getElementById("frozenContainer");
 const loversContainer = document.getElementById("loversContainer");
 const cluelessContainer = document.getElementById("cluelessContainer");
 const echoContainer = document.getElementById("echoContainer");
@@ -1748,6 +1770,7 @@ viperToggle.checked = JSON.parse(localStorage.getItem("viperEnabled")) || false;
 shieldToggle.checked = JSON.parse(localStorage.getItem("shieldEnabled")) || false;
 assassinToggle.checked = JSON.parse(localStorage.getItem("assassinEnabled")) || false;
 kingToggle.checked = JSON.parse(localStorage.getItem("kingEnabled")) || false;
+frozenToggle.checked = JSON.parse(localStorage.getItem("frozenEnabled")) || false;
 loversToggle.checked = JSON.parse(localStorage.getItem("loversEnabled")) || false;
 cluelessToggle.checked = JSON.parse(localStorage.getItem("cluelessEnabled")) || false;
 echoToggle.checked = JSON.parse(localStorage.getItem("echoEnabled")) || false;
@@ -2156,6 +2179,8 @@ function changeSubject() {
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  frozenAnnouncement.classList.remove('show');
+  frozenAnnouncement.textContent = '';
 }
 
 function enableGenerateButton() {
@@ -2314,6 +2339,21 @@ function announceKingPlayer() {
     }, 500);
   }
 }
+function announceFrozenPlayer() {
+  // Check the global flags (set during generation) instead of current toggle state
+  // because randomizer might have enabled it internally for this round
+  const isFrozenActive = words.some((_, i) => i === frozenPlayer);
+  
+  if (frozenPlayer !== null) {
+    const playerName = playerNames[frozenPlayer] || `Player ${frozenPlayer + 1}`;
+    
+    setTimeout(() => {
+      frozenAnnouncement.textContent = `${playerName} is Frozen!\nThey can't say a word in the first round!`;
+      frozenAnnouncement.classList.add('show');
+      frozenAnnouncement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 500);
+  }
+}
 // SELECT FIRST PLAYER //
 function selectFirstPlayer() {
   const randomPlayer = Math.floor(Math.random() * totalCards) + 1;
@@ -2355,6 +2395,7 @@ function revealAllRoles() {
     let roleClass = "";
     let specialNote = "";
     let isKing = (i === kingPlayer);
+    let isFrozen = (i === frozenPlayer);
     let isLovers = loverIndexes.includes(i);
     
     if (word === secretItem) {
@@ -2431,7 +2472,15 @@ function revealAllRoles() {
       } else {
         roleClass = "king-role";
       }
-    }    
+    }
+    
+    if (isFrozen) {
+      if (roleClass) {
+        roleClass += " frozne-role";
+      } else {
+        roleClass = "frozen-role";
+      }
+    } 
     
     if (isLovers) {
       if (roleClass) {
@@ -2448,10 +2497,11 @@ li.innerHTML = `
     <span class="player-number">${playerName}</span>
     <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end;">
       <span class="role-name ${roleClass}">
-        ${roleName}${isKing ? ' (King)' : ''}${isLovers ? ' (Lovers)' : ''}
+        ${roleName}${isKing ? ' (King)' : ''}${isFrozen ? ' (Frozen)' : ''}${isLovers ? ' (Lovers)' : ''}
       </span>
 
       ${isKing ? '<div class="king-badge">Has 2 votes!</div>' : ''}
+      ${isFrozen ? '<div class="frozen-badge">Cannot speak!</div>' : ''}
       ${isLovers ? '<div class="lovers-badge">Has a lover!</div>' : ''}
     </div>
   </div>
@@ -3999,6 +4049,7 @@ const roleToggleMap = {
   Assassin: "assassinToggle",
 
   King: "kingToggle",
+  Frozen: "frozenToggle",
   Lovers: "loversToggle"
 };
 
@@ -4119,8 +4170,11 @@ firstPlayerBox.textContent = "";
   rolesRevealBox.innerHTML = '';
   kingAnnouncement.classList.remove('show');
   kingAnnouncement.textContent = '';
+  frozenAnnouncement.classList.remove('show');
+  frozenAnnouncement.textContent = '';
   errorBox.textContent = "";
   kingPlayer = null;
+  frozenPlayer = null;
   loverIndexes = null;
   cluelessWord = "";
 
@@ -4206,6 +4260,7 @@ firstPlayerBox.textContent = "";
   let useCultist = cultistToggle.checked;
   let useShadow = shadowToggle.checked;
   let useKing = kingToggle.checked;
+  let useFrozen = frozenToggle.checked;
   let useLovers = loversToggle.checked;
 
   // RANDOMIZE LOGIC
@@ -4227,6 +4282,7 @@ useManiac = false;
 useCultist = false;
 useShadow = false;
 useKing = false;
+useFrozen = false;
 useLovers = false;
 
 // 2. Calculate available slots (non-imposters)
@@ -4334,10 +4390,18 @@ if (loversToggle.checked && playerCount >= 2) {
 
 // 👑 King
 if (kingToggle.checked) {
-  useKing = Math.random() < 0.5;
+  useKing = Math.random() < 0.33;
 } else {
   useKing = false;
 }
+
+// 🧊 Frozen
+if (frozenToggle.checked) {
+  useFrozen = Math.random() < 0.33;
+} else {
+  useFrozen = false;
+}
+
   } else {
       // Manual mode validation
       const civilianSlots = playerCount - imposterCount;
@@ -4638,6 +4702,11 @@ useShadow = selectedEvilHelper === "Shadow";
   // King
   if (useKing) {
     kingPlayer = Math.floor(Math.random() * playerCount);
+  }
+
+  // Frozen
+  if (useFrozen) {
+    frozenPlayer = Math.floor(Math.random() * playerCount);
   }
 
     loverIndexes = [];
@@ -5063,6 +5132,13 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
           wordBox.appendChild(kingText);
         }
 
+        if (frozenPlayer === i) {
+          const frozenText = document.createElement("div");
+          frozenText.className = "frozen-role";
+          frozenText.textContent = "Frozen";
+          wordBox.appendChild(frozenText);
+        }
+
 
         
         wordBox.classList.add("word-revealed");
@@ -5163,6 +5239,15 @@ if (realEvilIndex !== -1) {
           card.appendChild(kingHint);
           setTimeout(() => kingHint.classList.add('show'), 10);
         }
+
+        if (frozenPlayer === i) {
+          const frozenHint = document.createElement("div");
+          frozenHint.className = "frozen-hint";
+          frozenHint.innerHTML = `<strong>You are Frozen!</strong><br>Cannot say the first word!`;
+          card.appendChild(frozenHint);
+          setTimeout(() => frozenHint.classList.add('show'), 10);
+        }
+
 if (loverIndexes.includes(i)) {
           const loversHint = document.createElement("div");
           loversHint.className = "lovers-hint";
@@ -5203,6 +5288,10 @@ if (loverIndexes.includes(i)) {
         if (kingHint) kingHint.classList.remove('show');
 
         if (specialHint) specialHint.classList.remove('show');
+        const frozenHint = card.querySelector('.frozen-hint');
+        if (frozenHint) frozenHint.classList.remove('show');
+
+        if (specialHint) specialHint.classList.remove('show');
         const loversHint = card.querySelector('.lovers-hint');
         if (loversHint) loversHint.classList.remove('show');
 
@@ -5216,6 +5305,9 @@ if (loverIndexes.includes(i)) {
 
   if (kingHint && kingHint.parentNode)
     kingHint.parentNode.removeChild(kingHint);
+
+  if (frozenHint && frozenHint.parentNode)
+    frozenHint.parentNode.removeChild(frozenHint);
 
   // 🔥 REMOVE HUNTER HINT
   const hunterHint = card.querySelector(".hunter-hint");
@@ -5409,6 +5501,10 @@ assassinToggle.addEventListener("change", () => {
 
 kingToggle.addEventListener("change", () => {
   localStorage.setItem("kingEnabled", kingToggle.checked);
+});
+
+frozenToggle.addEventListener("change", () => {
+  localStorage.setItem("frozenEnabled", frozenToggle.checked);
 });
 
 loversToggle.addEventListener("change", () => {
