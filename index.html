@@ -5189,7 +5189,15 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
     roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
   });
 
-  Object.entries(roleCounts).forEach(([role, count]) => {
+  const shuffledRoles = Object.entries(roleCounts);
+
+// Fisher–Yates shuffle
+for (let i = shuffledRoles.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [shuffledRoles[i], shuffledRoles[j]] = [shuffledRoles[j], shuffledRoles[i]];
+}
+
+shuffledRoles.forEach(([role, count]) => {
 
   const color = roleColors[role] || "#ffffff";
   const isCivilian = role === "Civilian";
