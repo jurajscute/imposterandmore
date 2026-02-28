@@ -3012,12 +3012,21 @@ function showArsonistDecisionScreen() {
 
   const arsonistIndex = currentVoterIndex;
 
-  // 🔥 Check if ignite is available
-  if (canArsonistIgnite(arsonistIndex)) {
+  const aliveOthers = players
+    .map((p, i) => ({ p, i }))
+    .filter(obj => obj.p.alive && obj.i !== arsonistIndex);
+
+  const allDoused =
+    aliveOthers.length > 0 &&
+    aliveOthers.every(obj => arsonistDoused.has(obj.i));
+
+  // 🔥 IF EVERYONE IS DOUSED → SHOW IGNITE
+  if (allDoused) {
     showArsonistIgniteScreen(arsonistIndex);
     return;
   }
 
+  // 🔥 OTHERWISE SHOW DOUSE MENU
   votingBox.innerHTML = `
     <div class="arsonist-screen">
       <h3>🔥 Choose someone to Douse</h3>
@@ -3031,22 +3040,46 @@ function showArsonistDecisionScreen() {
 
     if (!player.alive) return;
     if (index === arsonistIndex) return;
-    if (arsonistDoused.has(index)) return; // prevent redousing
+    if (arsonistDoused.has(index)) return;
 
     const btn = document.createElement("button");
     btn.className = "reveal-arsonist-btn";
     btn.textContent = player.name;
 
     btn.onclick = () => {
-  arsonistDoused.add(index);
-  currentVoterIndex++;
-  setTimeout(() => {
-    showNextVoter();
-  }, 150);
-};
+
+      arsonistDoused.add(index);
+
+      currentVoterIndex++;
+      setTimeout(() => {
+        showNextVoter();
+      }, 150);
+    };
 
     optionsBox.appendChild(btn);
   });
+}
+
+function showArsonistIgniteScreen(arsonistIndex) {
+
+  votingBox.innerHTML = `
+    <div class="arsonist-screen">
+      <h3>🔥 Everyone is covered in gasoline...</h3>
+    </div>
+    <div class="roles-reveal-content">
+      <button id="igniteBtn" class="reveal-evil-btn">
+        🔥 IGNITE 🔥
+      </button>
+    </div>
+  `;
+
+  document.getElementById("igniteBtn").onclick = () => {
+
+    endGame(
+      `<strong>${players[arsonistIndex].name} the Arsonist burns everyone and wins!</strong>`,
+      "Arsonist"
+    );
+  };
 }
 
 function canArsonistIgnite(arsonistIndex) {
@@ -3515,6 +3548,11 @@ votingBox.innerHTML += `
   </div>
 `;
 
+if (players[currentVoterIndex].role === "Arsonist") {
+  showArsonistDecisionScreen();
+  return;
+}
+
   // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
 
@@ -3609,6 +3647,11 @@ arsonistMarkedTarget = null;
       </div>
     `;
   }
+
+  if (players[currentVoterIndex].role === "Arsonist") {
+  showArsonistDecisionScreen();
+  return;
+}
 
   // ✅ Add Continue button HERE
    votingBox.innerHTML += meetingMessages;
@@ -3719,6 +3762,10 @@ clearContinueButtons();
 
   continueBtn.onclick = () => {
     hunterPendingKillIndex = null;
+    if (players[currentVoterIndex].role === "Arsonist") {
+  showArsonistDecisionScreen();
+  return;
+}
     nextRound();
   };
 
