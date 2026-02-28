@@ -311,8 +311,13 @@
     .roles-reveal-box { text-align: center; padding: 0; background: #fff; color: #222; border-radius: 16px; font-size: clamp(16px, 4vw, 18px); font-weight: 600; opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; line-height: 1.4; margin-bottom: 16px; max-height: 0; overflow: hidden; border: 2px solid #4f46e5; }
     /* FIXED SCROLLING HERE */
     .roles-reveal-box.show { opacity: 1; transform: translateY(0); max-height: 600px; overflow-y: auto; transition: opacity 0.5s, transform 0.5s, max-height 0.5s; }
-    .roles-reveal-header { padding: 20px 16px; background: linear-gradient(135deg, #87adff, #7679ff); color: white; border-radius: 14px 14px 0 0; margin: 0; }
-    .roles-reveal-header h3 { margin: 0; font-size: clamp(18px, 4vw, 22px); font-weight: 800; }
+    .roles-reveal-header {
+  padding: 20px 16px;
+  background: var(--header-bg, linear-gradient(135deg, #87adff, #7679ff));
+  color: white;
+  border-radius: 14px 14px 0 0;
+  margin: 0;
+}
     .roles-reveal-content { padding: 20px; }
     .role-list { text-align: left; margin: 0; padding: 0; list-style: none; }
     .role-list li { margin-bottom: 12px; padding: 14px 16px; background: #f9fafb; border-radius: 12px; font-size: 15px; display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s, box-shadow 0.2s; border-left: 4px solid #4f46e5; }
@@ -2750,7 +2755,7 @@ if (voter.role === "Arsonist") {
   // 🎭 Render Screen
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h2 style="color:white">
+      <h2>
         👑 ${dictator.name}, you control the narrative.
       </h2>
       <p>Silence one voice… or let chaos unfold.</p>
