@@ -1342,6 +1342,10 @@ let isArsonistChoosing = false;
 let arsonistDoused = new Set();
 let arsonistAlive = true;
 
+let medicChoosingAction = false;
+let medicActionType = null; // "heal" or "protect"
+let medicIndex = null;
+
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
 let activeDetectiveCardElement = null;
@@ -2775,6 +2779,13 @@ if (voter.role === "Arsonist") {
   return;
 }
 
+ // 🚑 MEDIC
+if (voter.role === "Medic") {
+  showMedicAbilityScreen();
+  return;
+}
+
+
   // ✅ Normal advance
   currentVoterIndex++;
   setTimeout(() => {
@@ -3156,6 +3167,78 @@ function showHunterDecisionScreen() {
   };
 }
 
+function showMedicAbilityScreen() {
+
+  const medic = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="medic-screen">
+      <h3>⚕️ ${medic.name}, choose your ability</h3>
+    </div>
+    <div class="roles-reveal-content" id="medicAbilityOptions"></div>
+  `;
+
+  const medicAbilityOptions = document.getElementById("medicAbilityOptions");
+
+  ["heal", "protect"].forEach(action => {
+
+    const btn = document.createElement("button");
+    btn.textContent = action === "heal"
+      ? "Heal (Remove Poison)"
+      : "Protect (Block Poison/Kill)";
+    btn.className = "reveal-viper-btn";
+
+    btn.onclick = () => {
+      showMedicTargetScreen(action);
+    };
+
+    medicAbilityOptions.appendChild(btn);
+  });
+}
+
+function showMedicTargetScreen(actionType) {
+
+  const medic = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="medic-screen">
+      <h3>⚕️ ${medic.name}, choose who to ${actionType.toUpperCase()}</h3>
+    </div>
+    <div class="roles-reveal-content" id="medicOptions"></div>
+  `;
+
+  const medicOptions = document.getElementById("medicOptions");
+
+  players.forEach((player, index) => {
+
+    if (player.alive && index !== currentVoterIndex) {
+
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-viper-btn";
+
+      btn.onclick = () => {
+
+        if (actionType === "heal") {
+          players[index].poisoned = false;
+        }
+
+        if (actionType === "protect") {
+          players[index].protected = true;
+        }
+
+        // Continue voting (IDENTICAL to Viper)
+        currentVoterIndex++;
+        setTimeout(() => {
+          showNextVoter();
+        }, 150);
+      };
+
+      medicOptions.appendChild(btn);
+    }
+  });
+}
+
 function showArsonistDecisionScreen() {
 
   const arsonistIndex = currentVoterIndex;
@@ -3351,61 +3434,74 @@ skipBtn.onclick = () => {
 
 function finishVoting() {
 
-  meetingMessages = ""; // always reset at start
+  meetingMessages = "";
 
   // =====================================================
   // 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
   // =====================================================
 
-// 🐍 Activate poison scheduled last round
-if (viperAnnouncedPoison !== null) {
-  viperActivePoison = viperAnnouncedPoison;
-  viperAnnouncedPoison = null;
-}
-
-  // 🐍 Activate previously announced poison
-if (
-  viperActivePoison !== null &&
-  players[viperActivePoison] &&
-  players[viperActivePoison].alive
-) {
-  const poisoned = players[viperActivePoison];
-  poisoned.alive = false;
-  if (
-  hunterMarkedTarget !== null &&
-  !players[hunterMarkedTarget]?.alive
-) {
-  hunterMarkedTarget = null;
-}
-arsonistMarkedTarget = null;
-
-  const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
-
-  // 🔥 Second message (role reveal)
-  meetingMessages += `
-    <div class="poison-death">
-      <h3>🐍 ${poisoned.name}'s heart got torn through by poison'.</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-          ${poisoned.role}
-        </span>
-      </p>
-    </div>
-  `;
-
-  if (loverDeathIndex !== null) {
-    const lover = players[loverDeathIndex];
-    meetingMessages += `
-      <div class="lover-death-message">
-        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-      </div>
-    `;
+  // Activate scheduled poison
+  if (viperAnnouncedPoison !== null) {
+    viperActivePoison = viperAnnouncedPoison;
+    viperAnnouncedPoison = null;
   }
 
-  viperActivePoison = null;
-viperCooldown = false;
-}
+  // Apply poison if valid
+  if (
+    viperActivePoison !== null &&
+    players[viperActivePoison] &&
+    players[viperActivePoison].alive
+  ) {
+
+    const poisoned = players[viperActivePoison];
+
+    // 🛡️ Medic Protection Check
+    if (poisoned.protected) {
+
+      meetingMessages += `
+        <div class="roles-reveal-content">
+          <h3>⚕️ ${poisoned.name} was protected from poison by a Medic!</h3>
+        </div>
+      `;
+
+    } else {
+
+      poisoned.alive = false;
+
+      if (hunterMarkedTarget !== null &&
+          !players[hunterMarkedTarget]?.alive) {
+        hunterMarkedTarget = null;
+      }
+
+      arsonistMarkedTarget = null;
+
+      const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
+
+      meetingMessages += `
+        <div class="poison-death">
+          <h3>🐍 ${poisoned.name}'s heart was torn through by poison.</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+              ${poisoned.role}
+            </span>
+          </p>
+        </div>
+      `;
+
+      if (loverDeathIndex !== null) {
+        const lover = players[loverDeathIndex];
+        meetingMessages += `
+          <div class="lover-death-message">
+            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          </div>
+        `;
+      }
+    }
+
+    viperActivePoison = null;
+    viperCooldown = false;
+  }
 
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
@@ -3427,23 +3523,18 @@ viperCooldown = false;
   });
 
   let maxVotes = Math.max(...Object.values(votes || {0:0}));
-  let topPlayers = Object.keys(votes).filter(
-    p => votes[p] === maxVotes
-  );
+  let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
 
-  let eliminatedIndex = null;
-
-  if (topPlayers.length === 1) {
-    eliminatedIndex = parseInt(topPlayers[0]);
-  }
+  let eliminatedIndex = topPlayers.length === 1
+    ? parseInt(topPlayers[0])
+    : null;
 
   // =====================================================
-  // 🏹 PHASE 3 — APPLY HUNTER KILL BEFORE RESOLUTION
+  // 🏹 PHASE 3 — HUNTER
   // =====================================================
-
-  let hunterKilledIndex = null;
 
   if (hunterPendingKill !== null) {
+
     const targetIndex = Array.isArray(hunterPendingKill)
       ? hunterPendingKill[0]
       : hunterPendingKill;
@@ -3451,33 +3542,25 @@ viperCooldown = false;
     const target = players[targetIndex];
 
     if (target && target.alive) {
-      target.alive = false;
-      if (
-  hunterMarkedTarget !== null &&
-  !players[hunterMarkedTarget]?.alive
-) {
-  hunterMarkedTarget = null;
-}
-arsonistMarkedTarget = null;
-      hunterKilledIndex = targetIndex;
 
-      const loverDeathIndex = handleLoverChainDeath(targetIndex);
+      if (target.protected) {
 
-      meetingMessages += `
-        <hr>
-        <div class="roles-reveal-content">
-          <h3>💀 ${target.name} was hunted down!</h3>
-          <p style="font-style: italic;">
-            A silent hunter struck during the meeting...
-          </p>
-        </div>
-      `;
-
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
         meetingMessages += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          <hr>
+          <div class="roles-reveal-content">
+            <h3>⚕️ ${target.name} was protected from the Hunter by a Medic!</h3>
+          </div>
+        `;
+
+      } else {
+
+        target.alive = false;
+        handleLoverChainDeath(targetIndex);
+
+        meetingMessages += `
+          <hr>
+          <div class="roles-reveal-content">
+            <h3>💀 ${target.name} was hunted down!</h3>
           </div>
         `;
       }
@@ -3486,104 +3569,93 @@ arsonistMarkedTarget = null;
     hunterPendingKill = null;
   }
 
-  // 🐍 Schedule poison for next meeting
-if (viperNextPoison !== null) {
-  viperAnnouncedPoison = viperNextPoison;
+  // =====================================================
+  // 🐍 Schedule Next Poison
+  // =====================================================
 
-  meetingMessages += `
-    <hr>
-    <div class="roles-reveal-content">
-      <h3>🧪 ${players[viperNextPoison].name} throws up violently...</h3>
-      <p>Their future doesn't look so bright.</p>
-    </div>
-  `;
+  if (viperNextPoison !== null) {
 
-  viperNextPoison = null;
-  viperCooldown = true;
-}
+    viperAnnouncedPoison = viperNextPoison;
 
-// =====================================================
-// ⭐ PHASE 3B — APPLY SHERIFF ACTION
-// =====================================================
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🧪 ${players[viperNextPoison].name} throws up violently...
+          </h3>
+          <p> Their future doesn't seem too bright.</p>
+      </div>
+    `;
 
-if (sheriffShotTarget !== null) {
+    viperNextPoison = null;
+    viperCooldown = true;
+  }
 
-  const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
-  const sheriff = players[sheriffIndex];
-  const target = players[sheriffShotTarget];
+  // =====================================================
+  // ⭐ SHERIFF
+  // =====================================================
 
-  if (sheriff && sheriff.alive && target && target.alive) {
+  if (sheriffShotTarget !== null) {
 
-    const isEvil = sheriffAllowedRoles.includes(target.role);
+    const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
+    const sheriff = players[sheriffIndex];
+    const target = players[sheriffShotTarget];
 
-    if (isEvil) {
+    if (sheriff && sheriff.alive && target && target.alive) {
 
-      target.alive = false;
-      const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
+      const isEvil = sheriffAllowedRoles.includes(target.role);
 
-      meetingMessages += `
-        <hr>
-        <div class="roles-reveal-content">
-          <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[target.role]}; font-weight:bold;">
-              ${target.role}
-            </span>
-          </p>
-        </div>
-      `;
+      if (isEvil) {
 
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
+        if (target.protected) {
+
+          meetingMessages += `
+            <hr>
+            <div class="roles-reveal-content">
+              <h3>🛡️ ${target.name} was protected from the Sheriff by a Medic!</h3>
+            </div>
+          `;
+
+        } else {
+
+          target.alive = false;
+          handleLoverChainDeath(sheriffShotTarget);
+
+          meetingMessages += `
+            <hr>
+            <div class="roles-reveal-content">
+              <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
+            </div>
+          `;
+        }
+
+      } else {
+
+        sheriff.alive = false;
+        handleLoverChainDeath(sheriffIndex);
+
         meetingMessages += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-          </div>
-        `;
-      }
-
-    } else {
-
-      sheriff.alive = false;
-      const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
-
-      meetingMessages += `
-        <hr>
-        <div class="roles-reveal-content">
-          <h3>🪦 ${sheriff.name} the Sheriff shot an innocent person and died!</h3>
-        </div>
-      `;
-
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
-        meetingMessages += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+          <hr>
+          <div class="roles-reveal-content">
+            <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
           </div>
         `;
       }
     }
+
+    sheriffShotTarget = null;
   }
 
-  sheriffShotTarget = null;
-}
-
   // =====================================================
-  // 🛡 PHASE 4 — RESOLVE VOTE
+  // 🗳 RESOLVE VOTE
   // =====================================================
 
   let screenHTML = "";
 
-  // ⚖️ Tie
   if (eliminatedIndex === null) {
 
     screenHTML = `
       <div class="roles-reveal-header">
         <h2>⚖️ It's a Tie!</h2>
-      </div>
-      <div class="roles-reveal-content">
-        <p>No one is eliminated by vote.</p>
       </div>
     `;
 
@@ -3591,103 +3663,64 @@ if (sheriffShotTarget !== null) {
 
     const eliminatedPlayer = players[eliminatedIndex];
 
-    // 🎭 Jester
-    if (eliminatedPlayer.role === "Jester") {
-      endGame(
-        `<strong>${eliminatedPlayer.name} the Jester wins!</strong>`,
-        "Jester"
-      );
-      return;
-    }
+    if (eliminatedPlayer.alive) {
 
-    // 🛡 Shield logic
-    if (eliminatedPlayer.role === "Shield") {
-
-      // 🔥 If hunter killed them first
-      if (!eliminatedPlayer.alive) {
+      if (eliminatedPlayer.protected) {
 
         screenHTML = `
           <div class="roles-reveal-header">
-            <h2 style="color:${roleColors["Shield"]}">
-              🛡️ ${eliminatedPlayer.name}'s Shield shattered...
-            </h2>
-          </div>
-          <div class="roles-reveal-content">
-            <p>The Shield was cut down before it could activate.</p>
+            <h2>🛡️ ${eliminatedPlayer.name} was protected from execution!</h2>
           </div>
         `;
 
       } else {
 
-        // Shield activates normally
-        // (Keep your existing shield retaliation logic here)
-        // Just render it and return early
-
-        renderShieldRetaliation(eliminatedIndex);
-        return;
-      }
-
-    } else {
-
-      // 🗳 Normal elimination
-      if (eliminatedPlayer.alive) {
         eliminatedPlayer.alive = false;
-        if (
-  hunterMarkedTarget !== null &&
-  !players[hunterMarkedTarget]?.alive
-) {
-  hunterMarkedTarget = null;
-}
-arsonistMarkedTarget = null;
         handleLoverChainDeath(eliminatedIndex);
-      }
 
-      screenHTML = `
-        <div class="roles-reveal-header">
-          <h2>${eliminatedPlayer.name} has been voted!</h2>
-        </div>
-        <div class="roles-reveal-content">
-          <p>
-            They were the 
-            <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
-              ${eliminatedPlayer.role}
-            </span>
-          </p>
-        </div>
-      `;
+        screenHTML = `
+          <div class="roles-reveal-header">
+            <h2>${eliminatedPlayer.name} has been voted!</h2>
+          </div>
+          <div class="roles-reveal-content">
+            <p>
+              They were the 
+              <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+                ${eliminatedPlayer.role}
+              </span>
+            </p>
+          </div>
+        `;
+      }
     }
   }
 
   // =====================================================
-  // 🎨 PHASE 5 — RENDER EVERYTHING
+  // 🎨 RENDER
   // =====================================================
 
   votingBox.innerHTML = screenHTML;
 
-  // Vote summary
-votingBox.innerHTML += `
-  <div class="vote-summary">
-    <hr>
-    <h3>🗳️ Vote Results</h3>
-    ${Object.keys(votes).map(i => `
-      <p>
-        <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-      </p>
-    `).join("")}
-  </div>
-`;
+  votingBox.innerHTML += `
+    <div class="vote-summary">
+      <hr>
+      <h3>🗳️ Vote Results</h3>
+      ${Object.keys(votes).map(i => `
+        <p>
+          <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+        </p>
+      `).join("")}
+    </div>
+  `;
 
-  // Meeting messages (poison + hunter)
   votingBox.innerHTML += meetingMessages;
 
-  // Continue button
   clearContinueButtons();
   const btn = document.createElement("button");
   btn.textContent = "Continue";
   btn.className = "reveal-roles-btn";
   btn.onclick = () => nextRound();
   votingBox.appendChild(btn);
-
 }
 
 function renderShieldRetaliation(eliminatedIndex) {
