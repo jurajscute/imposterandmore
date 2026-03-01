@@ -3675,51 +3675,42 @@ medicHealMessage = "";
   // 🗳 RESOLVE VOTE
   // =====================================================
 
-  let screenHTML = "";
+let screenHTML = "";
 
-  if (eliminatedIndex === null) {
+if (eliminatedIndex === null) {
+
+  screenHTML = `
+    <div class="roles-reveal-header">
+      <h2>⚖️ It's a Tie!</h2>
+    </div>
+  `;
+
+} else {
+
+  const eliminatedPlayer = players[eliminatedIndex];
+
+  if (eliminatedPlayer.alive) {
+
+    // 🗳 Always eliminate on vote (Protect does NOT stop this)
+    eliminatedPlayer.alive = false;
+
+    handleLoverChainDeath(eliminatedIndex);
 
     screenHTML = `
       <div class="roles-reveal-header">
-        <h2>⚖️ It's a Tie!</h2>
+        <h2>${eliminatedPlayer.name} has been voted!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>
+          They were the 
+          <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
+            ${eliminatedPlayer.role}
+          </span>
+        </p>
       </div>
     `;
-
-  } else {
-
-    const eliminatedPlayer = players[eliminatedIndex];
-
-    if (eliminatedPlayer.alive) {
-
-      if (eliminatedPlayer.protected) {
-
-        screenHTML = `
-          <div class="roles-reveal-header">
-            <h2>🛡️ ${eliminatedPlayer.name} was protected from execution!</h2>
-          </div>
-        `;
-
-      } else {
-
-        eliminatedPlayer.alive = false;
-        handleLoverChainDeath(eliminatedIndex);
-
-        screenHTML = `
-          <div class="roles-reveal-header">
-            <h2>${eliminatedPlayer.name} has been voted!</h2>
-          </div>
-          <div class="roles-reveal-content">
-            <p>
-              They were the 
-              <span style="color:${roleColors[eliminatedPlayer.role]}; font-weight:bold;">
-                ${eliminatedPlayer.role}
-              </span>
-            </p>
-          </div>
-        `;
-      }
-    }
   }
+}
 
   // =====================================================
   // 🎨 RENDER
