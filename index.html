@@ -5229,6 +5229,20 @@ while (imposters < imposterCount) {
     imposters++;
   }
 }
+// Trickster roles
+const tricksterPool = [];
+
+if (useJester) tricksterPool.push("Jester");
+if (useDoubletake) tricksterPool.push("Doubletake");
+
+let selectedTrickster = null;
+
+if (tricksterPool.length > 0) {
+  const randomIndex = Math.floor(Math.random() * tricksterPool.length);
+  selectedTrickster = tricksterPool[randomIndex];
+}
+useJester = selectedTrickster === "Jester";
+useDoubletake = selectedTricskter === "Doubletake";
 
 // Evil helper roles (can only have ONE)
 const evilHelperPool = [];
