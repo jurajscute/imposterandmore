@@ -2767,7 +2767,11 @@ function castVote(targetIndex) {
   if (voter.role === "Viper" && !viperChoosingPoison) {
 
   // 🐍 If refueling, show cooldown screen instead
-if (viperAnnouncedPoison !== null || viperActivePoison !== null) {
+if (
+  viperNextPoison !== null ||
+  viperAnnouncedPoison !== null ||
+  viperActivePoison !== null
+) {
   showViperCooldownScreen();
   return;
 }
