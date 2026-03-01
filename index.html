@@ -3694,9 +3694,9 @@ if (
   meetingMessages += `
     <hr>
     <div class="roles-reveal-content">
-      <h3>🔫 A gun shot was heard...</h3>
+      <h3>🩸 A gun shot was heard...</h3>
       <p>
-        ${target.name} fired a shot at the Hunter but he evaded the shot putting a dagger into ${target.name}'s heart'.
+        ${target.name} fired a shot at the Hunter but he evaded the shot putting a dagger into ${target.name}'s heart.
       </p>
       <p>
         They were the 
@@ -3740,28 +3740,57 @@ if (butcherPendingKill !== null) {
   let butcherResolved = false;
 
   // ⭐ SPECIAL DUEL: Sheriff shot Butcher
-  if (
-    target &&
-    target.role === "Sheriff" &&
-    sheriffShotTarget !== null &&
-    players[sheriffShotTarget]?.role === "Butcher"
-  ) {
+  // ⭐ MUTUAL ATTACK: Sheriff & Butcher target each other
+if (
+  target &&
+  target.role === "Sheriff" &&
+  sheriffShotTarget !== null &&
+  players[sheriffShotTarget]?.role === "Butcher"
+) {
 
-    const butcherIndex = sheriffShotTarget;
-    const butcher = players[butcherIndex];
+  const butcherIndex = sheriffShotTarget;
+  const butcher = players[butcherIndex];
+  const sheriffIndex = targetIndex;
+  const sheriff = players[sheriffIndex];
 
-    if (butcher && butcher.alive) {
-      butcher.alive = false;
-      handleLoverChainDeath(butcherIndex);
-    }
+  // 🛡️ If Butcher is protected → Butcher wins
+  if (butcher.protected) {
+
+    sheriff.alive = false;
+    handleLoverChainDeath(sheriffIndex);
+
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🛡️🩸 The Butcher was shielded!</h3>
+        <p>
+          The Sheriff's bullet ricochets off of a Medic's protection.
+        </p>
+        <p>
+          The Butcher slaughtered the Sheriff.
+        </p>
+        <p>
+          ${sheriff.name} was the 
+          <span style="color:${roleColors["Sheriff"]}; font-weight:bold;">
+            Sheriff
+          </span>
+        </p>
+      </div>
+    `;
+
+  } else {
+
+    // 🔫 Normal duel — Sheriff wins
+    butcher.alive = false;
+    handleLoverChainDeath(butcherIndex);
 
     meetingMessages += `
       <hr>
       <div class="roles-reveal-content">
         <h3>🩸 A scream echoes throughout the room...</h3>
         <p>
-          The Butcher frantically slashed at the Sheriff —
-          but the Sheriff was just slightly faster.
+          The Butcher lunged —
+          but the Sheriff fired first.
         </p>
         <p>
           🔪 ${butcher.name} was shot down.
@@ -3774,9 +3803,10 @@ if (butcherPendingKill !== null) {
         </p>
       </div>
     `;
-
-    butcherResolved = true;
   }
+
+  butcherResolved = true;
+}
 
   // 🔪 NORMAL BUTCHER KILL
   if (!butcherResolved && target && target.alive) {
