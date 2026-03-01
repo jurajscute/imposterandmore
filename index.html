@@ -4024,15 +4024,18 @@ if (eliminatedIndex !== null) {
   }
 }
 
-// 🎯 ASSASSIN — Wins if their marked target is voted out
-if (assassinMarkedTarget !== null && eliminatedIndex === assassinMarkedTarget) {
+// 🎯 ASSASSIN — Wins if their target is voted out
+if (
+  useAssassin &&
+  assassinTarget !== null &&
+  eliminatedIndex === assassinTarget - 1
+) {
 
-  const assassinIndex = players.findIndex(p => p.role === "Assassin");
-  const assassin = players[assassinIndex];
+  const assassinPlayer = players.find(p => p.role === "Assassin");
 
-  if (assassin && assassin.alive) {
+  if (assassinPlayer && assassinPlayer.alive) {
     endGame(
-      `<strong>${assassin.name} the Assassin wins!</strong><br>
+      `<strong>${assassinPlayer.name} the Assassin wins!</strong><br>
        Their target was voted out!`,
       "Assassin"
     );
