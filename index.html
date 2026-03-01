@@ -1380,6 +1380,9 @@ let medicActionType = null; // "heal" or "protect"
 let medicIndex = null;
 let medicHealMessage = "";
 
+let butcherPendingKill = null;
+let butcherRevealMessage = "";
+
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
 let activeDetectiveCardElement = null;
@@ -2831,6 +2834,12 @@ if (voter.role === "Medic") {
   return;
 }
 
+// 🔪 BUTCHER
+if (voter.role === "Butcher") {
+  showButcherKillScreen();
+  return;
+}
+
 
   // ✅ Normal advance
   currentVoterIndex++;
@@ -3241,6 +3250,69 @@ function showMedicAbilityScreen() {
   });
 }
 
+function showButcherKillScreen() {
+
+  const butcher = players[currentVoterIndex];
+
+  votingBox.innerHTML = `
+    <div class="dictator-screen">
+      <h3>🔪 ${butcher.name}, sharpen your blade...</h3>
+    </div>
+    <div class="roles-reveal-content">
+      <button id="butcherKillBtn" class="reveal-evil-btn">
+        KILL
+      </button>
+    </div>
+  `;
+
+  document.getElementById("butcherKillBtn").onclick = () => {
+
+    const aliveTargets = players
+      .map((p, i) => ({ p, i }))
+      .filter(obj =>
+        obj.p.alive &&
+        obj.i !== currentVoterIndex
+      );
+
+    if (aliveTargets.length === 0) {
+      proceedToNextVoter();
+      return;
+    }
+
+    const randomTarget =
+      aliveTargets[Math.floor(Math.random() * aliveTargets.length)];
+
+    butcherPendingKill = randomTarget.i;
+
+    butcherRevealMessage = `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🔪 The Butcher stalked ${randomTarget.p.name}...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[randomTarget.p.role]}; font-weight:bold;">
+            ${randomTarget.p.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    votingBox.innerHTML += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>You will murder ${randomTarget.p.name}</h3>
+      </div>
+    `;
+
+    const continueBtn = document.createElement("button");
+    continueBtn.textContent = "Continue";
+    continueBtn.className = "reveal-evil-btn";
+    continueBtn.onclick = proceedToNextVoter;
+
+    votingBox.appendChild(continueBtn);
+  };
+}
+
 function showMedicTargetScreen(actionType) {
 
   const medic = players[currentVoterIndex];
@@ -3619,6 +3691,43 @@ if (
     hunterPendingKill = null;
   }
 
+  // =====================================================
+// 🔪 BUTCHER RESOLUTION
+// =====================================================
+
+if (butcherPendingKill !== null) {
+
+  const target = players[butcherPendingKill];
+
+  if (target && target.alive) {
+
+    if (target.protected) {
+
+      meetingMessages += `
+        <hr>
+        <div class="roles-reveal-content">
+          <h3>🛡️ ${target.name} survived the Butcher's attack!</h3>
+          <p>A Medic intervened just in time.</p>
+        </div>
+      `;
+
+    } else {
+
+      target.alive = false;
+      handleLoverChainDeath(butcherPendingKill);
+
+      meetingMessages += `
+        ${butcherRevealMessage}
+        <div class="roles-reveal-content">
+          <h3>💀 ${target.name} was carved apart by the Butcher!</h3>
+        </div>
+      `;
+    }
+  }
+
+  butcherPendingKill = null;
+  butcherRevealMessage = "";
+}
   // =====================================================
   // 🐍 Schedule Next Poison
   // =====================================================
