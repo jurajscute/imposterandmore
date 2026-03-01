@@ -3654,14 +3654,31 @@ if (
   // 🛡 Protection check FIRST
   if (target.protected) {
 
+  // 🎭 Special protection line for Jester
+  if (target.role === "Jester") {
+
     meetingMessages += `
       <hr>
       <div class="roles-reveal-content">
-        <h3>🃏 ${target.name} the JESTER was protected from the Sheriff by a Medic!</h3>
+        <h3>🃏 The Jester narrowly avoided death!</h3>
+        <p>
+          ${target.name} giggled as the bullet was stopped by the Medic...
+        </p>
       </div>
     `;
 
   } else {
+
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🛡️ ${target.name} was protected from the Sheriff by a Medic!</h3>
+      </div>
+    `;
+
+  }
+
+} else {
 
     // 🎭 JESTER INSTANT WIN IF NOT PROTECTED
     if (target.role === "Jester") {
