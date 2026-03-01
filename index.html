@@ -2500,10 +2500,7 @@ function selectFirstPlayer() {
     // 👇 SHOW START VOTING BUTTON HERE
     startVotingBtn.style.display = "block";
 startVotingBtn.classList.add("show");
-console.log("Button shown");
 setTimeout(() => {
-  console.log("After 300ms:", window.getComputedStyle(startVotingBtn).opacity);
-  console.log("Parent opacity:", window.getComputedStyle(startVotingBtn.parentElement).opacity);
 }, 300);
 
   }, 500);
@@ -5926,7 +5923,6 @@ if (loverIndexes.includes(i)) {
           lockedCards++;
 
 if (lockedCards === totalCards) {
-  console.log("Triggering first player...");
   selectFirstPlayer();
 }
 
@@ -5959,11 +5955,6 @@ if (lockedCards === totalCards) {
 
     cardsContainer.appendChild(card);
   });
-
-  if (specialHint) {
-  card.appendChild(specialHint);
-  setTimeout(() => specialHint.classList.add('show'), 10);
-}
 }
 
 
