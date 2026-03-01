@@ -1345,7 +1345,6 @@ let viperChoosingPoison = false;
 let viperNextPoison = null;     // selected this meeting
 let viperActivePoison = null;   // kills NEXT meeting
 let meetingMessages = "";
-let viperCooldown = false; // true = refueling, cannot poison
 
 let sheriffAllowedRoles = ["Imposter", "Dictator", "Mastermind", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
@@ -2768,10 +2767,10 @@ function castVote(targetIndex) {
   if (voter.role === "Viper" && !viperChoosingPoison) {
 
   // 🐍 If refueling, show cooldown screen instead
-  if (viperCooldown) {
-    showViperCooldownScreen();
-    return;
-  }
+if (viperAnnouncedPoison !== null || viperActivePoison !== null) {
+  showViperCooldownScreen();
+  return;
+}
 
   viperChoosingPoison = true;
   showPoisonScreen();
@@ -2966,7 +2965,6 @@ function showPoisonScreen() {
      btn.onclick = () => {
 
   viperNextPoison = index;
-  viperCooldown = true; // start cooldown
 
   currentVoterIndex++;
   setTimeout(() => {
@@ -3491,22 +3489,17 @@ if (viperAnnouncedPoison !== null) {
   viperAnnouncedPoison = null;
 }
 
-// 🐍 Apply active poison
 if (
   viperActivePoison !== null &&
   players[viperActivePoison] &&
   players[viperActivePoison].alive
 ) {
+  const poisoned = players[viperActivePoison];
 
- {
-    if (
-      hunterMarkedTarget !== null &&
-      !players[hunterMarkedTarget]?.alive
-    ) {
-      hunterMarkedTarget = null;
-    }
+  // Medic protection check (optional)
+  if (!poisoned.protected) {
 
-    arsonistMarkedTarget = null;
+    poisoned.alive = false;
 
     const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
@@ -3532,11 +3525,10 @@ if (
     }
   }
 
-}
-if (viperActivePoison !== null) {
   viperActivePoison = null;
-  viperCooldown = false;
 }
+
+
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
   // =====================================================
@@ -3621,7 +3613,6 @@ if (viperActivePoison !== null) {
     `;
 
     viperNextPoison = null;
-    viperCooldown = true;
   }
 
   // =====================================================
@@ -4291,7 +4282,6 @@ function generateCards() {
 viperActivePoison = null;
 viperAnnouncedPoison = null;
 viperNextPoison = null;
-viperCooldown = false;
 viperChoosingPoison = false;
 
 dictatorBlockedPlayer = null;
