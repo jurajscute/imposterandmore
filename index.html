@@ -3482,16 +3482,17 @@ function finishVoting() {
 medicHealMessage = "";
 
   // =====================================================
-  // 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
-  // =====================================================
+// 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
+// =====================================================
 
-  // Activate scheduled poison
-  if (viperAnnouncedPoison !== null) {
-    viperActivePoison = viperAnnouncedPoison;
-    viperAnnouncedPoison = null;
-  }
+// 🐍 Activate poison scheduled last round
+if (viperAnnouncedPoison !== null) {
+  viperActivePoison = viperAnnouncedPoison;
+  viperAnnouncedPoison = null;
+}
 
-  if (
+// 🐍 Apply active poison
+if (
   viperActivePoison !== null &&
   players[viperActivePoison] &&
   players[viperActivePoison].alive
@@ -3499,30 +3500,50 @@ medicHealMessage = "";
 
   const poisoned = players[viperActivePoison];
 
-  // If poison still exists, they die.
-  poisoned.alive = false;
+  // 🛡 MEDIC PROTECTION CHECK
+  if (poisoned.protected) {
 
-  const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
-
-  meetingMessages += `
-    <div class="poison-death">
-      <h3>🐍 ${poisoned.name}'s heart was torn through by poison.</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-          ${poisoned.role}
-        </span>
-      </p>
-    </div>
-  `;
-
-  if (loverDeathIndex !== null) {
-    const lover = players[loverDeathIndex];
     meetingMessages += `
-      <div class="lover-death-message">
-        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      <div class="roles-reveal-content">
+        <h3>⚕️ ${poisoned.name} was healed from poison!</h3>
       </div>
     `;
+
+  } else {
+
+    poisoned.alive = false;
+
+    if (
+      hunterMarkedTarget !== null &&
+      !players[hunterMarkedTarget]?.alive
+    ) {
+      hunterMarkedTarget = null;
+    }
+
+    arsonistMarkedTarget = null;
+
+    const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
+
+    meetingMessages += `
+      <div class="poison-death">
+        <h3>🐍 ${poisoned.name}'s heart was torn through by poison.</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+            ${poisoned.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+      meetingMessages += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+        </div>
+      `;
+    }
   }
 
   viperActivePoison = null;
