@@ -3012,23 +3012,34 @@ function showPoisonScreen() {
 
 function handleLoverChainDeath(deadIndex) {
 
+  // 🚨 SAFETY GUARDS
+  if (deadIndex === null || deadIndex === undefined) return null;
+  if (!Array.isArray(players)) return null;
+  if (deadIndex < 0 || deadIndex >= players.length) return null;
+  if (!players[deadIndex]) return null;
+
   const deadPlayer = players[deadIndex];
 
   if (!deadPlayer.isLover) return null;
 
   const otherLoverIndex = players.findIndex(
-    (p, i) => p.isLover && i !== deadIndex && p.alive
+    (p, i) => p && p.isLover && i !== deadIndex && p.alive
   );
 
   if (otherLoverIndex !== -1) {
+
     players[otherLoverIndex].alive = false;
+
+    // Clear pending targets safely
     if (
-  hunterMarkedTarget !== null &&
-  !players[hunterMarkedTarget]?.alive
-) {
-  hunterMarkedTarget = null;
-}
-arsonistMarkedTarget = null;
+      hunterMarkedTarget !== null &&
+      !players[hunterMarkedTarget]?.alive
+    ) {
+      hunterMarkedTarget = null;
+    }
+
+    arsonistMarkedTarget = null;
+
     return otherLoverIndex; // 🔥 return who died
   }
 
@@ -3721,9 +3732,12 @@ if (
 
 if (butcherPendingKill !== null) {
 
-  const target = players[butcherPendingKill]; // ✅ MOVE THIS TO THE TOP
+  const targetIndex = butcherPendingKill;
+  const target = players[targetIndex];
 
-  // ⭐ SPECIAL: Sheriff shot the Butcher
+  let butcherResolved = false;
+
+  // ⭐ SPECIAL DUEL: Sheriff shot Butcher
   if (
     target &&
     target.role === "Sheriff" &&
@@ -3734,15 +3748,15 @@ if (butcherPendingKill !== null) {
     const butcherIndex = sheriffShotTarget;
     const butcher = players[butcherIndex];
 
-    butcher.alive = false;
-    if (butcherIndex !== null && players[butcherIndex]) {
-  handleLoverChainDeath(butcherIndex);
-}
+    if (butcher && butcher.alive) {
+      butcher.alive = false;
+      handleLoverChainDeath(butcherIndex);
+    }
 
     meetingMessages += `
       <hr>
       <div class="roles-reveal-content">
-        <h3>🩸 A scream echos throughout the room...</h3>
+        <h3>🩸 A scream echoes throughout the room...</h3>
         <p>
           The Butcher frantically slashed at the Sheriff —
           but the Sheriff was just slightly faster.
@@ -3759,13 +3773,11 @@ if (butcherPendingKill !== null) {
       </div>
     `;
 
-    butcherPendingKill = null;
-    butcherRevealMessage = "";
+    butcherResolved = true;
   }
 
-  // ✅ NORMAL BUTCHER RESOLUTION
-
-  if (target && target.alive) {
+  // 🔪 NORMAL BUTCHER KILL
+  if (!butcherResolved && target && target.alive) {
 
     if (target.protected) {
 
@@ -3780,7 +3792,7 @@ if (butcherPendingKill !== null) {
     } else {
 
       target.alive = false;
-      handleLoverChainDeath(butcherPendingKill);
+      handleLoverChainDeath(targetIndex);
 
       meetingMessages += `
         ${butcherRevealMessage}
@@ -3798,6 +3810,7 @@ if (butcherPendingKill !== null) {
   }
 
   butcherPendingKill = null;
+  butcherRevealMessage = "";
 }
   // =====================================================
   // 🐍 Schedule Next Poison
