@@ -3498,21 +3498,7 @@ if (
   players[viperActivePoison].alive
 ) {
 
-  const poisoned = players[viperActivePoison];
-
-  // 🛡 MEDIC PROTECTION CHECK
-  if (poisoned.protected) {
-
-    meetingMessages += `
-      <div class="roles-reveal-content">
-        <h3>⚕️ ${poisoned.name} was healed from poison!</h3>
-      </div>
-    `;
-
-  } else {
-
-    poisoned.alive = false;
-
+ {
     if (
       hunterMarkedTarget !== null &&
       !players[hunterMarkedTarget]?.alive
@@ -3546,10 +3532,11 @@ if (
     }
   }
 
+}
+if (viperActivePoison !== null) {
   viperActivePoison = null;
   viperCooldown = false;
 }
-
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
   // =====================================================
