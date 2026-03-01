@@ -3284,25 +3284,18 @@ function showButcherKillScreen() {
 
     butcherPendingKill = randomTarget.i;
 
-    butcherRevealMessage = `
-      <hr>
-      <div class="roles-reveal-content">
-        <h3>🔪 The Butcher stalked ${randomTarget.p.name}...</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[randomTarget.p.role]}; font-weight:bold;">
-            ${randomTarget.p.role}
-          </span>
-        </p>
-      </div>
-    `;
-
     votingBox.innerHTML += `
-      <hr>
-      <div class="roles-reveal-content">
-        <h3>You will murder ${randomTarget.p.name}</h3>
-      </div>
-    `;
+  <hr>
+  <div class="roles-reveal-content">
+    <h3>You will slaughter ${randomTarget.p.name}</h3>
+    <p>
+      They are the 
+      <span style="color:${roleColors[randomTarget.p.role]}; font-weight:bold;">
+        ${randomTarget.p.role}
+      </span>
+    </p>
+  </div>
+`;
 
     const continueBtn = document.createElement("button");
     continueBtn.textContent = "Continue";
@@ -3683,8 +3676,14 @@ if (
           <hr>
           <div class="roles-reveal-content">
             <h3>💀 ${target.name} was hunted down!</h3>
-          </div>
-        `;
+          <p>
+      They were the 
+      <span style="color:${roleColors[target.role]}; font-weight:bold;">
+        ${target.role}
+      </span>
+    </p>
+  </div>
+`;
       }
     }
 
@@ -3717,16 +3716,21 @@ if (butcherPendingKill !== null) {
       handleLoverChainDeath(butcherPendingKill);
 
       meetingMessages += `
-        ${butcherRevealMessage}
-        <div class="roles-reveal-content">
-          <h3>💀 ${target.name} was carved apart by the Butcher!</h3>
-        </div>
-      `;
+  ${butcherRevealMessage}
+  <div class="roles-reveal-content">
+    <h3>💀 ${target.name} was carved apart by the Butcher!</h3>
+    <p>
+      They were the 
+      <span style="color:${roleColors[target.role]}; font-weight:bold;">
+        ${target.role}
+      </span>
+    </p>
+  </div>
+`;
     }
   }
 
   butcherPendingKill = null;
-  butcherRevealMessage = "";
 }
   // =====================================================
   // 🐍 Schedule Next Poison
