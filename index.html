@@ -3649,47 +3649,58 @@ if (
     const sheriff = players[sheriffIndex];
     const target = players[sheriffShotTarget];
 
-    if (sheriff && sheriff.alive && target && target.alive) {
+   if (sheriff && sheriff.alive && target && target.alive) {
 
-      const isEvil = sheriffAllowedRoles.includes(target.role);
+  // 🛡 Protection check FIRST
+  if (target.protected) {
 
-      if (isEvil) {
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🃏 ${target.name} the JESTER was protected from the Sheriff by a Medic!</h3>
+      </div>
+    `;
 
-        if (target.protected) {
+  } else {
 
-          meetingMessages += `
-            <hr>
-            <div class="roles-reveal-content">
-              <h3>🛡️ ${target.name} was protected from the Sheriff by a Medic!</h3>
-            </div>
-          `;
-
-        } else {
-
-          target.alive = false;
-          handleLoverChainDeath(sheriffShotTarget);
-
-          meetingMessages += `
-            <hr>
-            <div class="roles-reveal-content">
-              <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
-            </div>
-          `;
-        }
-
-      } else {
-
-        sheriff.alive = false;
-        handleLoverChainDeath(sheriffIndex);
-
-        meetingMessages += `
-          <hr>
-          <div class="roles-reveal-content">
-            <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
-          </div>
-        `;
-      }
+    // 🎭 JESTER INSTANT WIN IF NOT PROTECTED
+    if (target.role === "Jester") {
+      endGame(
+        `<strong>${target.name} the Jester wins!</strong><br>
+         They were shot by the Sheriff!`,
+        "Jester"
+      );
+      return;
     }
+
+    const isEvil = sheriffAllowedRoles.includes(target.role);
+
+    if (isEvil) {
+
+      target.alive = false;
+      handleLoverChainDeath(sheriffShotTarget);
+
+      meetingMessages += `
+        <hr>
+        <div class="roles-reveal-content">
+          <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
+        </div>
+      `;
+
+    } else {
+
+      sheriff.alive = false;
+      handleLoverChainDeath(sheriffIndex);
+
+      meetingMessages += `
+        <hr>
+        <div class="roles-reveal-content">
+          <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
+        </div>
+      `;
+    }
+  }
+}
 
     sheriffShotTarget = null;
   }
