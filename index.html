@@ -3699,7 +3699,8 @@ if (
       } else {
 
         target.alive = false;
-        handleLoverChainDeath(targetIndex);
+
+const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
         // 🎯 SPECIAL: Sheriff tried to shoot Hunter
 const hunterIndex = players.findIndex(p => p.role === "Hunter");
@@ -3724,6 +3725,14 @@ if (
       </p>
     </div>
   `;
+  if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name}'s heart stops beating...</h3>
+    </div>
+  `;
+}
 
 } else {
 
@@ -3739,6 +3748,14 @@ if (
       </p>
     </div>
   `;
+  if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name}'s heart shatters into pieces...</h3>
+    </div>
+  `;
+}
 }
       }
     }
@@ -3775,7 +3792,8 @@ if (
   if (butcher.protected) {
 
     sheriff.alive = false;
-    handleLoverChainDeath(sheriffIndex);
+
+const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
     meetingMessages += `
       <hr>
@@ -3795,12 +3813,20 @@ if (
         </p>
       </div>
     `;
+    if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} couldn't bare living without their lover...</h3>
+    </div>
+  `;
+}
 
   } else {
 
     // 🔫 Normal duel — Sheriff wins
     butcher.alive = false;
-    handleLoverChainDeath(butcherIndex);
+    const loverDeathIndex = handleLoverChainDeath(butcherIndex);
 
     meetingMessages += `
       <hr>
@@ -3821,6 +3847,15 @@ if (
         </p>
       </div>
     `;
+
+    if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} couldn't believe their loves faced such a cruel fate and had a heart attack.</h3>
+    </div>
+  `;
+}
   }
 
   butcherResolved = true;
@@ -3838,6 +3873,15 @@ if (
           <p>A Medic intervened just in time.</p>
         </div>
       `;
+
+      if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name}'s life had no meaning without their lover...</h3>
+    </div>
+  `;
+}
 
     } else {
 
@@ -3938,7 +3982,7 @@ if (
     if (isEvil) {
 
       target.alive = false;
-      handleLoverChainDeath(sheriffShotTarget);
+      const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
       meetingMessages += `
         <hr>
@@ -3947,10 +3991,19 @@ if (
         </div>
       `;
 
+      if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} died from utter heartbreak...</h3>
+    </div>
+  `;
+}
+
     } else {
 
       sheriff.alive = false;
-      handleLoverChainDeath(sheriffIndex);
+      const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
       meetingMessages += `
         <hr>
@@ -3958,6 +4011,16 @@ if (
           <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
         </div>
       `;
+      
+if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} loved their lawful lover, unfortunately they were also stupid and missed...</h3>
+    </div>
+  `;
+}
+      
     }
   }
 }
@@ -3988,7 +4051,7 @@ if (eliminatedIndex === null) {
     // 🗳 Always eliminate on vote (Protect does NOT stop this)
     eliminatedPlayer.alive = false;
 
-    handleLoverChainDeath(eliminatedIndex);
+    const loverDeathIndex = handleLoverChainDeath(eliminatedIndex);
 
     screenHTML = `
       <div class="roles-reveal-header">
@@ -4003,6 +4066,15 @@ if (eliminatedIndex === null) {
         </p>
       </div>
     `;
+
+    if (loverDeathIndex !== null) {
+  const lover = players[loverDeathIndex];
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+    </div>
+  `;
+}
   }
 }
 
