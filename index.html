@@ -3735,7 +3735,9 @@ if (butcherPendingKill !== null) {
     const butcher = players[butcherIndex];
 
     butcher.alive = false;
-    handleLoverChainDeath(butcherIndex);
+    if (butcherIndex !== null && players[butcherIndex]) {
+  handleLoverChainDeath(butcherIndex);
+}
 
     meetingMessages += `
       <hr>
