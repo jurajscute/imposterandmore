@@ -3715,53 +3715,54 @@ if (
     hunterPendingKill = null;
   }
 
-  // =====================================================
+// =====================================================
 // 🔪 BUTCHER RESOLUTION
 // =====================================================
 
 if (butcherPendingKill !== null) {
 
-// ⭐ SPECIAL: Sheriff shot the Butcher
-if (
-  target.role === "Sheriff" &&
-  sheriffShotTarget !== null &&
-  players[sheriffShotTarget]?.role === "Butcher"
-) {
+  const target = players[butcherPendingKill]; // ✅ MOVE THIS TO THE TOP
 
-  // Butcher dies instead
-  const butcherIndex = sheriffShotTarget;
-  const butcher = players[butcherIndex];
+  // ⭐ SPECIAL: Sheriff shot the Butcher
+  if (
+    target &&
+    target.role === "Sheriff" &&
+    sheriffShotTarget !== null &&
+    players[sheriffShotTarget]?.role === "Butcher"
+  ) {
 
-  butcher.alive = false;
-  handleLoverChainDeath(butcherIndex);
+    const butcherIndex = sheriffShotTarget;
+    const butcher = players[butcherIndex];
 
-  meetingMessages += `
-    <hr>
-    <div class="roles-reveal-content">
-      <h3>⭐ A deadly standoff!</h3>
-      <p>
-        The Butcher lunged at the Sheriff —
-        but the Sheriff fired first.
-      </p>
-      <p>
-        🔪 ${butcher.name} was shot down.
-      </p>
-      <p>
-        They were the 
-        <span style="color:${roleColors["Butcher"]}; font-weight:bold;">
-          Butcher
-        </span>
-      </p>
-    </div>
-  `;
+    butcher.alive = false;
+    handleLoverChainDeath(butcherIndex);
 
-  butcherPendingKill = null;
-  butcherRevealMessage = "";
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>🩸 A scream echos throughout the room...</h3>
+        <p>
+          The Butcher frantically slashed at the Sheriff —
+          but the Sheriff was just slightly faster.
+        </p>
+        <p>
+          🔪 ${butcher.name} was shot down.
+        </p>
+        <p>
+          They were the 
+          <span style="color:${roleColors["Butcher"]}; font-weight:bold;">
+            Butcher
+          </span>
+        </p>
+      </div>
+    `;
 
-  return; // 🚨 VERY IMPORTANT
-}
+    butcherPendingKill = null;
+    butcherRevealMessage = "";
+    return;
+  }
 
-  const target = players[butcherPendingKill];
+  // ✅ NORMAL BUTCHER RESOLUTION
 
   if (target && target.alive) {
 
@@ -3781,17 +3782,17 @@ if (
       handleLoverChainDeath(butcherPendingKill);
 
       meetingMessages += `
-  ${butcherRevealMessage}
-  <div class="roles-reveal-content">
-    <h3>💀 ${target.name} was carved apart by the Butcher!</h3>
-    <p>
-      They were the 
-      <span style="color:${roleColors[target.role]}; font-weight:bold;">
-        ${target.role}
-      </span>
-    </p>
-  </div>
-`;
+        ${butcherRevealMessage}
+        <div class="roles-reveal-content">
+          <h3>💀 ${target.name} was carved apart by the Butcher!</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[target.role]}; font-weight:bold;">
+              ${target.role}
+            </span>
+          </p>
+        </div>
+      `;
     }
   }
 
