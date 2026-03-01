@@ -3672,18 +3672,43 @@ if (
         target.alive = false;
         handleLoverChainDeath(targetIndex);
 
-        meetingMessages += `
-          <hr>
-          <div class="roles-reveal-content">
-            <h3>💀 ${target.name} was hunted down!</h3>
-          <p>
-      They were the 
-      <span style="color:${roleColors[target.role]}; font-weight:bold;">
-        ${target.role}
-      </span>
-    </p>
-  </div>
-`;
+        // 🎯 SPECIAL: Sheriff tried to shoot Hunter
+if (
+  target.role === "Sheriff" &&
+  sheriffShotTarget === hunterMarkedTarget
+) {
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🔫 A gun shot was heard...</h3>
+      <p>
+        ${target.name} saw the hunter coming a fired a shot, the hunter was just one step ahead.
+      </p>
+      <p>
+        They were the 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    </div>
+  `;
+
+} else {
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>💀 ${target.name} was hunted down!</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[target.role]}; font-weight:bold;">
+          ${target.role}
+        </span>
+      </p>
+    </div>
+  `;
+}
       }
     }
 
@@ -3695,6 +3720,46 @@ if (
 // =====================================================
 
 if (butcherPendingKill !== null) {
+
+// ⭐ SPECIAL: Sheriff shot the Butcher
+if (
+  target.role === "Sheriff" &&
+  sheriffShotTarget !== null &&
+  players[sheriffShotTarget]?.role === "Butcher"
+) {
+
+  // Butcher dies instead
+  const butcherIndex = sheriffShotTarget;
+  const butcher = players[butcherIndex];
+
+  butcher.alive = false;
+  handleLoverChainDeath(butcherIndex);
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>⭐ A deadly standoff!</h3>
+      <p>
+        The Butcher lunged at the Sheriff —
+        but the Sheriff fired first.
+      </p>
+      <p>
+        🔪 ${butcher.name} was shot down.
+      </p>
+      <p>
+        They were the 
+        <span style="color:${roleColors["Butcher"]}; font-weight:bold;">
+          Butcher
+        </span>
+      </p>
+    </div>
+  `;
+
+  butcherPendingKill = null;
+  butcherRevealMessage = "";
+
+  return; // 🚨 VERY IMPORTANT
+}
 
   const target = players[butcherPendingKill];
 
