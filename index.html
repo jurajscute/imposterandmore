@@ -3217,22 +3217,34 @@ function showMedicTargetScreen(actionType) {
       btn.textContent = player.name;
       btn.className = "reveal-viper-btn";
 
-      btn.onclick = () => {
+     btn.onclick = () => {
 
-        if (actionType === "heal") {
-          players[index].poisoned = false;
-        }
+  // 🩺 HEAL
+  if (actionType === "heal") {
 
-        if (actionType === "protect") {
-          players[index].protected = true;
-        }
+    // Cancel scheduled poison
+    if (viperAnnouncedPoison === index) {
+      viperAnnouncedPoison = null;
+    }
 
-        // Continue voting (IDENTICAL to Viper)
-        currentVoterIndex++;
-        setTimeout(() => {
-          showNextVoter();
-        }, 150);
-      };
+    // Cancel active poison
+    if (viperActivePoison === index) {
+      viperActivePoison = null;
+    }
+
+  }
+
+  // 🛡 PROTECT
+  if (actionType === "protect") {
+    players[index].protected = true;
+  }
+
+  // Continue voting
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+};
 
       medicOptions.appendChild(btn);
     }
@@ -3446,62 +3458,43 @@ function finishVoting() {
     viperAnnouncedPoison = null;
   }
 
-  // Apply poison if valid
   if (
-    viperActivePoison !== null &&
-    players[viperActivePoison] &&
-    players[viperActivePoison].alive
-  ) {
+  viperActivePoison !== null &&
+  players[viperActivePoison] &&
+  players[viperActivePoison].alive
+) {
 
-    const poisoned = players[viperActivePoison];
+  const poisoned = players[viperActivePoison];
 
-    // 🛡️ Medic Protection Check
-    if (poisoned.protected) {
+  // If poison still exists, they die.
+  poisoned.alive = false;
 
-      meetingMessages += `
-        <div class="roles-reveal-content">
-          <h3>⚕️ ${poisoned.name} was protected from poison by a Medic!</h3>
-        </div>
-      `;
+  const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
 
-    } else {
+  meetingMessages += `
+    <div class="poison-death">
+      <h3>🐍 ${poisoned.name}'s heart was torn through by poison.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
+          ${poisoned.role}
+        </span>
+      </p>
+    </div>
+  `;
 
-      poisoned.alive = false;
-
-      if (hunterMarkedTarget !== null &&
-          !players[hunterMarkedTarget]?.alive) {
-        hunterMarkedTarget = null;
-      }
-
-      arsonistMarkedTarget = null;
-
-      const loverDeathIndex = handleLoverChainDeath(viperActivePoison);
-
-      meetingMessages += `
-        <div class="poison-death">
-          <h3>🐍 ${poisoned.name}'s heart was torn through by poison.</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[poisoned.role]}; font-weight:bold;">
-              ${poisoned.role}
-            </span>
-          </p>
-        </div>
-      `;
-
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
-        meetingMessages += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-          </div>
-        `;
-      }
-    }
-
-    viperActivePoison = null;
-    viperCooldown = false;
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+    meetingMessages += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      </div>
+    `;
   }
+
+  viperActivePoison = null;
+  viperCooldown = false;
+}
 
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
