@@ -4006,6 +4006,55 @@ if (eliminatedIndex === null) {
   }
 }
 
+// =====================================================
+// 🏆 WIN CONDITION CHECK
+// =====================================================
+
+// 🎭 JESTER — Wins if voted out
+if (eliminatedIndex !== null) {
+  const eliminatedPlayer = players[eliminatedIndex];
+
+  if (eliminatedPlayer.role === "Jester") {
+    endGame(
+      `<strong>${eliminatedPlayer.name} the Jester wins!</strong><br>
+       They were voted out!`,
+      "Jester"
+    );
+    return;
+  }
+}
+
+// 🎯 ASSASSIN — Wins if their marked target is voted out
+if (assassinMarkedTarget !== null && eliminatedIndex === assassinMarkedTarget) {
+
+  const assassinIndex = players.findIndex(p => p.role === "Assassin");
+  const assassin = players[assassinIndex];
+
+  if (assassin && assassin.alive) {
+    endGame(
+      `<strong>${assassin.name} the Assassin wins!</strong><br>
+       Their target was voted out!`,
+      "Assassin"
+    );
+    return;
+  }
+}
+
+// 💕 LOVERS — Win if only lovers remain alive
+const alivePlayers = players.filter(p => p.alive);
+
+if (
+  alivePlayers.length === 2 &&
+  alivePlayers.every(p => p.isLover)
+) {
+  endGame(
+    `<strong>The Lovers win together!</strong><br>
+     Love conquers all.`,
+    "Lovers"
+  );
+  return;
+}
+
   // =====================================================
   // 🎨 RENDER
   // =====================================================
