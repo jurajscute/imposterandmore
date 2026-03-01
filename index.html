@@ -1367,6 +1367,7 @@ let arsonistAlive = true;
 let medicChoosingAction = false;
 let medicActionType = null; // "heal" or "protect"
 let medicIndex = null;
+let medicHealMessage = "";
 
 // NEW: State for detective interaction
 let isDetectiveChoosing = false;
@@ -3477,6 +3478,8 @@ skipBtn.onclick = () => {
 function finishVoting() {
 
   meetingMessages = "";
+  meetingMessages += medicHealMessage;
+medicHealMessage = "";
 
   // =====================================================
   // 🧪 PHASE 1 — PRE-MEETING EFFECTS (Poison)
