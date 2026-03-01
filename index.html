@@ -1403,6 +1403,9 @@ let activeDetectiveHintElement = null;
 // NEW: Saved Custom Subjects
 let savedCustomSubjects = {};
 
+//ROUNDS
+let votingRound = 0;
+
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
@@ -3592,6 +3595,7 @@ skipBtn.onclick = () => {
 }
 
 function finishVoting() {
+  votingRound++;
 
   meetingMessages = "";
   meetingMessages += medicHealMessage;
@@ -3928,7 +3932,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
     } else {
 
       target.alive = false;
-       const loverDeathIndex = handleLoverChainDeath(targetIndex);
+      handleLoverChainDeath(targetIndex);
 
       meetingMessages += `
         ${butcherRevealMessage}
@@ -3947,7 +3951,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
   meetingMessages += `
     <div class="lover-death-message">
-      <h3>💔 ${lover.name} also carved their own heart out, they spelled their lovers name on the wall...</h3>
+      <h3>💔 ${lover.name} carved their own heart out...</h3>
       <p>
         They were the 
         <span style="color:${roleColors[lover.role]}; font-weight:bold;">
@@ -3956,6 +3960,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
       </p>
     </div>
   `;
+}
     }
   }
 
@@ -4032,6 +4037,18 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
       );
       return;
     }
+
+    if (
+  target.role === "Doubletake" &&
+  votingRound > 1
+) {
+  endGame(
+    `<strong>${target.name} the Doubletake wins!</strong><br>
+     The Sheriff thought it'd be a good idea to shoot them!`,
+    "Doubletake"
+  );
+  return;
+}
 
     const isEvil = sheriffAllowedRoles.includes(target.role);
 
@@ -4122,6 +4139,19 @@ if (eliminatedIndex === null) {
 
   const eliminatedPlayer = players[eliminatedIndex];
 
+  if (
+  eliminatedPlayer.role === "Doubletake" &&
+  votingRound === 1
+) {
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🎭 ${eliminatedPlayer.name} was the Doubletake...</h3>
+      <p>You caught them quick enough.</p>
+    </div>
+  `;
+}
+
   if (eliminatedPlayer.alive) {
 
     // 🗳 Always eliminate on vote (Protect does NOT stop this)
@@ -4177,6 +4207,19 @@ if (eliminatedIndex !== null) {
     );
     return;
   }
+}
+
+// 🎭 DOUBLETAKE — Wins if voted after first round
+if (
+  eliminatedPlayer.role === "Doubletake" &&
+  votingRound > 1
+) {
+  endGame(
+    `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
+     They fooled everyone…`,
+    "Doubletake"
+  );
+  return;
 }
 
 // 🎯 ASSASSIN — Wins if their target is voted out
@@ -4793,6 +4836,7 @@ function announceLovers() {
 
 /* ===== MAIN GAME FUNCTION ===== */
 function generateCards() {
+  votingRound = 0;
 
   // 🔥 Reset Arsonist state
   arsonistDoused = new Set();
