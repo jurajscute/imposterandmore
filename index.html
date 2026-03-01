@@ -3634,13 +3634,20 @@ if (
     `;
 
     if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-      meetingMessages += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-        </div>
-      `;
-    }
+  const lover = players[loverDeathIndex];
+
+  meetingMessages += `
+    <div class="lover-death-message">
+      <h3>💔 ${lover.name}'s heart gets filled with utter hatred, it's almost as if they were poisoned too.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
+    </div>
+  `;
+}
   }
 
   viperActivePoison = null;
@@ -3727,9 +3734,16 @@ if (
   `;
   if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
       <h3>💔 ${lover.name}'s heart stops beating...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -3750,9 +3764,16 @@ if (
   `;
   if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
       <h3>💔 ${lover.name}'s heart shatters into pieces...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -3813,11 +3834,18 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
         </p>
       </div>
     `;
-    if (loverDeathIndex !== null) {
+   if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
-      <h3>💔 ${lover.name} couldn't bare living without their lover...</h3>
+      <h3>💔 ${lover.name} couldn't believe their loves faced such a cruel fate and had a heart attack.</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -3850,9 +3878,16 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
     if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
-      <h3>💔 ${lover.name} couldn't believe their loves faced such a cruel fate and had a heart attack.</h3>
+      <h3>💔 ${lover.name}'s life had no meaning without their lover...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -3876,9 +3911,16 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
       if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
-      <h3>💔 ${lover.name}'s life had no meaning without their lover...</h3>
+      <h3>💔 ${lover.name} couldn't believe what they did to their lover...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -3993,9 +4035,16 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
       if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
       <h3>💔 ${lover.name} died from utter heartbreak...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -4014,9 +4063,16 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
       
 if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
       <h3>💔 ${lover.name} loved their lawful lover, unfortunately they were also stupid and missed...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
@@ -4069,9 +4125,16 @@ if (eliminatedIndex === null) {
 
     if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
+
   meetingMessages += `
     <div class="lover-death-message">
       <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      <p>
+        They were the 
+        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+          ${lover.role}
+        </span>
+      </p>
     </div>
   `;
 }
