@@ -3945,6 +3945,24 @@ function addFinalContinueButton() {
 }
 
 function nextRound() {
+  // 🐍 Move scheduled poison into announced state
+if (viperNextPoison !== null) {
+  viperAnnouncedPoison = viperNextPoison;
+  viperNextPoison = null;
+}
+if (viperNextPoison !== null) {
+
+  meetingMessages += `
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🧪 ${players[viperNextPoison].name} throws up violently...</h3>
+      <p>Their future doesn't look so bright.</p>
+    </div>
+  `;
+
+  viperAnnouncedPoison = viperNextPoison;
+  viperNextPoison = null;
+}
 
   // 🔄 Reset per-round vote data
   players.forEach(player => {
