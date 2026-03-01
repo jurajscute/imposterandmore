@@ -286,6 +286,11 @@
     .first-player.show { opacity: 1; transform: translateY(0); }
 
     /* BUTTON DESIGNS */
+    .reveal-medic-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #005a30, #70ff94); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-medic-btn:hover { box-shadow: 0 6px 16px rgba(11, 245, 109, 0.3); }
+    .reveal-medic-btn:active { transform: scale(0.96); }
+    .reveal-medic-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+
     .reveal-roles-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-roles-btn:hover { box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
     .reveal-roles-btn:active { transform: scale(0.96); }
@@ -481,6 +486,23 @@
 }
 
 /* SCREEN DESIGNS */
+
+/* MEDIC SCREEN */
+
+.medic-screen {
+  background: linear-gradient(135deg, #008026, #88ffaf);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.medic-screen .roles-reveal-header {
+  background: linear-gradient(135deg, #008026, #88ffaf);
+}
+
+.medic-screen {
+  box-shadow: 0 0 25px rgba(0, 168, 84, 0.6);
+}
 
 /* ARSONIST SCREEN */
 
@@ -3186,7 +3208,7 @@ function showMedicAbilityScreen() {
     btn.textContent = action === "heal"
       ? "Heal (Remove Poison)"
       : "Protect (Block Poison/Kill)";
-    btn.className = "reveal-viper-btn";
+    btn.className = "reveal-medic-btn";
 
     btn.onclick = () => {
       showMedicTargetScreen(action);
@@ -3215,31 +3237,39 @@ function showMedicTargetScreen(actionType) {
 
       const btn = document.createElement("button");
       btn.textContent = player.name;
-      btn.className = "reveal-viper-btn";
+      btn.className = "reveal-medic-btn";
 
-     btn.onclick = () => {
+    btn.onclick = () => {
 
-  // 🩺 HEAL
   if (actionType === "heal") {
+
+    let healSuccessful = false;
 
     // Cancel scheduled poison
     if (viperAnnouncedPoison === index) {
       viperAnnouncedPoison = null;
+      healSuccessful = true;
     }
 
     // Cancel active poison
     if (viperActivePoison === index) {
       viperActivePoison = null;
+      healSuccessful = true;
     }
 
+    if (healSuccessful) {
+      medicHealMessage = `
+        <div class="roles-reveal-content">
+          <h3>⚕️ ${players[index].name} was healed by the Medic!</h3>
+        </div>
+      `;
+    }
   }
 
-  // 🛡 PROTECT
   if (actionType === "protect") {
     players[index].protected = true;
   }
 
-  // Continue voting
   currentVoterIndex++;
   setTimeout(() => {
     showNextVoter();
