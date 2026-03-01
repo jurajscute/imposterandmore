@@ -4210,10 +4210,10 @@ if (eliminatedIndex !== null) {
 }
 
 // 🎭 DOUBLETAKE — Wins if voted after first round
-if (
-  eliminatedPlayer.role === "Doubletake" &&
-  votingRound > 1
-) {
+if (eliminatedIndex !== null) {
+  const eliminatedPlayer = players[eliminatedIndex];
+
+  if (eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
   endGame(
     `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
      They fooled everyone…`,
@@ -4221,7 +4221,7 @@ if (
   );
   return;
 }
-
+}
 // 🎯 ASSASSIN — Wins if their target is voted out
 if (
   assassinTarget !== null &&
