@@ -4027,11 +4027,17 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
       const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
       meetingMessages += `
-        <hr>
-        <div class="roles-reveal-content">
-          <h3>⭐ ${target.name} was shot by the Sheriff!</h3>
-        </div>
-      `;
+  <hr>
+  <div class="roles-reveal-content">
+    <h3>⭐ ${target.name} was masterfully shot by the Sheriff!</h3>
+    <p>
+      They were the 
+      <span style="color:${roleColors[target.role]}; font-weight:bold;">
+        ${target.role}
+      </span>
+    </p>
+  </div>
+`;
 
       if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
