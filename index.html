@@ -4195,56 +4195,11 @@ if (eliminatedIndex === null) {
 // 🏆 WIN CONDITION CHECK
 // =====================================================
 
-// 🎭 JESTER — Wins if voted out
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
-
-  if (eliminatedPlayer.role === "Jester") {
-    endGame(
-      `<strong>${eliminatedPlayer.name} the Jester wins!</strong><br>
-       They were voted out!`,
-      "Jester"
-    );
-    return;
-  }
-}
-
-// 🎭 DOUBLETAKE — Wins if voted after first round
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
-
-  if (eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
-  endGame(
-    `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
-     They fooled everyone…`,
-    "Doubletake"
-  );
-  return;
-}
-}
-// 🎯 ASSASSIN — Wins if their target is voted out
+// ASSASSIN AND JESTER
 if (
   assassinTarget !== null &&
-  eliminatedIndex === assassinTarget - 1
-) {
-
-  const assassinPlayer = players.find(p => p.role === "Assassin");
-
-  if (assassinPlayer && assassinPlayer.alive) {
-    endGame(
-      `<strong>${assassinPlayer.name} the Assassin wins!</strong><br>
-       Their target was voted out!`,
-      "Assassin"
-    );
-    return;
-  }
-}
-
-// 🎭 + 🗡 Jester & Assassin combo win
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
-if (
-  assassinTarget !== null &&
+  assassinPlayer &&
+  assassinPlayer.alive &&
   eliminatedPlayer.role === "Jester" &&
   eliminatedIndex === assassinTarget - 1
 ) {
@@ -4271,7 +4226,7 @@ if (
         both win!
       </h2>
     </div>
-    <div class="win-content" style="background:#f4f4f4;">
+    <div class="win-content">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
@@ -4280,13 +4235,13 @@ if (
 
   return;
 }
-}
 
-// 🎭 + 🗡 Doubletake & Assassin combo win
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
+// ASSASSIN AND DOUBLETAKE
 if (
   assassinTarget !== null &&
+  assassinPlayer &&
+  assassinPlayer.alive &&
+  votingRound > 1 &&
   eliminatedPlayer.role === "Doubletake" &&
   eliminatedIndex === assassinTarget - 1
 ) {
@@ -4313,7 +4268,7 @@ if (
         both win!
       </h2>
     </div>
-    <div class="win-content" style="background:#f4f4f4;">
+    <div class="win-content">
       <button onclick="location.reload()" class="reveal-roles-btn">
         New Game
       </button>
@@ -4322,6 +4277,40 @@ if (
 
   return;
 }
+
+// JESTER WIN
+if (eliminatedPlayer.role === "Jester") {
+  endGame(
+    `<strong>${eliminatedPlayer.name} the Jester wins!</strong><br>
+     They were voted out!`,
+    "Jester"
+  );
+  return;
+}
+
+// DOUBLETAKE WIN
+if (eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
+  endGame(
+    `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
+     They fooled everyone…`,
+    "Doubletake"
+  );
+  return;
+}
+
+// ASSASSIN WIN
+if (
+  assassinTarget !== null &&
+  assassinPlayer &&
+  assassinPlayer.alive &&
+  eliminatedIndex === assassinTarget - 1
+) {
+  endGame(
+    `<strong>${assassinPlayer.name} the Assassin wins!</strong><br>
+     Their target was voted out!`,
+    "Assassin"
+  );
+  return;
 }
 
 // 💕 LOVERS — Win if only lovers remain alive
