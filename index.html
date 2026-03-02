@@ -4126,12 +4126,16 @@ cursePending = false; // Important: NOT true yet
   }
 
   charlatanChosenTarget = null; // reset for next round
+ const cursedPlayer = players[cursedPlayerIndex];
+
+if (cursedPlayer) {
   meetingMessages += `
-  <div class="curse-message">
-    <h3>🧿 ${players[cursedPlayerIndex].name} feels their soul rotting away...</h3>
-    <p>They will die after the next vote.</p>
-  </div>
-`;
+    <div class="curse-message">
+      <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
+      <p>They will die after the next vote.</p>
+    </div>
+  `;
+}
 }
 
   // =====================================================
