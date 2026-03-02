@@ -4130,24 +4130,13 @@ if (evilVotedSame) {
   if (cursedPlayer) {
     meetingMessages += `
       <div class="curse-message">
-        <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
+        <h3>🧿 ${cursedPlayer.name} feels their soul rotting away...</h3>
         <p>An evil force has marked them for death.</p>
       </div>
     `;
   }
 }
 
-  charlatanChosenTarget = null; // reset for next round
- const cursedPlayer = players[cursedPlayerIndex];
-
-if (cursedPlayer) {
-  meetingMessages += `
-    <div class="curse-message">
-      <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
-      <p>They will die after the next vote.</p>
-    </div>
-  `;
-}
 }
 
   // =====================================================
