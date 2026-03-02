@@ -4241,6 +4241,8 @@ if (
 }
 
 // 🎭 + 🗡 Jester & Assassin combo win
+if (eliminatedIndex !== null) {
+  const eliminatedPlayer = players[eliminatedIndex];
 if (
   assassinTarget !== null &&
   eliminatedPlayer.role === "Jester" &&
@@ -4278,8 +4280,11 @@ if (
 
   return;
 }
+}
 
 // 🎭 + 🗡 Doubletake & Assassin combo win
+if (eliminatedIndex !== null) {
+  const eliminatedPlayer = players[eliminatedIndex];
 if (
   assassinTarget !== null &&
   eliminatedPlayer.role === "Doubletake" &&
@@ -4316,6 +4321,7 @@ if (
   `;
 
   return;
+}
 }
 
 // 💕 LOVERS — Win if only lovers remain alive
