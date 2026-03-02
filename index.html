@@ -3072,6 +3072,19 @@ function showCharlatanDecisionScreen() {
   });
 }
 
+function isCurseStillValid() {
+
+  const charlatanAlive = players.some(p =>
+    p.alive && p.role === "Charlatan"
+  );
+
+  const evilAlive = players.some(p =>
+    p.alive && mainEvilRoles.includes(p.role)
+  );
+
+  return charlatanAlive && evilAlive;
+}
+
 function showPoisonScreen() {
 
   const viper = players[currentVoterIndex];
@@ -4071,45 +4084,65 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
 if (cursePending && cursedPlayerIndex !== null) {
 
-  const cursedPlayer = players[cursedPlayerIndex];
+  // 🔥 NEW: Check if curse should break
+  if (!isCurseStillValid()) {
 
-  if (cursedPlayer && cursedPlayer.alive) {
+    const savedPlayer = players[cursedPlayerIndex];
 
-    cursedPlayer.alive = false;
+    if (savedPlayer && savedPlayer.alive) {
+      meetingMessages += `
+        <div class="curse-break-message">
+          <h3>✨ The curse on ${savedPlayer.name} has been broken!</h3>
+          <p>The corrupted source has been split.</p>
+        </div>
+      `;
+    }
 
-    const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
+    cursePending = false;
+    cursedPlayerIndex = null;
 
-    meetingMessages += `
-      <div class="curse-death-message">
-        <h3>🖤 ${cursedPlayer.name}'s heart rots as they're consumed by darkness...</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
-            ${cursedPlayer.role}
-          </span>
-        </p>
-      </div>
-    `;
+  } else {
 
-    if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
+    const cursedPlayer = players[cursedPlayerIndex];
+
+    if (cursedPlayer && cursedPlayer.alive) {
+
+      cursedPlayer.alive = false;
+
+      const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
 
       meetingMessages += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name}'s heart melts into a pile of ash...</h3>
+        <div class="curse-death-message">
+          <h3>🖤 ${cursedPlayer.name}'s heart rots as they're consumed by darkness...</h3>
           <p>
             They were the 
-            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-              ${lover.role}
+            <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
+              ${cursedPlayer.role}
             </span>
           </p>
         </div>
       `;
-    }
-  }
 
-  cursePending = false;
-  cursedPlayerIndex = null;
+      if (loverDeathIndex !== null) {
+        const lover = players[loverDeathIndex];
+
+        meetingMessages += `
+          <div class="lover-death-message">
+            <h3>💔 ${lover.name}'s heart melts into a pile of ash...</h3>
+            <p>
+              They were the 
+              <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+                ${lover.role}
+              </span>
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    cursePending = false;
+    cursedPlayerIndex = null;
+  }
 }
 
   // 🎭 Check Charlatan Curse AFTER all votes are locked
@@ -5136,6 +5169,10 @@ viperAnnouncedPoison = null;
 viperNextPoison = null;
 viperChoosingPoison = false;
 
+medicChoosingAction = false;
+medicActionType = null; // "heal" or "protect"
+medicIndex = null;
+medicHealMessage = "";
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
 charlatanHasActed = false;
@@ -5144,6 +5181,11 @@ arsonistMarkedTarget = null;
 hunterChoosingIndex = null;
 arsonistMarkedTarget = null;
 arsonistChoosingIndex = null;
+charlatanChosenTarget = null;
+cursedPlayerIndex = null;
+cursePending = false;
+charlatanHasActed = false;
+curseCountdown = 0; // NEW
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
