@@ -1426,6 +1426,7 @@ let charlatanChosenTarget = null;
 let cursedPlayerIndex = null;
 let cursePending = false;
 let charlatanHasActed = false;
+let curseCountdown = 0; // NEW
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -4067,7 +4068,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
   // 🎭 Check Charlatan Curse AFTER all votes are locked
 if (charlatanChosenTarget !== null) {
 
-  const impostor = players.find(p => p.role === "Impostor" && p.alive);
+  const impostor = players.find(p => p.role === "Imposter" && p.alive);
 
   if (
     impostor &&
