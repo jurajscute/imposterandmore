@@ -4699,7 +4699,6 @@ const mainEvilRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Hunter"
 
 const impostorsAlive = alivePlayers.filter(p =>
   mainEvilRoles.includes(p.role) ||
-  ["Maniac","Shadow","Cultist","Charlatan"].includes(p.role)
 );
 
   const crewAlive = alivePlayers.filter(p =>
