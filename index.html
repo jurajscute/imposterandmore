@@ -3827,7 +3827,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
     meetingMessages += `
       <hr>
       <div class="roles-reveal-content">
-        <h3>🛡️🩸 The Butcher was shielded!</h3>
+        <h3>🛡️🩸 The Butcher was protected!</h3>
         <p>
           The Sheriff's bullet ricochets off of a Medic's protection.
         </p>
@@ -4142,6 +4142,12 @@ if (eliminatedIndex === null) {
 } else {
 
   const eliminatedPlayer = players[eliminatedIndex];
+
+  // 🛡️ SHIELD INTERRUPTS NORMAL ELIMINATION
+if (eliminatedPlayer.role === "Shield") {
+  renderShieldRetaliation(eliminatedIndex);
+  return;
+}
 
   if (
   eliminatedPlayer.role === "Doubletake" &&
