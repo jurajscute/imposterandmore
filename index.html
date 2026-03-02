@@ -3034,12 +3034,13 @@ function proceedToNextVoter() {
 
 function showCharlatanDecisionScreen() {
 
+  const charlatan = players[currentVoterIndex];
+
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2 style="color:${roleColors["Charlatan"]}">
-        🌀 Choose a player to curse
-      </h2>
-      <p>If the Impostor votes for the same player, they will die after the next vote.</p>
+    <div class="charlatan-screen">
+      <h3>🌀 ${charlatan.name}, choose who to 
+        <span style="color:${roleColors["Charlatan"]};">CURSE</span>
+      </h3>
     </div>
     <div class="roles-reveal-content" id="charlatanOptions"></div>
   `;
@@ -3047,24 +3048,28 @@ function showCharlatanDecisionScreen() {
   const container = document.getElementById("charlatanOptions");
 
   players.forEach((player, index) => {
-    if (!player.alive) return;
 
-    const btn = document.createElement("button");
-    btn.textContent = player.name;
-    btn.className = "reveal-roles-btn";
+    if (player.alive && index !== currentVoterIndex) {
 
-    btn.onclick = () => {
+      const btn = document.createElement("button");
+      btn.textContent = player.name;
+      btn.className = "reveal-roles-btn";
 
-  charlatanChosenTarget = index;
+      btn.onclick = () => {
 
-  charlatanHasActed = true;   // 👈 prevent loop
+        charlatanChosenTarget = index;
 
-  checkCharlatanCurse();
+        checkCharlatanCurse();
 
-  showNextVoter();
-};
+        currentVoterIndex++;   // 👈 ADVANCE TURN (same as Viper)
 
-    container.appendChild(btn);
+        setTimeout(() => {
+          showNextVoter();
+        }, 150);
+      };
+
+      container.appendChild(btn);
+    }
   });
 }
 
