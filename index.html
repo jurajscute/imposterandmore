@@ -4697,14 +4697,14 @@ function endGame(message, winningRole = null) {
 
   let backgroundStyle = "";
 
-  if (winnerTag === "AssassinJester") {
+if (winningRole === "AssassinJester") {
   backgroundStyle = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Jester"]})`;
 }
-else if (winnerTag === "AssassinDoubletake") {
+else if (winningRole === "AssassinDoubletake") {
   backgroundStyle = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Doubletake"]})`;
 }
-else if (roleColors[winnerTag]) {
-  backgroundStyle = roleColors[winnerTag];
+else if (winningRole && roleColors[winningRole]) {
+  backgroundStyle = roleColors[winningRole];
 }
 
   let color = "#ffffff";
