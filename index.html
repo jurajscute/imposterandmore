@@ -4298,18 +4298,18 @@ if (
 ) {
 
   const assassinColor = roleColors["Assassin"];
-  const loverColor = roleColors[eliminatedPlayer.role];
+  const loversColor = roleColors[eliminatedPlayer.role];
 
   votingBox.innerHTML = `
     <div class="win-header"
          style="
-           background: linear-gradient(-45deg, ${loverColor}, ${assassinColor}, ${loverColor});
+           background: linear-gradient(-45deg, ${loversColor}, ${assassinColor}, ${loversColor});
            background-size: 400% 400%;
            animation: gradientShift 8s ease infinite;
            color: white;
          ">
       <h2>
-        <span style="text-shadow:0 0 12px ${loverColor};">
+        <span style="text-shadow:0 0 12px ${loversColor};">
           Heartbreaker</span> <span style="text-shadow:0 0 12px ${assassinColor};">Assassin</span> Win</h2>
     </div>
     <div class="win-content">
