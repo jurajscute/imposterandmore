@@ -4115,15 +4115,27 @@ if (cursePending && cursedPlayerIndex !== null) {
   // 🎭 Check Charlatan Curse AFTER all votes are locked
 if (charlatanChosenTarget !== null) {
 
-  const impostor = players.find(p => p.role === "Imposter" && p.alive);
+  const evilVotedSame = players.some(p =>
+  p.alive &&
+  mainEvilRoles.includes(p.role) &&
+  p.vote === charlatanChosenTarget
+);
 
-  if (
-    impostor &&
-    impostor.vote === charlatanChosenTarget
-  ) {
-    cursedPlayerIndex = charlatanChosenTarget;
-cursePending = false; // Important: NOT true yet
+if (evilVotedSame) {
+  cursedPlayerIndex = charlatanChosenTarget;
+  cursePending = false;
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  if (cursedPlayer) {
+    meetingMessages += `
+      <div class="curse-message">
+        <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
+        <p>An evil force has marked them for death.</p>
+      </div>
+    `;
   }
+}
 
   charlatanChosenTarget = null; // reset for next round
  const cursedPlayer = players[cursedPlayerIndex];
