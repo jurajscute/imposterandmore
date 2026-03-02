@@ -1422,6 +1422,10 @@ let savedCustomSubjects = {};
 //ROUNDS
 let votingRound = 0;
 
+let charlatanChosenTarget = null;
+let cursedPlayerIndex = null;
+let cursePending = false;
+
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
@@ -2874,6 +2878,12 @@ if (voter.role === "Arsonist") {
   return;
 }
 
+// 🎭 CHARLATAN
+if (voter.role === "Charlatan") {
+  showCharlatanDecisionScreen();
+  return;
+}
+
  // 🚑 MEDIC
 if (voter.role === "Medic") {
   showMedicAbilityScreen();
@@ -3019,6 +3029,56 @@ function proceedToNextVoter() {
   setTimeout(() => {
     showNextVoter();
   }, 150);
+}
+
+function showCharlatanDecisionScreen() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2 style="color:${roleColors["Charlatan"]}">
+        🌀 Choose a player to curse
+      </h2>
+      <p>If the Impostor votes for the same player, they will die after the next vote.</p>
+    </div>
+    <div class="roles-reveal-content" id="charlatanOptions"></div>
+  `;
+
+  const container = document.getElementById("charlatanOptions");
+
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+
+    const btn = document.createElement("button");
+    btn.textContent = player.name;
+    btn.className = "reveal-roles-btn";
+
+    btn.onclick = () => {
+
+      charlatanChosenTarget = index;
+
+      checkCharlatanCurse();
+
+      showNextVoter(); // Resume normal vote flow
+    };
+
+    container.appendChild(btn);
+  });
+}
+
+function checkCharlatanCurse() {
+
+  const impostor = players.find(p => p.role === "Impostor" && p.alive);
+
+  if (
+    impostor &&
+    charlatanChosenTarget !== null &&
+    impostor.vote === charlatanChosenTarget
+  ) {
+    cursedPlayerIndex = charlatanChosenTarget;
+    cursePending = true;
+  }
+
+  charlatanChosenTarget = null;
 }
 
 function showPoisonScreen() {
@@ -3993,6 +4053,43 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
   butcherPendingKill = null;
   butcherRevealMessage = "";
 }
+
+if (cursePending && cursedPlayerIndex !== null) {
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  if (cursedPlayer.alive) {
+
+    cursedPlayer.alive = false;
+
+    votingBox.innerHTML = `
+      <div class="roles-reveal-header">
+        <h2 style="color:${roleColors["Charlatan"]}">
+          ☠️ The Curse Activates!
+        </h2>
+      </div>
+      <div class="roles-reveal-content">
+        <h3>${cursedPlayer.name} dies from a dark curse...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
+            ${cursedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    cursePending = false;
+    cursedPlayerIndex = null;
+
+    addContinueButton();
+    return;
+  }
+
+  cursePending = false;
+  cursedPlayerIndex = null;
+}
+
   // =====================================================
   // 🐍 Schedule Next Poison
   // =====================================================
