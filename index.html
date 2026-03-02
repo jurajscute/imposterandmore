@@ -4213,6 +4213,9 @@ if (
 
 // ASSASSIN + JESTER / ASSASSIN + DOUBLETAKE
 const eliminatedPlayer = players[eliminatedIndex];
+if (eliminatedIndex === null || eliminatedIndex === undefined) {
+  return;
+}
 
 let assassinWins = false;
 let jesterWins = false;
