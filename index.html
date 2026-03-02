@@ -4198,6 +4198,7 @@ if (eliminatedIndex === null) {
 // =====================================================
 // 🏆 WIN CONDITION CHECK
 // =====================================================
+if (eliminatedIndex !== null) {
 
 const eliminatedPlayer = players[eliminatedIndex];
 const assassinPlayer = players.find(p => p.role === "Assassin");
@@ -4378,6 +4379,7 @@ if (
     "Lovers"
   );
   return;
+}
 }
 
   // =====================================================
