@@ -4078,72 +4078,6 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
     viperNextPoison = null;
   }
 
-// =====================================================
-// 🧿 CURSE ACTIVATION (FROM PREVIOUS ROUND)
-// =====================================================
-
-if (cursePending && cursedPlayerIndex !== null) {
-
-  // 🔥 NEW: Check if curse should break
-  if (!isCurseStillValid()) {
-
-    const savedPlayer = players[cursedPlayerIndex];
-
-    if (savedPlayer && savedPlayer.alive) {
-      meetingMessages += `
-        <div class="curse-break-message">
-          <h3>✨ The curse on ${savedPlayer.name} has been broken!</h3>
-          <p>The corrupted source has been split.</p>
-        </div>
-      `;
-    }
-
-    cursePending = false;
-    cursedPlayerIndex = null;
-
-  } else {
-
-    const cursedPlayer = players[cursedPlayerIndex];
-
-    if (cursedPlayer && cursedPlayer.alive) {
-
-      cursedPlayer.alive = false;
-
-      const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
-
-      meetingMessages += `
-        <div class="curse-death-message">
-          <h3>🖤 ${cursedPlayer.name}'s heart rots as they're consumed by darkness...</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
-              ${cursedPlayer.role}
-            </span>
-          </p>
-        </div>
-      `;
-
-      if (loverDeathIndex !== null) {
-        const lover = players[loverDeathIndex];
-
-        meetingMessages += `
-          <div class="lover-death-message">
-            <h3>💔 ${lover.name}'s heart melts into a pile of ash...</h3>
-            <p>
-              They were the 
-              <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-                ${lover.role}
-              </span>
-            </p>
-          </div>
-        `;
-      }
-    }
-
-    cursePending = false;
-    cursedPlayerIndex = null;
-  }
-}
 
   // 🎭 Check Charlatan Curse AFTER all votes are locked
 if (charlatanChosenTarget !== null) {
@@ -4382,6 +4316,71 @@ if (eliminatedPlayer.role === "Shield") {
   }
 }
 
+// =====================================================
+// 🧿 CURSE ACTIVATION (AFTER VOTE RESOLUTION)
+// =====================================================
+
+if (cursePending && cursedPlayerIndex !== null) {
+
+  const charlatanAlive = players.some(p =>
+    p.alive && p.role === "Charlatan"
+  );
+
+  const evilAlive = players.some(p =>
+    p.alive && mainEvilRoles.includes(p.role)
+  );
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  if (!charlatanAlive || !evilAlive) {
+
+    if (cursedPlayer && cursedPlayer.alive) {
+      meetingMessages += `
+        <div class="curse-break-message">
+          <h3>✨ The curse on ${cursedPlayer.name} has been broken!</h3>
+          <p>The corrupted source has been split.</p>
+        </div>
+      `;
+    }
+
+  } else if (cursedPlayer && cursedPlayer.alive) {
+
+    cursedPlayer.alive = false;
+
+    const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
+
+    meetingMessages += `
+      <div class="curse-death-message">
+        <h3>🖤 ${cursedPlayer.name}'s heart rots as they're consumed by darkness...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
+            ${cursedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+
+      meetingMessages += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name}'s heart melts into a pile of ash...</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+              ${lover.role}
+            </span>
+          </p>
+        </div>
+      `;
+    }
+  }
+
+  cursePending = false;
+  cursedPlayerIndex = null;
+}
 
 // =====================================================
 // 🏆 WIN CONDITION CHECK
