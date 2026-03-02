@@ -113,6 +113,7 @@
     .role-card.medic { border-left-color: #29c26e; } .medic .role-icon { background: #29c26e; }
     .role-card.maniac { border-left-color: #530000; } .maniac .role-icon { background: #530000; }
     .role-card.cultist { border-left-color: #c47070; } .cultist .role-icon { background: #c47070; }
+    .role-card.charlatan { border-left-color: #272f52; } .charlatan .role-icon { background: #272f52; }
     .role-card.shadow { border-left-color: #2b2b2b; } .shadow .role-icon { background: #2b2b2b; }
     hellos
     
@@ -248,6 +249,7 @@
     .medic-role { color: #29c26e; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .maniac-role { color: #530000; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .cultist-role { color: #c47070; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
+    .charlatan-role { color: #272f52; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     .shadow-role { color: #2b2b2b; font-size: 14px; font-weight: 700; margin-top: 4px; text-align: center; line-height: 1.3; }
     
     .category-box { padding: 10px 12px; border-radius: 10px; background: #eef2ff; text-align: center; font-size: clamp(14px, 3.5vw, 16px); font-weight: 600; opacity: 0; transform: translateY(-10px); transition: opacity 0.25s, transform 0.25s; min-height: 44px; display: flex; align-items: center; justify-content: center; word-break: break-word; width: 100%; }
@@ -258,7 +260,7 @@
     .card-btn:active { transform: scale(0.96); }
     .card-btn.locked { background: #d1d5db; color: #6b7280; cursor: default; transform: none; opacity: 0.8; }
     
-    .imposter-hint,.butcher-hint,  .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .doubletake-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .frozen-hint, .lovers-hint, .sheriff-hint, .echo-hint, .psychic-hint, .idiot-hint, .philosopher-hint, .medic-hint, .maniac-hint, .cultist-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
+    .imposter-hint,.butcher-hint,  .dictator-hint, .mastermind-hint, .hunter-hint, .detective-hint, .assassin-hint, .jester-hint, .doubletake-hint, .jackal-hint, .arsonist-hint, .viper-hint, .shield-hint, .king-hint, .frozen-hint, .lovers-hint, .sheriff-hint, .echo-hint, .psychic-hint, .idiot-hint, .philosopher-hint, .medic-hint, .maniac-hint, .cultist-hint, .charlatan-hint, .shadow-hint { font-size: 13px; font-weight: 600; margin-top: 6px; text-align: center; padding: 8px; border-radius: 8px; border: 1px solid; line-height: 1.4; opacity: 0; transform: translateY(10px); transition: opacity 0.25s, transform 0.25s; }
     .detective-hint { color: #10b981; background: #f0fdf4; border-color: #bbf7d0; }
     .imposter-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
     .butcher-hint { color: #ff0000; background: #ffd2d2; border-color: #ff0000; }
@@ -283,8 +285,9 @@
     .medic-hint { color: #29c26e; background: #d3ffe9; border-color: #29c26e; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
     .cultist-hint { color: #c47070; background: #ffefef; border-color: #c47070; }
+    .charlatan-hint { color: #272f52; background: #a5aaee; border-color: #272f52; }
     .shadow-hint { color: #2b2b2b; background: #e2e2e2; border-color: #202020; }
-    .imposter-hint.show, .butcher-hint.show, .dictator-hint.show, .mastermind-hint.show, .hunter-hint.show, .medic-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .doubletake-hint.show, .jackal-hint.show, .arsonist-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .frozen-hint.show, .lovers-hint.show, .echo-hint.show, .psychic-hint.show, .sheriff-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .cultist-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
+    .imposter-hint.show, .butcher-hint.show, .dictator-hint.show, .mastermind-hint.show, .hunter-hint.show, .medic-hint.show, .detective-hint.show, .assassin-hint.show, .jester-hint.show, .doubletake-hint.show, .jackal-hint.show, .arsonist-hint.show, .viper-hint.show, .shield-hint.show, .king-hint.show, .frozen-hint.show, .lovers-hint.show, .echo-hint.show, .psychic-hint.show, .sheriff-hint.show, .idiot-hint.show, .philosopher-hint.show, .maniac-hint.show, .cultist-hint.show, .charlatan-hint.show, .shadow-hint.show { opacity: 1; transform: translateY(0); }
     
     .status-section { margin-top: 28px; width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .reveal-tracker { text-align: center; margin-bottom: 20px; font-size: clamp(16px, 4vw, 20px); font-weight: 800; color: #4f46e5; min-height: 32px; padding: 16px; background: #fff; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; }
@@ -368,6 +371,7 @@
     .role-list .medic-role { background: #d3ffe9; color: #29c26e; border-left-color: #29c26e; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
     .role-list .cultist-role { background: #ffefef; color: #c47070; border-left-color: #c47070; }
+    .role-list .charlatan-role { background: #a5aaee; color: #272f52; border-left-color: #272f52; }
     .role-list .shadow-role { background: #e2e2e2; color: #2b2b2b; border-left-color: #2b2b2b; }
     .assassin-target { font-size: 12px; color: #8b5cf6; font-weight: 600; margin-top: 4px; background: rgba(139, 92, 246, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
     .king-badge { font-size: 12px; color: #d97706; font-weight: 600; margin-top: 4px; background: rgba(234, 179, 8, 0.1); padding: 4px 8px; border-radius: 6px; display: inline-block; }
@@ -933,6 +937,7 @@ poison-death.poison-death {
             <div class="role-card medic"><h4><span class="role-icon">⚕️</span>Medic</h4><p>Select a target to protect from being killed next round!</p><div class="goal">Goal: Eliminate impostor and defend your teammates.</div></div>
             <div class="role-card maniac"><h4><span class="role-icon">💢</span>Maniac</h4><p>Help the impostor win, but without using a vote!</p><div class="goal">Goal: Win with the Impostor.</div></div>
             <div class="role-card cultist"><h4><span class="role-icon">🪬</span>Cultist</h4><p>Worship your unknown leader!</p><div class="goal">Goal: Win with the Impostor.</div></div>
+            <div class="role-card charlatan"><h4><span class="role-icon">🌀</span>Charlatan</h4><p>Select a target to curse, if the impostor votes for the person you cursed they will die from your magic!</p><div class="goal">Goal: Win with the Impostor.</div></div>
             <div class="role-card shadow"><h4><span class="role-icon">🐈‍⬛</span>Shadow</h4><p>Figure out the word and help the impostor!</p><div class="goal">Goal: Win with the Impostor.</div></div>
           </div>
         </div>
@@ -1222,6 +1227,13 @@ poison-death.poison-death {
       </label>
     </div>
 
+    <div class="role-pill charlatan-toggle" id="charlatanContainer">
+      <label>
+        <input id="charlatanToggle" type="checkbox" name="charlatan">
+        Charlatan
+      </label>
+    </div>
+
   </div>
 
   <!-- ================= NEUTRAL ================= -->
@@ -1374,7 +1386,7 @@ let viperNextPoison = null;     // selected this meeting
 let viperActivePoison = null;   // kills NEXT meeting
 let meetingMessages = "";
 
-let sheriffAllowedRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Jester", "Doubletake", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Shadow"]; // roles Sheriff can kill safely
+let sheriffAllowedRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Jester", "Doubletake", "Hunter", "Jackal", "Arsonist", "Assassin", "Viper", "Maniac", "Cultist", "Charlatan", "Shadow"]; // roles Sheriff can kill safely
 let dictatorBlockedPlayer = null;
 
 let sheriffShotTarget = null;
@@ -1475,6 +1487,7 @@ const philosopherToggle = document.getElementById("philosopherToggle");
 const medicToggle = document.getElementById("medicToggle");
 const maniacToggle = document.getElementById("maniacToggle");
 const cultistToggle = document.getElementById("cultistToggle");
+const charlatanToggle = document.getElementById("cultistToggle");
 const shadowToggle = document.getElementById("shadowToggle");
 
 // Role colors
@@ -1487,6 +1500,7 @@ const roleColors = {
   
   "Maniac": "#530000",
   "Cultist": "#c47070",
+  "Charlatan": "#272f52",
   "Shadow": "#2b2b2b",
 
   "Detective": "#10b981",
@@ -1551,6 +1565,7 @@ const roleData = {
 
   maniac:     { team: "Evil" },
   cultist:    { team: "Evil" },
+  charlatan:  { team: "Evil" },
   shadow:     { team: "Evil" },
 
   jackal:     { team: "Neutral" },
@@ -1587,6 +1602,7 @@ const medicContainer = document.getElementById("medicContainer");
 const sheriffContainer = document.getElementById("sheriffContainer");
 const maniacContainer = document.getElementById("maniacContainer");
 const cultistContainer = document.getElementById("cultistContainer");
+const charlatanContainer = document.getElementById("charlatanContainer");
 const shadowContainer = document.getElementById("shadowContainer");
 
 // Modal elements
@@ -1927,6 +1943,7 @@ medicToggle.checked = JSON.parse(localStorage.getItem("medicEnabled")) || false;
 sheriffToggle.checked = JSON.parse(localStorage.getItem("sheriffEnabled")) || false;
 maniacToggle.checked = JSON.parse(localStorage.getItem("maniacEnabled")) || false;
 cultistToggle.checked = JSON.parse(localStorage.getItem("cultistEnabled")) || false;
+charlatanToggle.checked = JSON.parse(localStorage.getItem("charlatanEnabled")) || false;
 shadowToggle.checked = JSON.parse(localStorage.getItem("shadowEnabled")) || false;
 
 // We do NOT save randomize state to local storage to force a fresh decision, or we can save it.
@@ -2626,6 +2643,9 @@ function revealAllRoles() {
     }  else if (word === "Cultist") {
       roleName = "Cultist";
       roleClass = "cultist-role";
+    }  else if (word === "Charlatan") {
+      roleName = "Charlatan";
+      roleClass = "charlatan-role";
     }  else if (word === "Shadow") {
       roleName = "Shadow";
       roleClass = "shadow-role";
@@ -4677,7 +4697,7 @@ const mainEvilRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Hunter"
 
 const impostorsAlive = alivePlayers.filter(p =>
   mainEvilRoles.includes(p.role) ||
-  ["Maniac","Shadow","Cultist"].includes(p.role)
+  ["Maniac","Shadow","Cultist","Charlatan"].includes(p.role)
 );
 
   const crewAlive = alivePlayers.filter(p =>
@@ -4884,6 +4904,7 @@ const roleToggleMap = {
 
   Maniac: "maniacToggle",
   Cultist: "cultistToggle",
+  Charlatan: "charlatanToggle",
   Shadow: "shadowToggle",
 
   Jester: "jesterToggle",
@@ -5117,6 +5138,7 @@ firstPlayerBox.textContent = "";
   let useSheriff = sheriffToggle.checked;
   let useManiac = maniacToggle.checked;
   let useCultist = cultistToggle.checked;
+  let useCharlatan = charlatanToggle.checked;
   let useShadow = shadowToggle.checked;
   let useKing = kingToggle.checked;
   let useFrozen = frozenToggle.checked;
@@ -5142,6 +5164,7 @@ useMedic = false;
 useSheriff = false;
 useManiac = false;
 useCultist = false;
+useCharlatan = false;
 useShadow = false;
 useKing = false;
 useFrozen = false;
@@ -5169,6 +5192,7 @@ if (medicToggle.checked) rolePool.push('medic');
 if (sheriffToggle.checked) rolePool.push('sheriff');
 if (maniacToggle.checked) rolePool.push('maniac');
 if (cultistToggle.checked) rolePool.push('cultist');
+if (charlatanToggle.checked) rolePool.push('charlatan');
 if (shadowToggle.checked) rolePool.push('shadow');
 
 if (cluelessToggle.checked && categoryItems.length >= 2) {
@@ -5243,6 +5267,7 @@ selectedRoles.forEach(role => {
   if (role === 'sheriff') useSheriff = true;
   if (role === 'maniac') useManiac = true;
   if (role === 'cultist') useCultist = true;
+  if (role === 'charlatan') useCharlatan = true;
   if (role === 'shadow') useShadow = true;
 });
 // 🟢 STEP 4 — Add-ons (DO NOT consume slots)
@@ -5291,6 +5316,7 @@ if (frozenToggle.checked) {
       if (useSheriff) specialRolesCount++;
       if (useManiac) specialRolesCount++;
       if (useCultist) specialRolesCount++;
+      if (useCharlatan) specialRolesCount++;
       if (useShadow) specialRolesCount++;
       
       if (civilianSlots < specialRolesCount + 1) { 
@@ -5382,6 +5408,7 @@ const evilHelperPool = [];
 
 if (useManiac) evilHelperPool.push("Maniac");
 if (useCultist) evilHelperPool.push("Cultist");
+if (useCharlatan) evilHelperPool.push("Charlatan");
 if (useShadow) evilHelperPool.push("Shadow");
 // Add future helper roles here
 // if (useSomeNewRole) evilHelperPool.push("SomeNewRole");
@@ -5394,6 +5421,7 @@ if (evilHelperPool.length > 0) {
 }
 useManiac = selectedEvilHelper === "Maniac";
 useCultist = selectedEvilHelper === "Cultist";
+useCharlatan = selectedEvilHelper === "Charlatan";
 useShadow = selectedEvilHelper === "Shadow";
 
   // Detective
@@ -5583,6 +5611,17 @@ useShadow = selectedEvilHelper === "Shadow";
       }
     }
   }
+  // Charlatan
+  if (useCharlatan) {
+    let assigned = false;
+    while (!assigned) {
+      const idx = Math.floor(Math.random() * playerCount);
+      if (words[idx] === "Civilian") {
+        words[idx] = "Charlatan";
+        assigned = true;
+      }
+    }
+  }
 // Shadow
   if (useShadow) {
     let assigned = false;
@@ -5677,7 +5716,7 @@ if (useLovers && playerCount >= 2) {
     
     if (newAssassinIndex !== null && newTargetIndex !== null && newAssassinIndex === newTargetIndex) {
       for (let i = 0; i < words.length; i++) {
-        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Butcher" && words[i] !== "Dictator" && words[i] !== "Mastermind" && words[i] !== "Hunter"  && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Doubletake" && words[i] !== "Arsonist" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Psychic" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Medic" && words[i] !== "Sheriff" && words[i] !== "Maniac" && words[i] !== "Cultist" && words[i] !== "Shadow" ) {
+        if (i !== newAssassinIndex && words[i] !== "Imposter" && words[i] !== "Butcher" && words[i] !== "Dictator" && words[i] !== "Mastermind" && words[i] !== "Hunter"  && words[i] !== "Detective" && words[i] !== "Jester" && words[i] !== "Doubletake" && words[i] !== "Arsonist" && words[i] !== "Jackal" && words[i] !== "Viper"  && words[i] !== "Shield" && words[i] !== "Assassin" && words[i] !== "Clueless" && words[i] !== "Echo" && words[i] !== "Psychic" && words[i] !== "Idiot" && words[i] !== "Philosopher" && words[i] !== "Medic" && words[i] !== "Sheriff" && words[i] !== "Maniac" && words[i] !== "Cultist" && words[i] !== "Charlatan" && words[i] !== "Shadow" ) {
           [words[newAssassinIndex], words[i]] = [words[i], words[newAssassinIndex]];
           assassinTarget = i + 1;
           break;
@@ -5709,7 +5748,7 @@ function initializePlayers() {
     const specialRoles = [
       "Imposter","Butcher","Dictator","Mastermind","Hunter","Detective","Jester","Doubletake","Jackal","Arsonist","Viper", "Shield",
       "Assassin","Clueless","Echo","Psychic","Idiot","Philosopher","Medic",
-      "Maniac","Cultist","Shadow","Sheriff"
+      "Maniac","Cultist","Charlatan","Shadow","Sheriff"
     ];
 
     if (!specialRoles.includes(roleName)) {
@@ -5817,6 +5856,7 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
         else if (targetWord === "Sheriff") roleReveal = "a Sheriff";
         else if (targetWord === "Maniac") roleReveal = "Mentally ill";
         else if (targetWord === "Cultist") roleReveal = "Mentally ill";
+        else if (targetWord === "Charlatan") roleReveal = "Evil";
         else if (targetWord === "Shadow") roleReveal = "Evil";
         else if (targetWord === "Detective") roleReveal = "Detective"; // Should be impossible if logic holds
         else roleReveal = "Crew"; // Or the secret word
@@ -6106,6 +6146,12 @@ shuffledRoles.forEach(([role, count]) => {
           roleText.className = "cultist-role";
           roleText.textContent = "Cultist";
           wordBox.appendChild(roleText);
+          } else if (word === "Charlatan") {
+          wordBox.textContent = "???";
+          const roleText = document.createElement("div");
+          roleText.className = "charlatan-role";
+          roleText.textContent = "Charlatan";
+          wordBox.appendChild(roleText);
           } else if (word === "Shadow") {
           wordBox.textContent = "???";
           const roleText = document.createElement("div");
@@ -6238,6 +6284,9 @@ if (realEvilIndex !== -1) {
         } else if (word === "Cultist") {
           specialHint.className = "cultist-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Find your leader and protect them at <strong>ALL</stong> costs!`;
+        } else if (word === "Charlatan") {
+          specialHint.className = "charlatan-hint";
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br><strong>Curse</strong> your enemies!<br>If the impostor votes the same person you cursed, the target <strong>dies</strong> 1 round later!<br><br><strong>YOUR VOTE DOESN'T COUNT</strong>`;
         } else if (word === "Shadow") {
 
   const realEvilIndex = words.findIndex(role =>
@@ -6568,6 +6617,10 @@ maniacToggle.addEventListener("change", () => {
 
 cultistToggle.addEventListener("change", () => {
   localStorage.setItem("cultistEnabled", cultistToggle.checked);
+});
+
+charlatanToggle.addEventListener("change", () => {
+  localStorage.setItem("charlatanEnabled", charlatanToggle.checked);
 });
 
 shadowToggle.addEventListener("change", () => {
