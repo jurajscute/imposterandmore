@@ -4211,42 +4211,51 @@ if (
 }
 
 
-// ASSASSIN + JESTER / ASSASSIN + DOUBLETAKE
-const eliminatedPlayer = players[eliminatedIndex];
-if (eliminatedIndex === null || eliminatedIndex === undefined) {
-  return;
-}
+// ----- NEUTRAL WIN CHECKS -----
 
 let assassinWins = false;
 let jesterWins = false;
 let doubletakeWins = false;
 
 if (
-  assassinTarget !== null &&
-  eliminatedIndex === assassinTarget - 1
+  eliminatedIndex !== null &&
+  eliminatedIndex !== undefined &&
+  eliminatedIndex >= 0 &&
+  players[eliminatedIndex]
 ) {
-  const assassinPlayer = players.find(p => p.role === "Assassin");
 
-  if (assassinPlayer && assassinPlayer.alive) {
-    assassinWins = true;
+  const eliminatedPlayer = players[eliminatedIndex];
+
+  // Assassin target voted
+  if (
+    assassinTarget !== null &&
+    eliminatedIndex === assassinTarget - 1
+  ) {
+    const assassinPlayer = players.find(p => p.role === "Assassin");
+    if (assassinPlayer && assassinPlayer.alive) {
+      assassinWins = true;
+    }
+  }
+
+  // Jester voted
+  if (eliminatedPlayer.role === "Jester") {
+    jesterWins = true;
+  }
+
+  // Doubletake voted after first round
+  if (
+    eliminatedPlayer.role === "Doubletake" &&
+    votingRound >= 2
+  ) {
+    doubletakeWins = true;
   }
 }
-
-if (eliminatedPlayer.role === "Jester") {
-  jesterWins = true;
-}
-
-if (
-  eliminatedPlayer.role === "Doubletake" &&
-  votingRound > 1
-) {
-  doubletakeWins = true;
-}
+// ----- RESOLVE NEUTRAL WINS -----
 
 if (assassinWins && jesterWins) {
   endGame(
     `<strong>Assassin & Jester win!</strong><br>
-     The Jester cackled as the Assassin sharpened his dagger.`,
+     Chaos erupted as both achieved their twisted goals.`,
     "AssassinJester"
   );
   return;
@@ -4255,7 +4264,7 @@ if (assassinWins && jesterWins) {
 if (assassinWins && doubletakeWins) {
   endGame(
     `<strong>Assassin & Doubletake win!</strong><br>
-     After patiantley waiting they both prevailed.`,
+     Patience and precision led them both to victory.`,
     "AssassinDoubletake"
   );
   return;
