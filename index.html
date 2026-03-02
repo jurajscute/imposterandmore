@@ -4698,7 +4698,7 @@ function checkWinCondition() {
 const mainEvilRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Hunter"];
 
 const impostorsAlive = alivePlayers.filter(p =>
-  mainEvilRoles.includes(p.role) ||
+  mainEvilRoles.includes(p.role)
 );
 
   const crewAlive = alivePlayers.filter(p =>
