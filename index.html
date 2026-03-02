@@ -4195,6 +4195,11 @@ if (eliminatedIndex === null) {
 // 🏆 WIN CONDITION CHECK
 // =====================================================
 
+if (eliminatedIndex === null) return;
+
+const eliminatedPlayer = players[eliminatedIndex];
+const assassinPlayer = players.find(p => p.role === "Assassin");
+
 // ASSASSIN AND JESTER
 if (
   assassinTarget !== null &&
