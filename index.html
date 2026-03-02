@@ -4195,51 +4195,6 @@ if (eliminatedIndex === null) {
 // 🏆 WIN CONDITION CHECK
 // =====================================================
 
-// 🎭 JESTER — Wins if voted out
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
-
-  if (eliminatedPlayer.role === "Jester") {
-    endGame(
-      `<strong>${eliminatedPlayer.name} the Jester wins!</strong><br>
-       They were voted out!`,
-      "Jester"
-    );
-    return;
-  }
-}
-
-// 🎭 DOUBLETAKE — Wins if voted after first round
-if (eliminatedIndex !== null) {
-  const eliminatedPlayer = players[eliminatedIndex];
-
-  if (eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
-  endGame(
-    `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
-     They fooled everyone…`,
-    "Doubletake"
-  );
-  return;
-}
-}
-// 🎯 ASSASSIN — Wins if their target is voted out
-if (
-  assassinTarget !== null &&
-  eliminatedIndex === assassinTarget - 1
-) {
-
-  const assassinPlayer = players.find(p => p.role === "Assassin");
-
-  if (assassinPlayer && assassinPlayer.alive) {
-    endGame(
-      `<strong>${assassinPlayer.name} the Assassin wins!</strong><br>
-       Their target was voted out!`,
-      "Assassin"
-    );
-    return;
-  }
-}
-
 // 💕 LOVERS — Win if only lovers remain alive
 const alivePlayers = players.filter(p => p.alive);
 
@@ -4251,6 +4206,74 @@ if (
     `<strong>The Lovers win together!</strong><br>
      Love conquers all.`,
     "Lovers"
+  );
+  return;
+}
+
+
+// ASSASSIN + JESTER / ASSASSIN + DOUBLETAKE
+const eliminatedPlayer = players[eliminatedIndex];
+
+let assassinWins = false;
+let jesterWins = false;
+let doubletakeWins = false;
+
+if (
+  assassinTarget !== null &&
+  eliminatedIndex === assassinTarget - 1
+) {
+  const assassinPlayer = players.find(p => p.role === "Assassin");
+
+  if (assassinPlayer && assassinPlayer.alive) {
+    assassinWins = true;
+  }
+}
+
+if (eliminatedPlayer.role === "Jester") {
+  jesterWins = true;
+}
+
+if (assassinWins && jesterWins) {
+  endGame(
+    `<strong>Assassin & Jester win!</strong><br>
+     The Jester cackled as the Assassin sharpened his dagger.`,
+    "AssassinJester"
+  );
+  return;
+}
+
+if (assassinWins && doubletakeWins) {
+  endGame(
+    `<strong>Assassin & Doubletake win!</strong><br>
+     After patiantley waiting they both prevailed.`,
+    "AssassinDoubletake"
+  );
+  return;
+}
+
+if (assassinWins) {
+  endGame(
+    `<strong>The Assassin wins!</strong><br>
+     Their marked target was voted out.`,
+    "Assassin"
+  );
+  return;
+}
+
+if (jesterWins) {
+  endGame(
+    `<strong>The Jester wins!</strong><br>
+     They were voted out!`,
+    "Jester"
+  );
+  return;
+}
+
+if (doubletakeWins) {
+  endGame(
+    `<strong>The Doubletake wins!</strong><br>
+     They survived the first vote and were eliminated.`,
+    "Doubletake"
   );
   return;
 }
