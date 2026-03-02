@@ -1425,6 +1425,7 @@ let votingRound = 0;
 let charlatanChosenTarget = null;
 let cursedPlayerIndex = null;
 let cursePending = false;
+let charlatanHasActed = false;
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -2879,7 +2880,7 @@ if (voter.role === "Arsonist") {
 }
 
 // 🎭 CHARLATAN
-if (voter.role === "Charlatan") {
+if (voter.role === "Charlatan" && !charlatanHasActed) {
   showCharlatanDecisionScreen();
   return;
 }
@@ -3054,12 +3055,14 @@ function showCharlatanDecisionScreen() {
 
     btn.onclick = () => {
 
-      charlatanChosenTarget = index;
+  charlatanChosenTarget = index;
 
-      checkCharlatanCurse();
+  charlatanHasActed = true;   // 👈 prevent loop
 
-      showNextVoter(); // Resume normal vote flow
-    };
+  checkCharlatanCurse();
+
+  showNextVoter();
+};
 
     container.appendChild(btn);
   });
@@ -4054,42 +4057,6 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
   butcherRevealMessage = "";
 }
 
-if (cursePending && cursedPlayerIndex !== null) {
-
-  const cursedPlayer = players[cursedPlayerIndex];
-
-  if (cursedPlayer.alive) {
-
-    cursedPlayer.alive = false;
-
-    votingBox.innerHTML = `
-      <div class="roles-reveal-header">
-        <h2 style="color:${roleColors["Charlatan"]}">
-          ☠️ The Curse Activates!
-        </h2>
-      </div>
-      <div class="roles-reveal-content">
-        <h3>${cursedPlayer.name} dies from a dark curse...</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
-            ${cursedPlayer.role}
-          </span>
-        </p>
-      </div>
-    `;
-
-    cursePending = false;
-    cursedPlayerIndex = null;
-
-    addContinueButton();
-    return;
-  }
-
-  cursePending = false;
-  cursedPlayerIndex = null;
-}
-
   // =====================================================
   // 🐍 Schedule Next Poison
   // =====================================================
@@ -4318,6 +4285,73 @@ if (eliminatedPlayer.role === "Shield") {
   `;
 }
   }
+}
+
+// ☠️ Curse Applied Announcement
+if (cursePending && cursedPlayerIndex !== null) {
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  meetingMessages += `
+    <div class="curse-message">
+      <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
+      <p>They will die after the next vote.</p>
+    </div>
+  `;
+}
+
+// ☠️ Curse Activation
+if (cursePending && cursedPlayerIndex !== null) {
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  if (cursedPlayer.alive) {
+
+    cursedPlayer.alive = false;
+
+    const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
+
+    screenHTML = `
+      <div class="roles-reveal-header">
+        <h2>🖤 ${cursedPlayer.name}'s heart rots away as darkness consumes them!</h2>
+      </div>
+      <div class="roles-reveal-content">
+        <p>
+          They were the 
+          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
+            ${cursedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    meetingMessages = "";
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+
+      meetingMessages += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name} has their heart melt away...</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+              ${lover.role}
+            </span>
+          </p>
+        </div>
+      `;
+    }
+
+    cursePending = false;
+    cursedPlayerIndex = null;
+
+    addContinueButton();
+    return;
+  }
+
+  cursePending = false;
+  cursedPlayerIndex = null;
 }
 
 // =====================================================
@@ -4709,6 +4743,7 @@ arsonistMarkedTarget = null;
   }
 
   sheriffShotTarget = null;
+  charlatanHasActed = false;
 
   addFinalContinueButton();
 }
@@ -4769,6 +4804,7 @@ if (viperNextPoison !== null) {
 
   dictatorBlockedPlayer = null;
   sheriffShotTarget = null;
+  charlatanHasActed = false;
   viperChoosingPoison = false;
 
   // 🏹 Hunter reset (only if ability already used)
@@ -5102,6 +5138,7 @@ viperChoosingPoison = false;
 
 dictatorBlockedPlayer = null;
 sheriffShotTarget = null;
+charlatanHasActed = false;
 hunterMarkedTarget = null;
 arsonistMarkedTarget = null;
 hunterChoosingIndex = null;
