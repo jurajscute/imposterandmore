@@ -4236,6 +4236,13 @@ if (eliminatedPlayer.role === "Jester") {
   jesterWins = true;
 }
 
+if (
+  eliminatedPlayer.role === "Doubletake" &&
+  votingRound > 1
+) {
+  doubletakeWins = true;
+}
+
 if (assassinWins && jesterWins) {
   endGame(
     `<strong>Assassin & Jester win!</strong><br>
