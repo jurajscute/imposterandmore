@@ -4695,19 +4695,17 @@ function shadeColor(color, percent) {
 
 function endGame(message, winningRole = null) {
 
-  let backgroundStyle = "";
+let color = "#ffffff";
 
 if (winningRole === "AssassinJester") {
-  backgroundStyle = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Jester"]})`;
+  color = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Jester"]})`;
 }
 else if (winningRole === "AssassinDoubletake") {
-  backgroundStyle = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Doubletake"]})`;
+  color = `linear-gradient(135deg, ${roleColors["Assassin"]}, ${roleColors["Doubletake"]})`;
 }
 else if (winningRole && roleColors[winningRole]) {
-  backgroundStyle = roleColors[winningRole];
+  color = roleColors[winningRole];
 }
-
-  let color = "#ffffff";
 
   if (winningRole && roleColors[winningRole]) {
     color = roleColors[winningRole];
