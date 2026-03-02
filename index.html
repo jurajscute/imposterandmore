@@ -4075,7 +4075,7 @@ if (charlatanChosenTarget !== null) {
     impostor.vote === charlatanChosenTarget
   ) {
     cursedPlayerIndex = charlatanChosenTarget;
-    cursePending = true;
+cursePending = false; // Important: NOT true yet
   }
 
   charlatanChosenTarget = null; // reset for next round
@@ -4309,7 +4309,7 @@ if (cursePending && cursedPlayerIndex !== null) {
 
   const cursedPlayer = players[cursedPlayerIndex];
 
-  if (cursedPlayer && cursedPlayer.alive) {
+  if (cursedPlayer) {
 
     cursedPlayer.alive = false;
 
@@ -4561,6 +4561,11 @@ if (
   btn.className = "reveal-roles-btn";
   btn.onclick = () => nextRound();
   votingBox.appendChild(btn);
+
+  // If someone was cursed this round, arm it for next round
+if (cursedPlayerIndex !== null && !cursePending) {
+  cursePending = true;
+}
 }
 
 function renderShieldRetaliation(eliminatedIndex) {
