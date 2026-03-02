@@ -4065,6 +4065,53 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
     viperNextPoison = null;
   }
 
+// =====================================================
+// 🧿 CURSE ACTIVATION (FROM PREVIOUS ROUND)
+// =====================================================
+
+if (cursePending && cursedPlayerIndex !== null) {
+
+  const cursedPlayer = players[cursedPlayerIndex];
+
+  if (cursedPlayer && cursedPlayer.alive) {
+
+    cursedPlayer.alive = false;
+
+    const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
+
+    meetingMessages += `
+      <div class="curse-death-message">
+        <h3>🖤 ${cursedPlayer.name}'s heart rots as they're consumed by darkness...</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
+            ${cursedPlayer.role}
+          </span>
+        </p>
+      </div>
+    `;
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+
+      meetingMessages += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name}'s heart melts into a pile of ash...</h3>
+          <p>
+            They were the 
+            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
+              ${lover.role}
+            </span>
+          </p>
+        </div>
+      `;
+    }
+  }
+
+  cursePending = false;
+  cursedPlayerIndex = null;
+}
+
   // 🎭 Check Charlatan Curse AFTER all votes are locked
 if (charlatanChosenTarget !== null) {
 
@@ -4079,6 +4126,12 @@ cursePending = false; // Important: NOT true yet
   }
 
   charlatanChosenTarget = null; // reset for next round
+  meetingMessages += `
+  <div class="curse-message">
+    <h3>🧿 ${players[cursedPlayerIndex].name} feels their soul rotting away...</h3>
+    <p>They will die after the next vote.</p>
+  </div>
+`;
 }
 
   // =====================================================
@@ -4291,62 +4344,6 @@ if (eliminatedPlayer.role === "Shield") {
   }
 }
 
-// ☠️ Curse Applied Announcement
-if (cursePending && cursedPlayerIndex !== null) {
-
-  const cursedPlayer = players[cursedPlayerIndex];
-
-  meetingMessages += `
-    <div class="curse-message">
-      <h3>🧿 ${cursedPlayer.name} has been cursed...</h3>
-      <p>They will die after the next vote.</p>
-    </div>
-  `;
-}
-
-// ☠️ Curse Activation
-if (cursePending && cursedPlayerIndex !== null) {
-
-  const cursedPlayer = players[cursedPlayerIndex];
-
-  if (cursedPlayer) {
-
-    cursedPlayer.alive = false;
-
-    const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
-
-    meetingMessages += `
-      <div class="curse-death-message">
-        <h3>🖤 ${cursedPlayer.name}'s heart rots away as darkness consumes them.</h3>
-        <p>
-          They were the 
-          <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
-            ${cursedPlayer.role}
-          </span>
-        </p>
-      </div>
-    `;
-
-    if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-
-      meetingMessages += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name} has their heart melt away...</h3>
-          <p>
-            They were the 
-            <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-              ${lover.role}
-            </span>
-          </p>
-        </div>
-      `;
-    }
-  }
-
-  cursePending = false;
-  cursedPlayerIndex = null;
-}
 
 // =====================================================
 // 🏆 WIN CONDITION CHECK
