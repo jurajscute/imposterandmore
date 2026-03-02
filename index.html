@@ -4315,11 +4315,9 @@ if (cursePending && cursedPlayerIndex !== null) {
 
     const loverDeathIndex = handleLoverChainDeath(cursedPlayerIndex);
 
-    screenHTML = `
-      <div class="roles-reveal-header">
-        <h2>🖤 ${cursedPlayer.name}'s heart rots away as darkness consumes them!</h2>
-      </div>
-      <div class="roles-reveal-content">
+    meetingMessages += `
+      <div class="curse-death-message">
+        <h3>🖤 ${cursedPlayer.name}'s heart rots away as darkness consumes them.</h3>
         <p>
           They were the 
           <span style="color:${roleColors[cursedPlayer.role]}; font-weight:bold;">
