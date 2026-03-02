@@ -3037,7 +3037,7 @@ function showCharlatanDecisionScreen() {
   const charlatan = players[currentVoterIndex];
 
   votingBox.innerHTML = `
-    <div class="charlatan-screen">
+    <div class="dictator-screen">
       <h3>🌀 ${charlatan.name}, choose who to 
         <span style="color:${roleColors["Charlatan"]};">CURSE</span>
       </h3>
@@ -3059,8 +3059,6 @@ function showCharlatanDecisionScreen() {
 
         charlatanChosenTarget = index;
 
-        checkCharlatanCurse();
-
         currentVoterIndex++;   // 👈 ADVANCE TURN (same as Viper)
 
         setTimeout(() => {
@@ -3071,22 +3069,6 @@ function showCharlatanDecisionScreen() {
       container.appendChild(btn);
     }
   });
-}
-
-function checkCharlatanCurse() {
-
-  const impostor = players.find(p => p.role === "Impostor" && p.alive);
-
-  if (
-    impostor &&
-    charlatanChosenTarget !== null &&
-    impostor.vote === charlatanChosenTarget
-  ) {
-    cursedPlayerIndex = charlatanChosenTarget;
-    cursePending = true;
-  }
-
-  charlatanChosenTarget = null;
 }
 
 function showPoisonScreen() {
@@ -4082,6 +4064,22 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
     viperNextPoison = null;
   }
 
+  // 🎭 Check Charlatan Curse AFTER all votes are locked
+if (charlatanChosenTarget !== null) {
+
+  const impostor = players.find(p => p.role === "Impostor" && p.alive);
+
+  if (
+    impostor &&
+    impostor.vote === charlatanChosenTarget
+  ) {
+    cursedPlayerIndex = charlatanChosenTarget;
+    cursePending = true;
+  }
+
+  charlatanChosenTarget = null; // reset for next round
+}
+
   // =====================================================
   // ⭐ SHERIFF
   // =====================================================
@@ -4748,7 +4746,6 @@ arsonistMarkedTarget = null;
   }
 
   sheriffShotTarget = null;
-  charlatanHasActed = false;
 
   addFinalContinueButton();
 }
@@ -4809,7 +4806,7 @@ if (viperNextPoison !== null) {
 
   dictatorBlockedPlayer = null;
   sheriffShotTarget = null;
-  charlatanHasActed = false;
+  charlatanChosenTarget = null;
   viperChoosingPoison = false;
 
   // 🏹 Hunter reset (only if ability already used)
