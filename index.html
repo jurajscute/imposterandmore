@@ -4303,12 +4303,14 @@ if (
   votingBox.innerHTML = `
     <div class="win-header"
          style="
-           background: linear-gradient(-45deg, ${assassinColor}, black, ${loverColor});
+           background: linear-gradient(-45deg, ${loverColor}, ${assassinColor}, ${loverColor});
            background-size: 400% 400%;
            animation: gradientShift 8s ease infinite;
            color: white;
          ">
-      <h2>Heartbreaker Assassin Win</h2>
+      <h2>
+        <span style="text-shadow:0 0 12px ${loverColor};">
+          Heartbreaker</span> <span style="text-shadow:0 0 12px ${assassinColor};">Assassin</span> Win</h2>
     </div>
     <div class="win-content">
       <p>
