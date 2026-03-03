@@ -295,6 +295,11 @@
     .first-player.show { opacity: 1; transform: translateY(0); }
 
     /* BUTTON DESIGNS */
+    .reveal-charlatan-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #001f61, #21417c); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-charlatan-btn:hover { box-shadow: 0 6px 16px rgba(10, 0, 99, 0.3); }
+    .reveal-charlatan-btn:active { transform: scale(0.96); }
+    .reveal-charlatan-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+
     .reveal-medic-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #006e3b, #025e47); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-medic-btn:hover { box-shadow: 0 6px 16px rgba(11, 245, 109, 0.3); }
     .reveal-medic-btn:active { transform: scale(0.96); }
@@ -498,6 +503,23 @@
 }
 
 /* SCREEN DESIGNS */
+
+/* Charlatan */
+
+.charlatan-screen {
+  background: linear-gradient(135deg, #473ca3, #b8bcff);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.charlatan-screen .roles-reveal-header {
+  background: linear-gradient(135deg, #473ca3, #b8bcff);
+}
+
+.charlatan-screen {
+  box-shadow: 0 0 25px rgba(0, 4, 54, 0.6);
+}
 
 /* MEDIC SCREEN */
 
@@ -3038,8 +3060,8 @@ function showCharlatanDecisionScreen() {
   const charlatan = players[currentVoterIndex];
 
   votingBox.innerHTML = `
-    <div class="dictator-screen">
-      <h3>🌀 ${charlatan.name}, choose who to 
+    <div class="charlatan-screen">
+      <h3>${charlatan.name}, choose who to 
         <span style="color:${roleColors["Charlatan"]};">CURSE</span>
       </h3>
     </div>
@@ -3054,7 +3076,7 @@ function showCharlatanDecisionScreen() {
 
       const btn = document.createElement("button");
       btn.textContent = player.name;
-      btn.className = "reveal-roles-btn";
+      btn.className = "reveal-charlatan-btn";
 
       btn.onclick = () => {
 
@@ -5184,7 +5206,6 @@ charlatanChosenTarget = null;
 cursedPlayerIndex = null;
 cursePending = false;
 charlatanHasActed = false;
-curseCountdown = 0; // NEW
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
