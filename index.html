@@ -1586,7 +1586,7 @@ const roleThemes = {
   Mastermind: "#e74c3c",
   Hunter: "#e74c3c",
   Jackal: "#5d3b6d",
-  Chameleon: "#edceff",
+  Chameleon: "#3b6d4e",
   Arsonist: "#ff5e00",
   Viper: "#004b16",
   Assassin: "#9b59b6",
@@ -2660,8 +2660,12 @@ function revealAllRoles() {
       roleName = "Jackal";
       roleClass = "jackal-role";
     } else if (word === "Chameleon") {
-      roleName = "Chameleon";
-      roleClass = "chameleon-role";
+  roleName = "Chameleon";
+  roleClass = "chameleon-role";
+
+  if (chameleonAlliance) {
+    roleName += ` (${chameleonAlliance})`;
+  }
     } else if (word === "Arsonist") {
       roleName = "Arsonist";
       roleClass = "arsonist-role";
