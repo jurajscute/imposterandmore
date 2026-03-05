@@ -674,10 +674,6 @@
   margin: 0;
 }
 
-.skip-btn {
-  background: linear-gradient(145deg,#888,#666);
-}
-
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -1453,8 +1449,6 @@ let cursedPlayerIndex = null;
 let cursePending = false;
 let charlatanHasActed = false;
 let curseCountdown = 0; // NEW
-
-let skipVotes = 0;
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -2813,17 +2807,6 @@ votingBox.classList.add("vote-fade-in");
       voteOptions.appendChild(btn);
     }
   });
-
-  // ➖ Skip Vote button
-// ⏭️ Skip button
-const skipBtn = document.createElement("button");
-skipBtn.textContent = "⏭️ Skip";
-skipBtn.className = "reveal-roles-btn";
-skipBtn.style.marginTop = "10px";
-
-skipBtn.onclick = () => castVote("skip");
-
-voteOptions.appendChild(skipBtn);
 }
 
 function showViperCooldownScreen() {
@@ -2861,28 +2844,6 @@ function castVote(targetIndex) {
 
   const voter = players[currentVoterIndex];
   if (!voter || !voter.alive) return;
-
-if (targetIndex === null) {
-
-  players[currentVoterIndex].vote = "skip";
-
-  let voteWeight = 1;
-
-  if (currentVoterIndex === kingPlayer) voteWeight = 2;
-  if (voter.role === "Maniac") voteWeight = 0;
-  if (voter.role === "Charlatan") voteWeight = 0;
-  if (voter.role === "Viper") voteWeight = 0;
-
-  if (!votes["skip"]) votes["skip"] = 0;
-  votes["skip"] += voteWeight;
-
-  currentVoterIndex++;
-  setTimeout(() => {
-    showNextVoter();
-  }, 150);
-
-  return;
-}
 
   players[currentVoterIndex].vote = targetIndex;
 
@@ -2976,7 +2937,7 @@ if (voter.role === "Butcher") {
 
   players.forEach((player, index) => {
     if (!player.alive) return;
-    if (player.vote === null || player.vote === "skip") return;
+    if (player.vote === null) return;
 
     let weight = 1;
     if (index === kingPlayer) weight = 2;
@@ -3009,7 +2970,7 @@ if (voter.role === "Butcher") {
 
   players.forEach((player, index) => {
     if (!player.alive) return;
-    if (player.vote === null || player.vote === "skip") return;
+    if (player.vote === null) return;
 
     const votedFor = players[player.vote]?.name || "Nobody";
 
@@ -3074,7 +3035,7 @@ clearContinueButtons();
   // 🟢 Skip Option
   const skipBtn = document.createElement("button");
   skipBtn.textContent = "Skip (Let all votes stand)";
-  skipBtn.className = "skip-btn";
+  skipBtn.className = "reveal-roles-btn";
   skipBtn.style.marginTop = "10px";
   skipBtn.style.opacity = "0.8";
 
@@ -3809,74 +3770,31 @@ if (
 }
 
 
-// =====================================================
-// 🗳 COUNT VOTES
-// =====================================================
+  // =====================================================
+  // 🗳 PHASE 2 — COUNT VOTES
+  // =====================================================
 
-let maxVotes = 0;
-let winners = [];
+  votes = {};
 
-Object.entries(votes).forEach(([target, count]) => {
+  players.forEach((player, index) => {
+    if (!player.alive) return;
+    if (index === dictatorBlockedPlayer) return;
+    if (player.vote === null) return;
 
-  if (count > maxVotes) {
-    maxVotes = count;
-    winners = [target];
-  }
+    let weight = 1;
+    if (index === kingPlayer) weight = 2;
+    if (player.role === "Maniac" || player.role === "Charlatan" || player.role === "Viper") weight = 0;
 
-  else if (count === maxVotes) {
-    winners.push(target);
-  }
-
-  if (winners.includes("skip") && winners.length === 1) {
-
-  let voteSummary = "";
-
-  Object.entries(votes).forEach(([target, count]) => {
-
-    if (target === "skip") {
-      voteSummary += `<p><strong>Skip</strong> — ${count} vote${count !== 1 ? "s" : ""}</p>`;
-    }
-
-    else {
-      voteSummary += `<p><strong>${players[target].name}</strong> — ${count} vote${count !== 1 ? "s" : ""}</p>`;
-    }
-
+    if (!votes[player.vote]) votes[player.vote] = 0;
+    votes[player.vote] += weight;
   });
 
-  votingBox.innerHTML = `
-    <div class="meeting-skipped">
-      <h2>⏭️ Meeting Skipped</h2>
-      <div class="vote-summary">
-        ${voteSummary}
-      </div>
-    </div>
-  `;
+  let maxVotes = Math.max(...Object.values(votes || {0:0}));
+  let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
 
-  clearContinueButtons();
-
-  const btn = document.createElement("button");
-  btn.textContent = "Continue";
-  btn.className = "reveal-roles-btn";
-  btn.onclick = () => nextRound();
-
-  votingBox.appendChild(btn);
-
-  return;
-}
-
-let eliminatedIndex = null;
-
-if (winners.length === 1 && winners[0] !== "skip") {
-  eliminatedIndex = parseInt(winners[0]);
-}
-
-});
-
-let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
-
-let eliminatedIndex = topPlayers.length === 1
-  ? parseInt(topPlayers[0])
-  : null;
+  let eliminatedIndex = topPlayers.length === 1
+    ? parseInt(topPlayers[0])
+    : null;
 
   // =====================================================
   // 🏹 PHASE 3 — HUNTER
@@ -4673,53 +4591,32 @@ if (
 }
 }
 
-// =====================================================
-// 🎨 RENDER
-// =====================================================
+  // =====================================================
+  // 🎨 RENDER
+  // =====================================================
 
-votingBox.innerHTML = screenHTML;
+  votingBox.innerHTML = screenHTML;
 
-votingBox.innerHTML += `
-  <div class="vote-summary">
-    <hr>
-    <h3>🗳️ Vote Results</h3>
-    ${Object.keys(votes).map(i => `
-      <p>
-        <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-      </p>
-    `).join("")}
-  </div>
-`;
-
-votingBox.innerHTML += `
-  <div class="vote-breakdown">
-    <hr>
-    <h3>🧾 Who Voted For Who</h3>
-    ${players.map(p => {
-
-      let voteTarget = "Skipped";
-
-      if (typeof p.vote === "number") {
-        voteTarget = players[p.vote]?.name || "Unknown";
-      }
-
-      return `
+  votingBox.innerHTML += `
+    <div class="vote-summary">
+      <hr>
+      <h3>🗳️ Vote Results</h3>
+      ${Object.keys(votes).map(i => `
         <p>
-          <strong>${p.name}</strong> → ${voteTarget}
+          <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
         </p>
-      `;
-    }).join("")}
-  </div>
-`;
+      `).join("")}
+    </div>
+  `;
 
-votingBox.innerHTML += meetingMessages;
+  votingBox.innerHTML += meetingMessages;
 
-clearContinueButtons();
-const btn = document.createElement("button");
-btn.textContent = "Continue";
-btn.className = "reveal-roles-btn";
-btn.onclick = () => nextRound();
-votingBox.appendChild(btn);
+  clearContinueButtons();
+  const btn = document.createElement("button");
+  btn.textContent = "Continue";
+  btn.className = "reveal-roles-btn";
+  btn.onclick = () => nextRound();
+  votingBox.appendChild(btn);
 
   // If someone was cursed this round, arm it for next round
 if (cursedPlayerIndex !== null && !cursePending) {
