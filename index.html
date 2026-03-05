@@ -5065,7 +5065,7 @@ const impostorsAlive = alivePlayers.filter(p =>
   /* ==============================
      👹 IMPOSTORS WIN
      ============================== */
-
+const chameleonPlayer = alivePlayers.find(p => p.role === "Chameleon");
   const chameleonSoloAlive =
   chameleonPlayer &&
   chameleonPlayer.alive &&
@@ -5134,8 +5134,6 @@ if (
 /* ==============================
    🦎 CHAMELEON SOLO WIN
 ============================== */
-
-const chameleonPlayer = alivePlayers.find(p => p.role === "Chameleon");
 
 if (chameleonPlayer && chameleonAlliance === "Solo") {
 
