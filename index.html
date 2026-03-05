@@ -5128,17 +5128,26 @@ const impostorsAlive = alivePlayers.filter(p =>
 
   /* ==============================
      👥 CREW WIN
-     ============================== */
+============================== */
 
-  if (
-    impostorsAlive.length === 0 &&
-    !jackalAlive &&
-    !arsonistAlive &&
-    !viperAlive
-  ) {
-    endGame(`<strong>Crew wins!</strong>`, "Crew");
-    return true;
-  }
+const chameleonAlive = players.some(
+  p => p.role === "Chameleon" && p.alive
+);
+
+const chameleonSolo = players.some(
+  p => p.role === "Chameleon" && p.mode === "solo"
+);
+
+if (
+  impostorsAlive.length === 0 &&
+  !jackalAlive &&
+  !arsonistAlive &&
+  !viperAlive &&
+  !(chameleonAlive && chameleonSolo)
+) {
+  endGame(`<strong>Crew wins!</strong>`, "Crew");
+  return true;
+}
 
   return false;
 
