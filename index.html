@@ -6241,8 +6241,8 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
 
   const trimmed = secretItem.trim();
   wordBox.textContent =
-    trimmed.slice(0, 2).charAt(0).toUpperCase() +
-    trimmed.slice(1, 2).toLowerCase() +
+    trimmed.slice(0, 2, 3).charAt(0).toUpperCase() +
+    trimmed.slice(1, 2, 3).toLowerCase() +
     "...";
 
   const roleText = document.createElement("div");
@@ -6273,10 +6273,10 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
       rolesHTML += `💧 ${count} Civilians<br>`;
     }
     else if (team === "Evil") {
-      rolesHTML += `🩸 ${count} Evil presences<br>`;
+      rolesHTML += `🩸 ${count} Evil<br>`;
     }
     else if (team === "Neutral") {
-      rolesHTML += `💥 ${count} Chaotic presences<br>`;
+      rolesHTML += `💥 ${count} Neutral<br>`;
     }
 
   });
