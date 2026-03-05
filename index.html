@@ -674,6 +674,10 @@
   margin: 0;
 }
 
+.skip-btn {
+  background:#475569;
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -1449,6 +1453,8 @@ let cursedPlayerIndex = null;
 let cursePending = false;
 let charlatanHasActed = false;
 let curseCountdown = 0; // NEW
+
+let skipVotes = 0;
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -2762,6 +2768,7 @@ function startVotingPhase() {
 
   currentVoterIndex = 0;
   votes = {};
+  skipVotes = 0;
 
   showNextVoter();
 }
@@ -2807,6 +2814,15 @@ votingBox.classList.add("vote-fade-in");
       voteOptions.appendChild(btn);
     }
   });
+  // ⏭ Skip Button
+const skipBtn = document.createElement("button");
+skipBtn.textContent = "Skip Vote";
+skipBtn.className = "reveal-roles-btn skip-btn";;
+skipBtn.style.marginTop = "10px";
+
+skipBtn.onclick = () => castVote("skip");
+
+voteOptions.appendChild(skipBtn);
 }
 
 function showViperCooldownScreen() {
@@ -2846,6 +2862,16 @@ function castVote(targetIndex) {
   if (!voter || !voter.alive) return;
 
   players[currentVoterIndex].vote = targetIndex;
+
+if (targetIndex === "skip") {
+  skipVotes++;
+
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+  return;
+}
 
   let voteWeight = 1;
 
@@ -3789,8 +3815,40 @@ if (
     votes[player.vote] += weight;
   });
 
-  let maxVotes = Math.max(...Object.values(votes || {0:0}));
-  let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
+  let maxPlayerVotes = Math.max(...Object.values(votes || {0:0}));
+
+if (skipVotes > maxPlayerVotes) {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>⏭️ Meeting Skipped</h2>
+    </div>
+  `;
+
+  votingBox.innerHTML += `
+    <div class="vote-summary">
+      <hr>
+      <h3>🗳️ Vote Results</h3>
+      ${Object.keys(votes).map(i => `
+        <p><strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}</p>
+      `).join("")}
+      <p><strong>Skip</strong> - ${skipVotes} vote${skipVotes !== 1 ? "s" : ""}</p>
+    </div>
+  `;
+
+  votingBox.innerHTML += meetingMessages;
+
+  const btn = document.createElement("button");
+  btn.textContent = "Continue";
+  btn.className = "reveal-roles-btn";
+  btn.onclick = () => nextRound();
+
+  votingBox.appendChild(btn);
+
+  return;
+}
+
+let topPlayers = Object.keys(votes).filter(p => votes[p] === maxPlayerVotes);
 
   let eliminatedIndex = topPlayers.length === 1
     ? parseInt(topPlayers[0])
@@ -4602,11 +4660,14 @@ if (
       <hr>
       <h3>🗳️ Vote Results</h3>
       ${Object.keys(votes).map(i => `
-        <p>
-          <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-        </p>
-      `).join("")}
-    </div>
+  <p>
+    <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+  </p>
+`).join("")}
+
+<p>
+  <strong>Skip</strong> - ${skipVotes} vote${skipVotes !== 1 ? "s" : ""}
+</p>
   `;
 
   votingBox.innerHTML += meetingMessages;
