@@ -952,7 +952,7 @@ poison-death.poison-death {
             <div class="role-card lovers"><h4><span class="role-icon">🩷</span>Lovers</h4><p>You have a partner!</p><div class="goal">Goal: Use extra vote wisely</div></div>
             <div class="role-card clueless"><h4><span class="role-icon">?</span>Clueless</h4><p>You get the wrong word.</p><div class="goal">Goal: Figure out you are clueless</div></div>
             <div class="role-card echo"><h4><span class="role-icon">🔊</span>Echo</h4><p>You have to base your answers purely from the person before you. Like an echo.</p><div class="goal">Goal: Eliminate impostors, don't reveal your role.</div></div>
-            <div class="role-card psychic"><h4><span class="role-icon">🔮</span>Psychic</h4><p>You are able to see all the roles in the current game.</p><div class="goal">Goal: Eliminate impostors using your divine powers.</div></div>
+            <div class="role-card psychic"><h4><span class="role-icon">🔮</span>Psychic</h4><p>You are able to see all allignments in the current game.</p><div class="goal">Goal: Eliminate impostors using your divine powers.</div></div>
             <div class="role-card sheriff"><h4><span class="role-icon">🌵</span>Sheriff</h4><p>You have the option to eliminate someone! Be careful, with great power comes great responsibility.</p><div class="goal">Goal: Eliminate impostors, by any means necessary.</div></div>
             <div class="role-card idiot"><h4><span class="role-icon">🐔</span>Idiot</h4><p>You have no idea what the word is.</p><div class="goal">Goal: Eliminate impostors.</div></div>
             <div class="role-card philosopher"><h4><span class="role-icon">💭</span>Philosopher</h4><p>You are able to ask a single Yes or No question, the target must answer it honestly (Unless they're a Doubletake!).</p><div class="goal">Goal: Eliminate impostors, question your enemies.</div></div>
@@ -6037,22 +6037,22 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
         else if (targetWord === "Dictator") roleReveal = "Evil";
         else if (targetWord === "Mastermind") roleReveal = "Evil";
         else if (targetWord === "Hunter") roleReveal = "Evil";
-        else if (targetWord === "Jester") roleReveal = "Mentally ill";
-        else if (targetWord === "Doubletake") roleReveal = "Mentally ill";
-        else if (targetWord === "Jackal") roleReveal = "Evil";
-        else if (targetWord === "Arsonist") roleReveal = "Mentally ill";
-        else if (targetWord === "Viper") roleReveal = "Evil";
+        else if (targetWord === "Jester") roleReveal = "Neutral";
+        else if (targetWord === "Doubletake") roleReveal = "Neutral";
+        else if (targetWord === "Jackal") roleReveal = "Neutral";
+        else if (targetWord === "Arsonist") roleReveal = "Neutral";
+        else if (targetWord === "Viper") roleReveal = "Neutral";
         else if (targetWord === "Shield") roleReveal = "a Shield";
-        else if (targetWord === "Assassin") roleReveal = "Evil";
+        else if (targetWord === "Assassin") roleReveal = "Neutral";
         else if (targetWord === "Clueless") roleReveal = "Crew";
         else if (targetWord === "Echo") roleReveal = "an Echo";
         else if (targetWord === "Psychic") roleReveal = "a Psychic";
-        else if (targetWord === "Idiot") roleReveal = "Mentally ill";
+        else if (targetWord === "Idiot") roleReveal = "Neutral";
         else if (targetWord === "Philosopher") roleReveal = "a Philosopher";
         else if (targetWord === "Medic") roleReveal = "a Medic";
         else if (targetWord === "Sheriff") roleReveal = "a Sheriff";
-        else if (targetWord === "Maniac") roleReveal = "Mentally ill";
-        else if (targetWord === "Cultist") roleReveal = "Mentally ill";
+        else if (targetWord === "Maniac") roleReveal = "Evil";
+        else if (targetWord === "Cultist") roleReveal = "Evil";
         else if (targetWord === "Charlatan") roleReveal = "Evil";
         else if (targetWord === "Shadow") roleReveal = "Evil";
         else if (targetWord === "Detective") roleReveal = "Detective"; // Should be impossible if logic holds
@@ -6250,25 +6250,39 @@ wordBox.textContent =
   roleText.textContent = "Psychic";
   wordBox.appendChild(roleText);
 
-  // 🔮 Psychic Vision Box
-  const visionBox = document.createElement("div");
-  visionBox.className = "psychic-vision";
+// 🔮 Psychic Vision Box
+const visionBox = document.createElement("div");
+visionBox.className = "psychic-vision";
 
-  let rolesHTML = `<strong>You sense the roles in this game:</strong><br><br>`;
+let rolesHTML = `<strong>🔮 Your vision reveals...</strong><br><br>`;
 
-  const roleCounts = {};
+const teamCounts = {};
 
-  players.forEach(player => {
-    roleCounts[player.role] = (roleCounts[player.role] || 0) + 1;
-  });
+players.forEach(player => {
+  const roleKey = player.role.toLowerCase();
+  const team = roleData[roleKey]?.team || "Crew";
 
-  const shuffledRoles = Object.entries(roleCounts);
+  teamCounts[team] = (teamCounts[team] || 0) + 1;
+});
 
-// Fisher–Yates shuffle
-for (let i = shuffledRoles.length - 1; i > 0; i--) {
-  const j = Math.floor(Math.random() * (i + 1));
-  [shuffledRoles[i], shuffledRoles[j]] = [shuffledRoles[j], shuffledRoles[i]];
-}
+// convert to array and shuffle so order isn't revealing
+const teams = Object.entries(teamCounts).sort(() => Math.random() - 0.5);
+
+teams.forEach(([team, count]) => {
+
+  if (team === "Crew") {
+    rolesHTML += `💧 ${count} Civilians <br>`;
+  }
+  else if (team === "Evil") {
+    rolesHTML += `🩸 ${count} Evil presences<br>`;
+  }
+  else if (team === "Neutral") {
+    rolesHTML += `💥 ${count} Chaotic presences<br>`;
+  }
+
+});
+
+visionBox.innerHTML = rolesHTML;
 
 shuffledRoles.forEach(([role, count]) => {
 
