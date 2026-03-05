@@ -3831,15 +3831,23 @@ let maxPlayerVotes = Math.max(
   0
 );
 
+// skip wins only if strictly higher
 let meetingSkipped = skipVotes > maxPlayerVotes;
+
+// tie if skip equals top player
+let skipTie = skipVotes === maxPlayerVotes && skipVotes > 0;
 
 let topPlayers = Object.keys(votes)
   .filter(v => v !== "skip")
   .filter(v => votes[v] === maxPlayerVotes);
 
-let eliminatedIndex = topPlayers.length === 1
-  ? parseInt(topPlayers[0])
-  : null;
+let eliminatedIndex = null;
+
+if (!meetingSkipped && !skipTie) {
+  eliminatedIndex = topPlayers.length === 1
+    ? parseInt(topPlayers[0])
+    : null;
+}
   // =====================================================
   // 🏹 PHASE 3 — HUNTER
   // =====================================================
@@ -4324,7 +4332,7 @@ if (meetingSkipped) {
   `;
 
 }
-else if (eliminatedIndex === null) {
+else if (eliminatedIndex === null || skipTie) {
 
   screenHTML = `
     <div class="roles-reveal-header">
