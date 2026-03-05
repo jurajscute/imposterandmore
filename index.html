@@ -3796,11 +3796,10 @@ if (
 }
 
 
-  // =====================================================
-  // 🗳 PHASE 2 — COUNT VOTES
-// =====================================================
+  // ================= COUNT VOTES =================
 
 votes = {};
+skipVotes = 0;
 
 players.forEach((player, index) => {
   if (!player.alive) return;
@@ -3808,11 +3807,13 @@ players.forEach((player, index) => {
   if (player.vote === null) return;
 
   let weight = 1;
+
   if (index === kingPlayer) weight = 2;
   if (player.role === "Maniac" || player.role === "Charlatan" || player.role === "Viper") weight = 0;
 
   if (player.vote === "skip") {
     skipVotes += weight;
+    votes["skip"] = skipVotes;
     return;
   }
 
@@ -3820,63 +3821,21 @@ players.forEach((player, index) => {
   votes[player.vote] += weight;
 });
 
-// add skip into the votes object so it appears in results
-votes["skip"] = skipVotes;
 
-let maxPlayerVotes = Math.max(...Object.values(votes), 0);
+// ================= DETERMINE RESULT =================
 
-if (skipVotes > maxPlayerVotes) {
+let maxPlayerVotes = Math.max(
+  ...Object.keys(votes)
+    .filter(v => v !== "skip")
+    .map(v => votes[v]),
+  0
+);
 
-  votingBox.innerHTML = `
-    <div class="roles-reveal-header">
-      <h2>⏭️ Meeting Skipped</h2>
-    </div>
-  `;
-
-  votingBox.innerHTML += `
-  <div class="vote-summary">
-    <hr>
-    <h3>🗳️ Vote Results</h3>
-
-    ${Object.keys(votes).map(i => {
-
-      if (i === "skip") {
-        return `
-          <p>
-            <strong>Skip</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-          </p>
-        `;
-      }
-
-      const player = players[parseInt(i)];
-      if (!player) return "";
-
-      return `
-        <p>
-          <strong>${player.name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-        </p>
-      `;
-
-    }).join("")}
-
-  </div>
-`;
-
-  votingBox.innerHTML += meetingMessages;
-
-  const btn = document.createElement("button");
-  btn.textContent = "Continue";
-  btn.className = "reveal-roles-btn";
-  btn.onclick = () => nextRound();
-
-  votingBox.appendChild(btn);
-
-  return;
-}
+let meetingSkipped = skipVotes > maxPlayerVotes;
 
 let topPlayers = Object.keys(votes)
-  .filter(p => p !== "skip")
-  .filter(p => votes[p] === maxPlayerVotes);
+  .filter(v => v !== "skip")
+  .filter(v => votes[v] === maxPlayerVotes);
 
 let eliminatedIndex = topPlayers.length === 1
   ? parseInt(topPlayers[0])
