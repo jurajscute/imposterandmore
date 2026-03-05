@@ -3826,15 +3826,34 @@ if (skipVotes > maxPlayerVotes) {
   `;
 
   votingBox.innerHTML += `
-    <div class="vote-summary">
-      <hr>
-      <h3>🗳️ Vote Results</h3>
-      ${Object.keys(votes).map(i => `
-        <p><strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}</p>
-      `).join("")}
-      <p><strong>Skip</strong> - ${skipVotes} vote${skipVotes !== 1 ? "s" : ""}</p>
-    </div>
-  `;
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
+
+    ${Object.keys(votes).map(i => {
+
+      if (i === "skip") {
+        return `
+          <p>
+            <strong>Skip</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+          </p>
+        `;
+      }
+
+      const player = players[parseInt(i)];
+
+      if (!player) return "";
+
+      return `
+        <p>
+          <strong>${player.name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+        </p>
+      `;
+      
+    }).join("")}
+
+  </div>
+`;
 
   votingBox.innerHTML += meetingMessages;
 
@@ -4663,20 +4682,35 @@ if (
 
   votingBox.innerHTML = screenHTML;
 
-  votingBox.innerHTML += `
-    <div class="vote-summary">
-      <hr>
-      <h3>🗳️ Vote Results</h3>
-      ${Object.keys(votes).map(i => `
-  <p>
-    <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
-  </p>
-`).join("")}
+ votingBox.innerHTML += `
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
 
-<p>
-  <strong>Skip</strong> - ${skipVotes} vote${skipVotes !== 1 ? "s" : ""}
-</p>
-  `;
+    ${Object.keys(votes).map(i => {
+
+      if (i === "skip") {
+        return `
+          <p>
+            <strong>Skip</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+          </p>
+        `;
+      }
+
+      const player = players[parseInt(i)];
+
+      if (!player) return "";
+
+      return `
+        <p>
+          <strong>${player.name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+        </p>
+      `;
+      
+    }).join("")}
+
+  </div>
+`;
 
   votingBox.innerHTML += meetingMessages;
 
