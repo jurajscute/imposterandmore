@@ -674,6 +674,10 @@
   margin: 0;
 }
 
+.skip-btn {
+  background: linear-gradient(145deg,#888,#666);
+}
+
 @keyframes loverFade {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
@@ -2807,6 +2811,16 @@ votingBox.classList.add("vote-fade-in");
       voteOptions.appendChild(btn);
     }
   });
+
+  // ➖ Skip Vote button
+const skipBtn = document.createElement("button");
+skipBtn.textContent = "Skip Vote";
+skipBtn.className = "reveal-roles-btn";
+skipBtn.style.marginTop = "10px";
+
+skipBtn.onclick = () => castVote(null);
+
+voteOptions.appendChild(skipBtn);
 }
 
 function showViperCooldownScreen() {
@@ -2844,6 +2858,17 @@ function castVote(targetIndex) {
 
   const voter = players[currentVoterIndex];
   if (!voter || !voter.alive) return;
+
+if (targetIndex === null) {
+
+  players[currentVoterIndex].vote = "skip";
+
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+  return;
+}
 
   players[currentVoterIndex].vote = targetIndex;
 
@@ -2937,7 +2962,7 @@ if (voter.role === "Butcher") {
 
   players.forEach((player, index) => {
     if (!player.alive) return;
-    if (player.vote === null) return;
+    if (player.vote === null || player.vote === "skip") return;
 
     let weight = 1;
     if (index === kingPlayer) weight = 2;
@@ -2970,7 +2995,7 @@ if (voter.role === "Butcher") {
 
   players.forEach((player, index) => {
     if (!player.alive) return;
-    if (player.vote === null) return;
+    if (player.vote === null || player.vote === "skip") return;
 
     const votedFor = players[player.vote]?.name || "Nobody";
 
@@ -3035,7 +3060,7 @@ clearContinueButtons();
   // 🟢 Skip Option
   const skipBtn = document.createElement("button");
   skipBtn.textContent = "Skip (Let all votes stand)";
-  skipBtn.className = "reveal-roles-btn";
+  skipBtn.className = "skip-btn";
   skipBtn.style.marginTop = "10px";
   skipBtn.style.opacity = "0.8";
 
@@ -3779,7 +3804,7 @@ if (
   players.forEach((player, index) => {
     if (!player.alive) return;
     if (index === dictatorBlockedPlayer) return;
-    if (player.vote === null) return;
+    if (player.vote === null || player.vote === "skip") return;
 
     let weight = 1;
     if (index === kingPlayer) weight = 2;
@@ -4591,32 +4616,53 @@ if (
 }
 }
 
-  // =====================================================
-  // 🎨 RENDER
-  // =====================================================
+// =====================================================
+// 🎨 RENDER
+// =====================================================
 
-  votingBox.innerHTML = screenHTML;
+votingBox.innerHTML = screenHTML;
 
-  votingBox.innerHTML += `
-    <div class="vote-summary">
-      <hr>
-      <h3>🗳️ Vote Results</h3>
-      ${Object.keys(votes).map(i => `
+votingBox.innerHTML += `
+  <div class="vote-summary">
+    <hr>
+    <h3>🗳️ Vote Results</h3>
+    ${Object.keys(votes).map(i => `
+      <p>
+        <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+      </p>
+    `).join("")}
+  </div>
+`;
+
+votingBox.innerHTML += `
+  <div class="vote-breakdown">
+    <hr>
+    <h3>🧾 Who Voted For Who</h3>
+    ${players.map(p => {
+
+      let voteTarget = "Skipped";
+
+      if (typeof p.vote === "number") {
+        voteTarget = players[p.vote]?.name || "Unknown";
+      }
+
+      return `
         <p>
-          <strong>${players[i].name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
+          <strong>${p.name}</strong> → ${voteTarget}
         </p>
-      `).join("")}
-    </div>
-  `;
+      `;
+    }).join("")}
+  </div>
+`;
 
-  votingBox.innerHTML += meetingMessages;
+votingBox.innerHTML += meetingMessages;
 
-  clearContinueButtons();
-  const btn = document.createElement("button");
-  btn.textContent = "Continue";
-  btn.className = "reveal-roles-btn";
-  btn.onclick = () => nextRound();
-  votingBox.appendChild(btn);
+clearContinueButtons();
+const btn = document.createElement("button");
+btn.textContent = "Continue";
+btn.className = "reveal-roles-btn";
+btn.onclick = () => nextRound();
+votingBox.appendChild(btn);
 
   // If someone was cursed this round, arm it for next round
 if (cursedPlayerIndex !== null && !cursePending) {
