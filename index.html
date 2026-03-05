@@ -4336,7 +4336,11 @@ if (eliminatedIndex === null) {
 
 } else {
 
-  const eliminatedPlayer = players[eliminatedIndex];
+  let eliminatedPlayer = null;
+
+if (eliminatedIndex !== null && players[eliminatedIndex]) {
+  eliminatedPlayer = players[eliminatedIndex];
+}
 
   // 🛡️ SHIELD INTERRUPTS NORMAL ELIMINATION
 if (eliminatedPlayer.role === "Shield") {
@@ -4467,7 +4471,11 @@ if (cursePending && cursedPlayerIndex !== null) {
 // =====================================================
 if (eliminatedIndex !== null) {
 
-const eliminatedPlayer = players[eliminatedIndex];
+let eliminatedPlayer = null;
+
+if (eliminatedIndex !== null && players[eliminatedIndex]) {
+  eliminatedPlayer = players[eliminatedIndex];
+}
 const assassinPlayer = players.find(p => p.role === "Assassin");
 
 // ASSASSIN AND JESTER
