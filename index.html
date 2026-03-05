@@ -4343,13 +4343,13 @@ if (eliminatedIndex !== null && players[eliminatedIndex]) {
 }
 
   // 🛡️ SHIELD INTERRUPTS NORMAL ELIMINATION
-if (eliminatedPlayer.role === "Shield") {
+if (eliminatedPlayer && eliminatedPlayer.role === "Shield") {
   renderShieldRetaliation(eliminatedIndex);
   return;
 }
 
   if (
-  eliminatedPlayer.role === "Doubletake" &&
+ eliminatedPlayer && eliminatedPlayer.role === "Doubletake"  &&
   votingRound === 1
 ) {
   meetingMessages += `
@@ -4483,7 +4483,7 @@ if (
   assassinTarget !== null &&
   assassinPlayer &&
   assassinPlayer.alive &&
-  eliminatedPlayer.role === "Jester" &&
+  eliminatedPlayer && eliminatedPlayer.role === "Jester"  &&
   eliminatedIndex === assassinTarget - 1
 ) {
 
@@ -4525,7 +4525,7 @@ if (
   assassinPlayer &&
   assassinPlayer.alive &&
   votingRound > 1 &&
-  eliminatedPlayer.role === "Doubletake" &&
+  eliminatedPlayer && eliminatedPlayer.role === "Doubletake" &&
   eliminatedIndex === assassinTarget - 1
 ) {
 
@@ -4607,7 +4607,7 @@ if (
 }
 
 // JESTER WIN
-if (eliminatedPlayer.role === "Jester") {
+if (eliminatedPlayer && eliminatedPlayer.role === "Jester") {
   endGame(
     `<strong>${eliminatedPlayer.name} the Jester wins!</strong><br>
      They were voted out!`,
@@ -4617,7 +4617,7 @@ if (eliminatedPlayer.role === "Jester") {
 }
 
 // DOUBLETAKE WIN
-if (eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
+if (eliminatedPlayer && eliminatedPlayer.role === "Doubletake" && votingRound > 1) {
   endGame(
     `<strong>${eliminatedPlayer.name} the Doubletake wins!</strong><br>
      They fooled everyone…`,
