@@ -5048,7 +5048,6 @@ function checkWinCondition() {
 
   const alivePlayers = players.filter(p => p.alive);
 
-  const chameleonPlayer = alivePlayers.find(p => p.role === "Chameleon");
   const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
   const arsonistAlive = alivePlayers.find(p => p.role === "Arsonist");
   const viperAlive  = alivePlayers.find(p => p.role === "Viper");
@@ -5126,44 +5125,17 @@ const impostorsAlive = alivePlayers.filter(p =>
     }
   }
 
-  /* ==============================
-     👥 CREW WIN
+/* ==============================
+   🦎 CHAMELEON SOLO WIN
 ============================== */
 
-const chameleonAlive = players.some(
-  p => p.role === "Chameleon" && p.alive
-);
-
-const chameleonSolo = players.some(
-  p => p.role === "Chameleon" && p.mode === "solo"
-);
-
-if (
-  impostorsAlive.length === 0 &&
-  !jackalAlive &&
-  !arsonistAlive &&
-  !viperAlive &&
-  !(chameleonAlive && chameleonSolo)
-) {
-  endGame(`<strong>Crew wins!</strong>`, "Crew");
-  return true;
-}
-
-  return false;
-
-  if (chameleonPlayer && chameleonAlliance === "Crew") {
-  crewAlive.push(chameleonPlayer);
-}
-
-if (chameleonPlayer && chameleonAlliance === "Imposter") {
-  impostorsAlive.push(chameleonPlayer);
-}
+const chameleonPlayer = alivePlayers.find(p => p.role === "Chameleon");
 
 if (chameleonPlayer && chameleonAlliance === "Solo") {
 
-  const others = alivePlayers.filter(p => p !== chameleonPlayer);
+  const othersAlive = alivePlayers.filter(p => p !== chameleonPlayer);
 
-  if (others.length === 0) {
+  if (othersAlive.length === 0) {
     endGame(
       `<strong>${chameleonPlayer.name} the Chameleon wins alone!</strong>`,
       "Chameleon"
@@ -5172,6 +5144,28 @@ if (chameleonPlayer && chameleonAlliance === "Solo") {
   }
 
 }
+
+
+/* ==============================
+   👥 CREW WIN
+============================== */
+
+const chameleonSoloAlive =
+  chameleonPlayer &&
+  chameleonPlayer.alive &&
+  chameleonAlliance === "Solo";
+
+if (
+  impostorsAlive.length === 0 &&
+  !jackalAlive &&
+  !arsonistAlive &&
+  !viperAlive &&
+  !chameleonSoloAlive
+) {
+  endGame(`<strong>Crew wins!</strong>`, "Crew");
+  return true;
+}
+return false;
 }
 
 function shadeColor(color, percent) {
