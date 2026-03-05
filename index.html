@@ -298,6 +298,17 @@
     .first-player.show { opacity: 1; transform: translateY(0); }
 
     /* BUTTON DESIGNS */
+
+    .reveal-crew-btn { padding: 14px 24px; border: 2px solid #00ff66; border-radius: 999px; background: linear-gradient(135deg, #324764, #0076ad); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-crew-btn:hover { box-shadow: 0 6px 16px rgba(0, 71, 138, 0.6); }
+    .reveal-crew-btn:active { transform: scale(0.96); }
+    .reveal-crew-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+
+    .reveal-chameleon-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #00472a, #a87bb6); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-chameleon-btn:hover { box-shadow: 0 6px 16px rgba(0, 99, 49, 0.3); }
+    .reveal-chameleon-btn:active { transform: scale(0.96); }
+    .reveal-chameleon-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
+
     .reveal-charlatan-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #001f61, #21417c); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-charlatan-btn:hover { box-shadow: 0 6px 16px rgba(10, 0, 99, 0.3); }
     .reveal-charlatan-btn:active { transform: scale(0.96); }
@@ -508,7 +519,24 @@
 
 /* SCREEN DESIGNS */
 
-/* Charlatan */
+/* CHAMELEON SCREEN */
+
+.chameleon-screen {
+  background: linear-gradient(135deg, #d096ff, #1c3013);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+}
+
+.chameleon-screen .roles-reveal-header {
+  background: linear-gradient(135deg, #d096ff, #1c3013);
+}
+
+.chameleon-screen {
+  box-shadow: 0 0 25px rgba(168, 0, 0, 0.6);
+}
+
+/* CHARLATAN SCREEN */
 
 .charlatan-screen {
   background: linear-gradient(135deg, #473ca3, #b8bcff);
@@ -3119,12 +3147,12 @@ function showChameleonAllianceScreen() {
     <div class="roles-reveal-header">
       <h2>🦎 Chameleon Choice</h2>
     </div>
-    <div class="roles-reveal-content">
+    <div class="chameleon-screen">
       <p>You must now choose your alliance.</p>
 
-      <button id="chamCrew" class="reveal-roles-btn">Crew</button>
+      <button id="chamCrew" class="reveal-crew-btn">Crew</button>
       <button id="chamEvil" class="reveal-evil-btn">Imposters</button>
-      <button id="chamSolo" class="reveal-evil-btn">Solo</button>
+      <button id="chamSolo" class="reveal-chameleon-btn">Solo</button>
     </div>
   `;
 
