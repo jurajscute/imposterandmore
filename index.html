@@ -3310,7 +3310,11 @@ function showHunterDecisionScreen() {
   const hunterIndex = currentVoterIndex;
 
   // 🔥 FORCE target selection if none exists
- if (hunterMarkedTarget === null) {
+ if (
+  hunterMarkedTarget === null ||
+  !players[hunterMarkedTarget] ||
+  !players[hunterMarkedTarget].alive
+) {
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
@@ -3361,14 +3365,17 @@ function showHunterDecisionScreen() {
     </div>
   `;
 
-  document.getElementById("hunterKill").onclick = () => {
-    hunterPendingKill = targetIndex;
+ document.getElementById("hunterKill").onclick = () => {
+  hunterPendingKill = targetIndex;
 
-    currentVoterIndex++;
-    setTimeout(() => {
-      showNextVoter();
-    }, 150);
-  };
+  // reset target so hunter must pick again next meeting
+  hunterMarkedTarget = null;
+
+  currentVoterIndex++;
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+};
 
   document.getElementById("hunterSpare").onclick = () => {
 
