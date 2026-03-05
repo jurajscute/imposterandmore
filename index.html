@@ -5135,6 +5135,7 @@ if (chameleonPlayer && chameleonAlliance === "Solo") {
 
   const othersAlive = alivePlayers.filter(p => p !== chameleonPlayer);
 
+  // 🦎 Chameleon alone
   if (othersAlive.length === 0) {
     endGame(
       `<strong>${chameleonPlayer.name} the Chameleon wins alone!</strong>`,
@@ -5143,9 +5144,19 @@ if (chameleonPlayer && chameleonAlliance === "Solo") {
     return true;
   }
 
+  // 🦎 Chameleon + 1 crew
+  if (
+    othersAlive.length === 1 &&
+    !["Imposter","Butcher","Dictator","Mastermind","Hunter","Jackal","Arsonist","Viper"].includes(othersAlive[0].role)
+  ) {
+    endGame(
+      `<strong>${chameleonPlayer.name} the Chameleon wins!</strong>`,
+      "Chameleon"
+    );
+    return true;
+  }
+
 }
-
-
 /* ==============================
    👥 CREW WIN
 ============================== */
