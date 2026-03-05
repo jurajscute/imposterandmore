@@ -5053,28 +5053,6 @@ function checkWinCondition() {
   const arsonistAlive = alivePlayers.find(p => p.role === "Arsonist");
   const viperAlive  = alivePlayers.find(p => p.role === "Viper");
 
-  if (chameleonPlayer && chameleonAlliance === "Crew") {
-  crewAlive.push(chameleonPlayer);
-}
-
-if (chameleonPlayer && chameleonAlliance === "Imposter") {
-  impostorsAlive.push(chameleonPlayer);
-}
-
-if (chameleonPlayer && chameleonAlliance === "Solo") {
-
-  const others = alivePlayers.filter(p => p !== chameleonPlayer);
-
-  if (others.length === 0) {
-    endGame(
-      `<strong>${chameleonPlayer.name} the Chameleon wins alone!</strong>`,
-      "Chameleon"
-    );
-    return true;
-  }
-
-}
-
 const mainEvilRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Hunter"];
 
 const impostorsAlive = alivePlayers.filter(p =>
@@ -5163,6 +5141,28 @@ const impostorsAlive = alivePlayers.filter(p =>
   }
 
   return false;
+
+  if (chameleonPlayer && chameleonAlliance === "Crew") {
+  crewAlive.push(chameleonPlayer);
+}
+
+if (chameleonPlayer && chameleonAlliance === "Imposter") {
+  impostorsAlive.push(chameleonPlayer);
+}
+
+if (chameleonPlayer && chameleonAlliance === "Solo") {
+
+  const others = alivePlayers.filter(p => p !== chameleonPlayer);
+
+  if (others.length === 0) {
+    endGame(
+      `<strong>${chameleonPlayer.name} the Chameleon wins alone!</strong>`,
+      "Chameleon"
+    );
+    return true;
+  }
+
+}
 }
 
 function shadeColor(color, percent) {
