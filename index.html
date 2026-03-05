@@ -1467,6 +1467,9 @@ let curseCountdown = 0; // NEW
 
 let skipVotes = 0;
 
+let chameleonAlliance = null; // "Crew" | "Imposter" | "Solo"
+let chameleonHasChosen = false;
+
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
@@ -2961,6 +2964,15 @@ if (voter.role === "Butcher") {
   return;
 }
 
+// 🦎 CHAMELEON ALLIANCE CHOICE
+if (
+  voter.role === "Chameleon" &&
+  !chameleonHasChosen
+) {
+  showChameleonAllianceScreen();
+  return;
+}
+
 
   // ✅ Normal advance
   currentVoterIndex++;
@@ -3096,6 +3108,41 @@ function proceedToNextVoter() {
   }, 150);
 }
 
+function showChameleonAllianceScreen() {
+
+  votingBox.innerHTML = `
+    <div class="roles-reveal-header">
+      <h2>🦎 Chameleon Choice</h2>
+    </div>
+    <div class="roles-reveal-content">
+      <p>You must now choose your alliance.</p>
+
+      <button id="chamCrew" class="reveal-roles-btn">Crew</button>
+      <button id="chamEvil" class="reveal-evil-btn">Imposters</button>
+      <button id="chamSolo" class="reveal-evil-btn">Solo</button>
+    </div>
+  `;
+
+  document.getElementById("chamCrew").onclick = () => {
+    chameleonAlliance = "Crew";
+    chameleonHasChosen = true;
+    continueAfterChameleon();
+  };
+
+  document.getElementById("chamEvil").onclick = () => {
+    chameleonAlliance = "Imposter";
+    chameleonHasChosen = true;
+    continueAfterChameleon();
+  };
+
+  document.getElementById("chamSolo").onclick = () => {
+    chameleonAlliance = "Solo";
+    chameleonHasChosen = true;
+    continueAfterChameleon();
+  };
+
+}
+
 function showCharlatanDecisionScreen() {
 
   const charlatan = players[currentVoterIndex];
@@ -3133,6 +3180,16 @@ function showCharlatanDecisionScreen() {
       container.appendChild(btn);
     }
   });
+}
+
+function continueAfterChameleon() {
+
+  currentVoterIndex++;
+
+  setTimeout(() => {
+    showNextVoter();
+  }, 150);
+
 }
 
 function isCurseStillValid() {
@@ -4991,9 +5048,32 @@ function checkWinCondition() {
 
   const alivePlayers = players.filter(p => p.alive);
 
+  const chameleonPlayer = alivePlayers.find(p => p.role === "Chameleon");
   const jackalAlive = alivePlayers.find(p => p.role === "Jackal");
   const arsonistAlive = alivePlayers.find(p => p.role === "Arsonist");
   const viperAlive  = alivePlayers.find(p => p.role === "Viper");
+
+  if (chameleonPlayer && chameleonAlliance === "Crew") {
+  crewAlive.push(chameleonPlayer);
+}
+
+if (chameleonPlayer && chameleonAlliance === "Imposter") {
+  impostorsAlive.push(chameleonPlayer);
+}
+
+if (chameleonPlayer && chameleonAlliance === "Solo") {
+
+  const others = alivePlayers.filter(p => p !== chameleonPlayer);
+
+  if (others.length === 0) {
+    endGame(
+      `<strong>${chameleonPlayer.name} the Chameleon wins alone!</strong>`,
+      "Chameleon"
+    );
+    return true;
+  }
+
+}
 
 const mainEvilRoles = ["Imposter", "Butcher", "Dictator", "Mastermind", "Hunter"];
 
@@ -5320,6 +5400,8 @@ charlatanChosenTarget = null;
 cursedPlayerIndex = null;
 cursePending = false;
 charlatanHasActed = false;
+chameleonAlliance = null; // "Crew" | "Imposter" | "Solo"
+chameleonHasChosen = false;
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
