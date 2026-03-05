@@ -6240,77 +6240,50 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
  } else if (word === "Psychic") {
 
   const trimmed = secretItem.trim();
-wordBox.textContent =
-  trimmed.slice(0, 2).charAt(0).toUpperCase() +
-  trimmed.slice(1, 2).toLowerCase() +
-  "...";
+  wordBox.textContent =
+    trimmed.slice(0, 2).charAt(0).toUpperCase() +
+    trimmed.slice(1, 2).toLowerCase() +
+    "...";
 
   const roleText = document.createElement("div");
   roleText.className = "psychic-role";
   roleText.textContent = "Psychic";
   wordBox.appendChild(roleText);
 
-// 🔮 Psychic Vision Box
-const visionBox = document.createElement("div");
-visionBox.className = "psychic-vision";
+  // 🔮 Psychic Vision Box
+  const visionBox = document.createElement("div");
+  visionBox.className = "psychic-vision";
 
-let rolesHTML = `<strong>🔮 Your vision reveals...</strong><br><br>`;
+  let rolesHTML = `<strong>🔮 Your vision reveals...</strong><br><br>`;
 
-const teamCounts = {};
+  const teamCounts = {};
 
-players.forEach(player => {
-  const roleKey = player.role.toLowerCase();
-  const team = roleData[roleKey]?.team || "Crew";
+  players.forEach(player => {
+    const roleKey = player.role.toLowerCase();
+    const team = roleData[roleKey]?.team || "Crew";
+    teamCounts[team] = (teamCounts[team] || 0) + 1;
+  });
 
-  teamCounts[team] = (teamCounts[team] || 0) + 1;
-});
+  // Shuffle order so it's not predictable
+  const teams = Object.entries(teamCounts).sort(() => Math.random() - 0.5);
 
-// convert to array and shuffle so order isn't revealing
-const teams = Object.entries(teamCounts).sort(() => Math.random() - 0.5);
+  teams.forEach(([team, count]) => {
 
-teams.forEach(([team, count]) => {
+    if (team === "Crew") {
+      rolesHTML += `💧 ${count} Civilians<br>`;
+    }
+    else if (team === "Evil") {
+      rolesHTML += `🩸 ${count} Evil presences<br>`;
+    }
+    else if (team === "Neutral") {
+      rolesHTML += `💥 ${count} Chaotic presences<br>`;
+    }
 
-  if (team === "Crew") {
-    rolesHTML += `💧 ${count} Civilians <br>`;
-  }
-  else if (team === "Evil") {
-    rolesHTML += `🩸 ${count} Evil presences<br>`;
-  }
-  else if (team === "Neutral") {
-    rolesHTML += `💥 ${count} Chaotic presences<br>`;
-  }
-
-});
-
-visionBox.innerHTML = rolesHTML;
-
-
-  const color = roleColors[role] || "#ffffff";
-  const isCivilian = role === "Civilian";
-
-  rolesHTML += `
-    <div class="psychic-player-role">
-      <span
-        style="
-          color:${color};
-          font-weight:bold;
-          ${!isCivilian ? `
-            text-shadow:
-              -1px -1px 0 #fff,
-               1px -1px 0 #fff,
-              -1px  1px 0 #fff,
-               1px  1px 0 #fff;
-          ` : ""}
-        "
-      >
-        ${role}${count > 1 ? ` x${count}` : ""}
-      </span>
-    </div>
-  `;
-});
+  });
 
   visionBox.innerHTML = rolesHTML;
   wordBox.appendChild(visionBox);
+
 
 
 
