@@ -4353,7 +4353,19 @@ if (loverDeathIndex !== null) {
 
 let screenHTML = "";
 
-if (eliminatedIndex === null) {
+if (meetingSkipped) {
+
+  const skipCount = votes["skip"] || 0;
+
+  screenHTML = `
+    <div class="roles-reveal-header">
+      <h2>⏭️ Meeting Skipped</h2>
+      <p>${skipCount} player${skipCount !== 1 ? "s" : ""} voted to skip</p>
+    </div>
+  `;
+
+}
+else if (eliminatedIndex === null) {
 
   screenHTML = `
     <div class="roles-reveal-header">
