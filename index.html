@@ -2861,17 +2861,12 @@ function castVote(targetIndex) {
   const voter = players[currentVoterIndex];
   if (!voter || !voter.alive) return;
 
-  players[currentVoterIndex].vote = targetIndex;
-
-if (targetIndex === "skip") {
-  skipVotes++;
-
-  currentVoterIndex++;
-  setTimeout(() => {
-    showNextVoter();
-  }, 150);
-  return;
-}
+  // record vote
+  if (targetIndex === null) {
+    players[currentVoterIndex].vote = "skip";
+  } else {
+    players[currentVoterIndex].vote = targetIndex;
+  }
 
   let voteWeight = 1;
 
@@ -2880,11 +2875,11 @@ if (targetIndex === "skip") {
   if (voter.role === "Charlatan") voteWeight = 0;
   if (voter.role === "Viper") voteWeight = 0;
 
-  if (!votes[targetIndex]) {
-    votes[targetIndex] = 0;
+  if (!votes[players[currentVoterIndex].vote]) {
+    votes[players[currentVoterIndex].vote] = 0;
   }
 
-  votes[targetIndex] += voteWeight;
+  votes[players[currentVoterIndex].vote] += voteWeight;
 
   // 🐍 VIPER
   if (voter.role === "Viper" && !viperChoosingPoison) {
