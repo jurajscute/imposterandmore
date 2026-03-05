@@ -1454,6 +1454,8 @@ let cursePending = false;
 let charlatanHasActed = false;
 let curseCountdown = 0; // NEW
 
+let skipVotes = 0;
+
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
@@ -2813,12 +2815,13 @@ votingBox.classList.add("vote-fade-in");
   });
 
   // ➖ Skip Vote button
+// ⏭️ Skip button
 const skipBtn = document.createElement("button");
-skipBtn.textContent = "Skip Vote";
+skipBtn.textContent = "⏭️ Skip";
 skipBtn.className = "reveal-roles-btn";
 skipBtn.style.marginTop = "10px";
 
-skipBtn.onclick = () => castVote(null);
+skipBtn.onclick = () => castVote("skip");
 
 voteOptions.appendChild(skipBtn);
 }
@@ -2863,10 +2866,21 @@ if (targetIndex === null) {
 
   players[currentVoterIndex].vote = "skip";
 
+  let voteWeight = 1;
+
+  if (currentVoterIndex === kingPlayer) voteWeight = 2;
+  if (voter.role === "Maniac") voteWeight = 0;
+  if (voter.role === "Charlatan") voteWeight = 0;
+  if (voter.role === "Viper") voteWeight = 0;
+
+  if (!votes["skip"]) votes["skip"] = 0;
+  votes["skip"] += voteWeight;
+
   currentVoterIndex++;
   setTimeout(() => {
     showNextVoter();
   }, 150);
+
   return;
 }
 
@@ -3795,31 +3809,74 @@ if (
 }
 
 
-  // =====================================================
-  // 🗳 PHASE 2 — COUNT VOTES
-  // =====================================================
+// =====================================================
+// 🗳 COUNT VOTES
+// =====================================================
 
-  votes = {};
+let maxVotes = 0;
+let winners = [];
 
-  players.forEach((player, index) => {
-    if (!player.alive) return;
-    if (index === dictatorBlockedPlayer) return;
-    if (player.vote === null || player.vote === "skip") return;
+Object.entries(votes).forEach(([target, count]) => {
 
-    let weight = 1;
-    if (index === kingPlayer) weight = 2;
-    if (player.role === "Maniac" || player.role === "Charlatan" || player.role === "Viper") weight = 0;
+  if (count > maxVotes) {
+    maxVotes = count;
+    winners = [target];
+  }
 
-    if (!votes[player.vote]) votes[player.vote] = 0;
-    votes[player.vote] += weight;
+  else if (count === maxVotes) {
+    winners.push(target);
+  }
+
+  if (winners.includes("skip") && winners.length === 1) {
+
+  let voteSummary = "";
+
+  Object.entries(votes).forEach(([target, count]) => {
+
+    if (target === "skip") {
+      voteSummary += `<p><strong>Skip</strong> — ${count} vote${count !== 1 ? "s" : ""}</p>`;
+    }
+
+    else {
+      voteSummary += `<p><strong>${players[target].name}</strong> — ${count} vote${count !== 1 ? "s" : ""}</p>`;
+    }
+
   });
 
-  let maxVotes = Math.max(...Object.values(votes || {0:0}));
-  let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
+  votingBox.innerHTML = `
+    <div class="meeting-skipped">
+      <h2>⏭️ Meeting Skipped</h2>
+      <div class="vote-summary">
+        ${voteSummary}
+      </div>
+    </div>
+  `;
 
-  let eliminatedIndex = topPlayers.length === 1
-    ? parseInt(topPlayers[0])
-    : null;
+  clearContinueButtons();
+
+  const btn = document.createElement("button");
+  btn.textContent = "Continue";
+  btn.className = "reveal-roles-btn";
+  btn.onclick = () => nextRound();
+
+  votingBox.appendChild(btn);
+
+  return;
+}
+
+let eliminatedIndex = null;
+
+if (winners.length === 1 && winners[0] !== "skip") {
+  eliminatedIndex = parseInt(winners[0]);
+}
+
+});
+
+let topPlayers = Object.keys(votes).filter(p => votes[p] === maxVotes);
+
+let eliminatedIndex = topPlayers.length === 1
+  ? parseInt(topPlayers[0])
+  : null;
 
   // =====================================================
   // 🏹 PHASE 3 — HUNTER
