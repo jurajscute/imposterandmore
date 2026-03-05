@@ -3798,24 +3798,32 @@ if (
 
   // =====================================================
   // 🗳 PHASE 2 — COUNT VOTES
-  // =====================================================
+// =====================================================
 
-  votes = {};
+votes = {};
 
-  players.forEach((player, index) => {
-    if (!player.alive) return;
-    if (index === dictatorBlockedPlayer) return;
-    if (player.vote === null) return;
+players.forEach((player, index) => {
+  if (!player.alive) return;
+  if (index === dictatorBlockedPlayer) return;
+  if (player.vote === null) return;
 
-    let weight = 1;
-    if (index === kingPlayer) weight = 2;
-    if (player.role === "Maniac" || player.role === "Charlatan" || player.role === "Viper") weight = 0;
+  let weight = 1;
+  if (index === kingPlayer) weight = 2;
+  if (player.role === "Maniac" || player.role === "Charlatan" || player.role === "Viper") weight = 0;
 
-    if (!votes[player.vote]) votes[player.vote] = 0;
-    votes[player.vote] += weight;
-  });
+  if (player.vote === "skip") {
+    skipVotes += weight;
+    return;
+  }
 
-  let maxPlayerVotes = Math.max(...Object.values(votes || {0:0}));
+  if (!votes[player.vote]) votes[player.vote] = 0;
+  votes[player.vote] += weight;
+});
+
+// add skip into the votes object so it appears in results
+votes["skip"] = skipVotes;
+
+let maxPlayerVotes = Math.max(...Object.values(votes), 0);
 
 if (skipVotes > maxPlayerVotes) {
 
@@ -3841,7 +3849,6 @@ if (skipVotes > maxPlayerVotes) {
       }
 
       const player = players[parseInt(i)];
-
       if (!player) return "";
 
       return `
@@ -3849,7 +3856,7 @@ if (skipVotes > maxPlayerVotes) {
           <strong>${player.name}</strong> - ${votes[i]} vote${votes[i] !== 1 ? "s" : ""}
         </p>
       `;
-      
+
     }).join("")}
 
   </div>
@@ -3867,12 +3874,13 @@ if (skipVotes > maxPlayerVotes) {
   return;
 }
 
-let topPlayers = Object.keys(votes).filter(p => votes[p] === maxPlayerVotes);
+let topPlayers = Object.keys(votes)
+  .filter(p => p !== "skip")
+  .filter(p => votes[p] === maxPlayerVotes);
 
-  let eliminatedIndex = topPlayers.length === 1
-    ? parseInt(topPlayers[0])
-    : null;
-
+let eliminatedIndex = topPlayers.length === 1
+  ? parseInt(topPlayers[0])
+  : null;
   // =====================================================
   // 🏹 PHASE 3 — HUNTER
   // =====================================================
@@ -4957,6 +4965,7 @@ if (viperNextPoison !== null) {
 });
 
   votes = {};
+  skipVotes = 0;
   currentVoterIndex = 0;
 
   dictatorBlockedPlayer = null;
