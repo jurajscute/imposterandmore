@@ -4361,7 +4361,7 @@ if (eliminatedPlayer && eliminatedPlayer.role === "Shield") {
   `;
 }
 
-  if (eliminatedPlayer.alive) {
+  if (eliminatedPlayer && eliminatedPlayer.alive) {
 
     // 🗳 Always eliminate on vote (Protect does NOT stop this)
     eliminatedPlayer.alive = false;
