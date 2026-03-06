@@ -299,7 +299,7 @@
 
     /* BUTTON DESIGNS */
 
-    .reveal-crew-btn { padding: 14px 24px; border: 2px solid #00ff66; border-radius: 999px; background: linear-gradient(135deg, #324764, #0076ad); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
+    .reveal-crew-btn { padding: 14px 24px; border: none; border-radius: 999px; background: linear-gradient(135deg, #324764, #0076ad); color: white; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 300px; text-align: center; transition: transform 0.12s ease, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); margin-bottom: 16px; }
     .reveal-crew-btn:hover { box-shadow: 0 6px 16px rgba(0, 71, 138, 0.6); }
     .reveal-crew-btn:active { transform: scale(0.96); }
     .reveal-crew-btn:disabled { background: linear-gradient(135deg, #9ca3af, #d1d5db); cursor: not-allowed; box-shadow: none; transform: none; }
@@ -3141,13 +3141,65 @@ function proceedToNextVoter() {
   }, 150);
 }
 
+function showChameleonGoalScreen() {
+
+let headerClass = "";
+let headerText = "";
+let goalText = "";
+
+if (chameleonAlliance === "Crew") {
+  headerClass = "roles-reveal-header";
+  headerText = "🦎 The Chameleon joins the Crew";
+  goalText = "Help the Crew eliminate all evil roles.";
+}
+
+if (chameleonAlliance === "Imposter") {
+  headerClass = "dictator-screen";
+  headerText = "🦎 The Chameleon joins the Imposters";
+  goalText = "Help the Imposters come out on top.";
+}
+
+if (chameleonAlliance === "Solo") {
+  headerClass = "chameleon-screen";
+  headerText = "🦎 The Chameleon goes Solo";
+  goalText = "Outlive everyone and reach the top of the foodchain.";
+}
+
+votingBox.innerHTML = `
+  <div class="roles-reveal-header ${headerClass}">
+    <h2>${headerText}</h2>
+  </div>
+
+  <div class="roles-reveal-content">
+    <p>${goalText}</p>
+    <button class="reveal-roles-btn" id="continueBtn">Continue</button>
+  </div>
+`;
+
+document.getElementById("continueBtn").onclick = () => {
+  currentVoterIndex++;
+  showNextVoter();
+};
+
+  const btn = document.createElement("button");
+  btn.textContent = "Continue";
+  btn.className = "reveal-chameleon-btn";
+
+  btn.onclick = () => {
+    // Continue the normal game flow
+    startVotingPhase(); 
+  };
+
+  votingBox.appendChild(btn);
+}
+
 function showChameleonAllianceScreen() {
 
   votingBox.innerHTML = `
-    <div class="roles-reveal-header">
+    <div class="chameleon-screen">
       <h2>🦎 Chameleon Choice</h2>
     </div>
-    <div class="chameleon-screen">
+    <div class="roles-reveal-content">
       <p>You must now choose your alliance.</p>
 
       <button id="chamCrew" class="reveal-crew-btn">Crew</button>
@@ -3159,19 +3211,19 @@ function showChameleonAllianceScreen() {
   document.getElementById("chamCrew").onclick = () => {
     chameleonAlliance = "Crew";
     chameleonHasChosen = true;
-    continueAfterChameleon();
+    showChameleonGoalScreen();
   };
 
   document.getElementById("chamEvil").onclick = () => {
     chameleonAlliance = "Imposter";
     chameleonHasChosen = true;
-    continueAfterChameleon();
+    showChameleonGoalScreen();
   };
 
   document.getElementById("chamSolo").onclick = () => {
     chameleonAlliance = "Solo";
     chameleonHasChosen = true;
-    continueAfterChameleon();
+    showChameleonGoalScreen();
   };
 
 }
