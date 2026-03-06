@@ -3146,7 +3146,6 @@ function showChameleonGoalScreen() {
 let headerClass = "";
 let headerText = "";
 let goalText = "";
-let extraInfo = "";
 
 if (chameleonAlliance === "Crew") {
   headerClass = "roles-reveal-header";
@@ -3157,23 +3156,19 @@ if (chameleonAlliance === "Crew") {
 if (chameleonAlliance === "Imposter") {
   headerClass = "dictator-screen";
   headerText = "🦎 The Chameleon joins the Imposters";
-  goalText = "Help the Imposters come out on top.";
 
-  // 🔥 Reveal who the impostor is
+  // Find ANY main evil role (same logic as Maniac)
   const realEvilIndex = words.findIndex(role =>
     mainEvilRoles.includes(role)
   );
 
-  if (realEvilIndex !== -1) {
-    const targetName = playerNames[realEvilIndex] || `Player ${realEvilIndex + 1}`;
+  let targetName = "the Imposters";
 
-    extraInfo = `
-      <div class="chameleon-hint">
-        <strong>Your ally:</strong><br>
-        ${targetName} is part of the evil team.
-      </div>
-    `;
+  if (realEvilIndex !== -1) {
+    targetName = playerNames[realEvilIndex];
   }
+
+  goalText = `Help ${targetName} eliminate everyone.`;
 }
 
 if (chameleonAlliance === "Solo") {
@@ -3189,7 +3184,6 @@ votingBox.innerHTML = `
 
   <div class="roles-reveal-content">
     <p>${goalText}</p>
-    ${extraInfo}
     <button class="reveal-roles-btn" id="continueBtn">Continue</button>
   </div>
 `;
@@ -3198,7 +3192,7 @@ document.getElementById("continueBtn").onclick = () => {
   currentVoterIndex++;
   showNextVoter();
 };
-
+  votingBox.appendChild(btn);
 }
 
 function showChameleonAllianceScreen() {
