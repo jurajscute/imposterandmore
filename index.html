@@ -3180,16 +3180,6 @@ document.getElementById("continueBtn").onclick = () => {
   currentVoterIndex++;
   showNextVoter();
 };
-
-  const btn = document.createElement("button");
-  btn.textContent = "Continue";
-  btn.className = "reveal-chameleon-btn";
-
-  btn.onclick = () => {
-    // Continue the normal game flow
-    startVotingPhase(); 
-  };
-
   votingBox.appendChild(btn);
 }
 
@@ -3204,7 +3194,7 @@ function showChameleonAllianceScreen() {
 
       <button id="chamCrew" class="reveal-crew-btn">Crew</button>
       <button id="chamEvil" class="reveal-evil-btn">Imposters</button>
-      <button id="chamSolo" class="reveal-chameleon-btn">Solo</button>
+      <button id="chamSolo" class="reveal-medic-btn">Solo</button>
     </div>
   `;
 
