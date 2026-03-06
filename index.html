@@ -286,7 +286,7 @@
     .psychic-hint { color: #b79dff; background: #e2d0ff; border-color: #a889fd; }
     .sheriff-hint { color: #977d08; background: #fff4b9; border-color: #977d08; }
     .idiot-hint { color: #d6c800; background: #f1f8b16e; border-color: #d6c800; }
-    .beastmaster-hint { color: #df9800; background: #a2ecae; border-color: #df9800; }
+    .beastmaster-hint { color: #df9800; background: #daffe0; border-color: #df9800; }
     .philosopher-hint { color: #2b99ff; background: #d0eeff; border-color: #3d81ff; }
     .medic-hint { color: #29c26e; background: #d3ffe9; border-color: #29c26e; }
     .maniac-hint { color: #530000; background: #ffe0e0; border-color: #790000; }
@@ -390,7 +390,7 @@
     .role-list .psychic-role { background: #dfcbff; color: #b79dff; border-left-color: #b79dff; }
     .role-list .sheriff-role { background: #fff4b9; color: #977d08; border-left-color: #977d08; }
     .role-list .idiot-role { background: #f1f8b16e; color: #d6c800; border-left-color: #d6c800; }
-    .role-list .beastmaster-role { background: #a2ecae; color: #df9800; border-left-color: #df9800; }
+    .role-list .beastmaster-role { background: #daffe0; color: #df9800; border-left-color: #df9800; }
     .role-list .philosopher-role { background: #d0eeff; color: #2b99ff; border-left-color: #2b99ff; }
     .role-list .medic-role { background: #d3ffe9; color: #29c26e; border-left-color: #29c26e; }
     .role-list .maniac-role { background: #ffe0e0; color: #530000; border-left-color: #530000; }
@@ -6808,7 +6808,7 @@ if (arsonistChoosingIndex !== null && i !== arsonistChoosingIndex) {
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>You're an idiot and forgot what the word is...<br>Eliminate impostor!<br><br>The detective sees you as <strong>neutral</strong>!`;
         } else if (word === "Beastmaster") {
           specialHint.className = "beastmaster-hint";
-          specialHint.innerHTML = `<strong>Your Mission:</strong><br>You can only use animals as your words, try your best to describe your word using animals.<br>Eliminate impostor!`;
+          specialHint.innerHTML = `<strong>Your Mission:</strong><br>You can only use <strong>animals</strong> as your words, try your best to describe your word using animals.<br><br>Eliminate impostor!`;
         } else if (word === "Medic") {
           specialHint.className = "medic-hint";
           specialHint.innerHTML = `<strong>Your Mission:</strong><br>Heal and protect your teammates!<br><br>During voting, you can select one person to <strong>HEAL</strong> or <strong>PROTECT</strong>!`;
