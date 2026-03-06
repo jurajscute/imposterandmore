@@ -6957,47 +6957,33 @@ if (loverIndexes.includes(i)) {
   arsonistChoosingIndex = null;
   arsonistMarkedTarget = null; // reset selection
 }
-  
-          
-          while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
-          
-          wordBox.textContent = "Locked";
-          wordBox.className = "word-box word-locked";
-          btn.textContent = "Locked";
-          btn.classList.add("locked");
-          btn.disabled = true;
-          statusLabel.textContent = "Locked";
-          
-          lockedCards++;
 
-if (lockedCards === totalCards) {
-  selectFirstPlayer();
-}
 
           updateTracker();
         }, 250);
         setTimeout(() => {
-          if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
-          if (loversHint && loversHint.parentNode) loversHint.parentNode.removeChild(loversHint);
-          
-          while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
-          
-          wordBox.textContent = "Locked";
-          wordBox.className = "word-box word-locked";
-          btn.textContent = "Locked";
-          btn.classList.add("locked");
-          btn.disabled = true;
-          statusLabel.textContent = "Locked";
-          
-          lockedCards++;
-          
-          if (lockedCards === totalCards) {
-  setTimeout(() => {
-    selectFirstPlayer();
-  }, 300);
-}
-          updateTracker();
-        }, 250);
+  if (specialHint && specialHint.parentNode) specialHint.parentNode.removeChild(specialHint);
+  if (loversHint && loversHint.parentNode) loversHint.parentNode.removeChild(loversHint);
+
+  while (wordBox.firstChild) wordBox.removeChild(wordBox.firstChild);
+
+  wordBox.textContent = "Locked";
+  wordBox.className = "word-box word-locked";
+  btn.textContent = "Locked";
+  btn.classList.add("locked");
+  btn.disabled = true;
+  statusLabel.textContent = "Locked";
+
+  lockedCards++;
+
+  if (lockedCards === totalCards) {
+    setTimeout(() => {
+      selectFirstPlayer();
+    }, 300);
+  }
+
+  updateTracker();
+}, 250);
       }
     });
 
