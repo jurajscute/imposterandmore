@@ -4725,54 +4725,45 @@ if (evilVotedSame) {
 
     const isEvil = sheriffAllowedRoles.includes(target.role);
 
-    if (isEvil) {
+let loverDeathIndex = null;
 
-      const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
-      const killSuccess = attemptKill(sheriffIndex, sheriffShotTarget);
-if (killSuccess) {
-      meetingMessages += `
-  <hr>
-  <div class="roles-reveal-content">
-    <h3>⭐ ${target.name} was masterfully shot by the Sheriff!</h3>
-    <p>
-      They were the 
-      <span style="color:${roleColors[target.role]}; font-weight:bold;">
-        ${target.role}
-      </span>
-    </p>
-  </div>
-`;
+if (isEvil) {
 
+  const killSuccess = attemptKill(sheriffIndex, sheriffShotTarget);
 
-      if (loverDeathIndex !== null) {
-  const lover = players[loverDeathIndex];
+  if (killSuccess) {
+
+    loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
+
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>⭐ ${target.name} was masterfully shot by the Sheriff!</h3>
+        <p>
+          They were the 
+          <span style="color:${roleColors[target.role]}; font-weight:bold;">
+            ${target.role}
+          </span>
+        </p>
+      </div>
+    `;
+  }
+
+} else {
+
+  sheriff.alive = false;
+  loverDeathIndex = handleLoverChainDeath(sheriffIndex);
 
   meetingMessages += `
-    <div class="lover-death-message">
-      <h3>💔 ${lover.name} died from utter heartbreak...</h3>
-      <p>
-        They were the 
-        <span style="color:${roleColors[lover.role]}; font-weight:bold;">
-          ${lover.role}
-        </span>
-      </p>
+    <hr>
+    <div class="roles-reveal-content">
+      <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
     </div>
   `;
 }
 
-    } else {
-
-      sheriff.alive = false;
-      const loverDeathIndex = handleLoverChainDeath(sheriffIndex);
-
-      meetingMessages += `
-        <hr>
-        <div class="roles-reveal-content">
-          <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
-        </div>
-      `;
-    }
 if (loverDeathIndex !== null) {
+
   const lover = players[loverDeathIndex];
 
   meetingMessages += `
@@ -4787,8 +4778,6 @@ if (loverDeathIndex !== null) {
     </div>
   `;
 }
-      
-    }
   }
 }
 
