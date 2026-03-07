@@ -4154,19 +4154,25 @@ function attemptKill(attackerIndex, targetIndex) {
     attacker.alive = false;
 
     meetingMessages += `
-      <hr>
-      <div class="roles-reveal-content">
-        <h3>⚡ A cursed aura explodes!</h3>
-        <p>${attacker.name} tried to kill ${target.name}...</p>
-        <p>
-          But ${target.name} was the 
-          <span style="color:${roleColors["Jinx"]}; font-weight:bold;">
-          Jinx
-          </span>!
-        </p>
-        <p>${attacker.name} died instead!</p>
-      </div>
-    `;
+<hr>
+<div class="roles-reveal-content">
+  <h3>🩸 A gut-wrenching scream is heard!</h3>
+  <p>${attacker.name} tried to kill ${target.name}...</p>
+  <p>
+    But ${target.name} is the 
+    <span style="color:${roleColors["Jinx"]}; font-weight:bold;">
+      Jinx
+    </span>!
+  </p>
+  <p>${attacker.name} attack was predicted and they got killed instead!</p>
+  <p>
+    They were the 
+    <span style="color:${roleColors[attacker.role]}; font-weight:bold;">
+      ${attacker.role}
+    </span>.
+  </p>
+</div>
+`;
 
     const loverDeathIndex = handleLoverChainDeath(attackerIndex);
 
