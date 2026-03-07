@@ -1524,7 +1524,7 @@ let chameleonAlliance = null; // "Crew" | "Imposter" | "Solo"
 let chameleonHasChosen = false;
 
 let necromancerReviveTarget = null;
-let necromancerUsed = false;
+let necromancerHasRevived = false;
 
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
@@ -2965,31 +2965,29 @@ function showViperCooldownScreen() {
 function showNecromancerReviveScreen() {
 
   const revivedPlayer = players[necromancerReviveTarget];
-  players[necromancerReviveTarget].hasVoted = false;
-
   revivedPlayer.alive = true;
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h2>Necromancer Revival</h2>
+      <h2>🧟 Necromancer Revive</h2>
     </div>
 
     <div class="roles-reveal-content">
-      <p><strong>${revivedPlayer.name}</strong> rises from the dead!</p>
-      <button id="continueRevivedVote" class="reveal-roles-btn">
-        Continue
-      </button>
+      <p>${revivedPlayer.name} rises from the dead!</p>
+      <p>They must now cast their vote.</p>
+      <button class="reveal-roles-btn" id="continueBtn">Continue</button>
     </div>
   `;
 
-  document.getElementById("continueRevivedVote").onclick = () => {
+  document.getElementById("continueBtn").onclick = () => {
 
     currentVoterIndex = necromancerReviveTarget;
 
     necromancerReviveTarget = null;
 
-    showNextVoter(); // revived player votes
+    showNextVoter();
   };
+
 }
 
 function castVote(targetIndex) {
@@ -3083,6 +3081,12 @@ if (
   !chameleonHasChosen
 ) {
   showChameleonAllianceScreen();
+  return;
+}
+
+// 🧟 NECROMANCER
+if (voter.role === "Necromancer" && !necromancerHasRevived) {
+  showNecromancerReviveOptions();
   return;
 }
 
@@ -3349,42 +3353,36 @@ function showCharlatanDecisionScreen() {
   });
 }
 
-function showNecromancerDecisionScreen() {
-
-  if (necromancerUsed) {
-    currentVoterIndex++;
-    showNextVoter();
-    return;
-  }
+function showNecromancerReviveOptions() {
 
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h3>🧟 Necromancer Power</h3>
+      <h3>🧟 Necromancer Ritual</h3>
     </div>
     <div class="roles-reveal-content" id="reviveOptions"></div>
   `;
 
-  const optionsBox = document.getElementById("reviveOptions");
+  const options = document.getElementById("reviveOptions");
 
   players.forEach((player, index) => {
 
-    if (player.alive) return; // only dead players
+    if (player.alive) return;
 
     const btn = document.createElement("button");
     btn.className = "reveal-evil-btn";
-    btn.textContent = player.name;
+    btn.textContent = `Revive ${player.name}`;
 
     btn.onclick = () => {
-
       necromancerReviveTarget = index;
-      necromancerUsed = true;
+      necromancerHasRevived = true;
 
       currentVoterIndex++;
       showNextVoter();
     };
 
-    optionsBox.appendChild(btn);
+    options.appendChild(btn);
   });
+
 }
 
 function continueAfterChameleon() {
@@ -5622,6 +5620,8 @@ cursePending = false;
 charlatanHasActed = false;
 chameleonAlliance = null; // "Crew" | "Imposter" | "Solo"
 chameleonHasChosen = false;
+necromancerReviveTarget = null;
+necromancerHasRevived = false;
 
   startVotingBtn.style.display = "none";
 startVotingBtn.classList.remove("show");
