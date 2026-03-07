@@ -3086,6 +3086,18 @@ if (
 
 // 🧟 NECROMANCER
 if (voter.role === "Necromancer" && !necromancerHasRevived) {
+
+  const deadPlayers = players.filter(p => !p.alive);
+
+  // If nobody is dead, skip the ritual
+  if (deadPlayers.length === 0) {
+    currentVoterIndex++;
+    setTimeout(() => {
+      showNextVoter();
+    }, 150);
+    return;
+  }
+
   showNecromancerReviveOptions();
   return;
 }
@@ -3355,34 +3367,59 @@ function showCharlatanDecisionScreen() {
 
 function showNecromancerReviveOptions() {
 
+  const deadPlayers = players
+    .map((p, i) => ({ ...p, index: i }))
+    .filter(p => !p.alive);
+
   votingBox.innerHTML = `
     <div class="dictator-screen">
-      <h3>🧟 Necromancer Ritual</h3>
+      <h3>🧟 Revival Ritual</h3>
     </div>
-    <div class="roles-reveal-content" id="reviveOptions"></div>
+    <div class="roles-reveal-content" id="necromancerOptions">
+      <p>Choose a player to revive.</p>
+    </div>
   `;
 
-  const options = document.getElementById("reviveOptions");
+  const optionsBox = document.getElementById("necromancerOptions");
 
-  players.forEach((player, index) => {
-
-    if (player.alive) return;
+  // Dead player revive buttons
+  deadPlayers.forEach(player => {
 
     const btn = document.createElement("button");
     btn.className = "reveal-evil-btn";
     btn.textContent = `Revive ${player.name}`;
 
     btn.onclick = () => {
-      necromancerReviveTarget = index;
+
+      necromancerReviveTarget = player.index;
       necromancerHasRevived = true;
 
       currentVoterIndex++;
-      showNextVoter();
+      setTimeout(() => {
+        showNextVoter();
+      }, 150);
     };
 
-    options.appendChild(btn);
+    optionsBox.appendChild(btn);
   });
 
+  // ⏭ Skip Revival button
+  const skipBtn = document.createElement("button");
+  skipBtn.className = "reveal-roles-btn skip-btn";
+  skipBtn.textContent = "Skip Revival";
+  skipBtn.style.marginTop = "10px";
+
+  skipBtn.onclick = () => {
+
+    necromancerReviveTarget = null;
+
+    currentVoterIndex++;
+    setTimeout(() => {
+      showNextVoter();
+    }, 150);
+  };
+
+  optionsBox.appendChild(skipBtn);
 }
 
 function continueAfterChameleon() {
