@@ -3643,7 +3643,7 @@ function resolveSheriffNow() {
 
   if (sheriffAllowedRoles.includes(target.role)) {
 
-    attemptKill(sheriffIndex, targetIndex);
+    target.alive = false;
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
@@ -5306,7 +5306,7 @@ function resolveSheriffAfterShield() {
 
   if (sheriffAllowedRoles.includes(target.role)) {
 
-    attemptKill(sheriffIndex, targetIndex);
+    target.alive = false;
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
