@@ -4563,7 +4563,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 }
 
     } else {
-
+const butcherIndex = players.findIndex(p => p.role === "Butcher");
       attemptKill(butcherIndex, targetIndex);
       handleLoverChainDeath(targetIndex);
 
