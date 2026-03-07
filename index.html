@@ -1523,6 +1523,9 @@ let skipVotes = 0;
 let chameleonAlliance = null; // "Crew" | "Imposter" | "Solo"
 let chameleonHasChosen = false;
 
+let necromancerReviveTarget = null;
+let necromancerUsed = false;
+
 /* ===== ELEMENTS ===== */
 const cardsContainer = document.getElementById("cardsContainer");
 const generateBtn = document.getElementById("generateBtn");
@@ -2877,9 +2880,16 @@ function showNextVoter() {
   }
 
   if (currentVoterIndex >= players.length) {
-    finishVoting();
+
+  // 🧟 NECROMANCER REVIVE CHECK
+  if (necromancerReviveTarget !== null) {
+    showNecromancerReviveScreen();
     return;
   }
+
+  finishVoting();
+  return;
+}
 
   const voter = players[currentVoterIndex];
 
@@ -2950,6 +2960,36 @@ function showViperCooldownScreen() {
   };
 
   votingBox.appendChild(continueBtn);
+}
+
+function showNecromancerReviveScreen() {
+
+  const revivedPlayer = players[necromancerReviveTarget];
+  players[necromancerReviveTarget].hasVoted = false;
+
+  revivedPlayer.alive = true;
+
+  votingBox.innerHTML = `
+    <div class="dictator-screen">
+      <h2>Necromancer Revival</h2>
+    </div>
+
+    <div class="roles-reveal-content">
+      <p><strong>${revivedPlayer.name}</strong> rises from the dead!</p>
+      <button id="continueRevivedVote" class="reveal-roles-btn">
+        Continue
+      </button>
+    </div>
+  `;
+
+  document.getElementById("continueRevivedVote").onclick = () => {
+
+    currentVoterIndex = necromancerReviveTarget;
+
+    necromancerReviveTarget = null;
+
+    showNextVoter(); // revived player votes
+  };
 }
 
 function castVote(targetIndex) {
@@ -3306,6 +3346,44 @@ function showCharlatanDecisionScreen() {
 
       container.appendChild(btn);
     }
+  });
+}
+
+function showNecromancerDecisionScreen() {
+
+  if (necromancerUsed) {
+    currentVoterIndex++;
+    showNextVoter();
+    return;
+  }
+
+  votingBox.innerHTML = `
+    <div class="dictator-screen">
+      <h3>🧟 Necromancer Power</h3>
+    </div>
+    <div class="roles-reveal-content" id="reviveOptions"></div>
+  `;
+
+  const optionsBox = document.getElementById("reviveOptions");
+
+  players.forEach((player, index) => {
+
+    if (player.alive) return; // only dead players
+
+    const btn = document.createElement("button");
+    btn.className = "reveal-evil-btn";
+    btn.textContent = player.name;
+
+    btn.onclick = () => {
+
+      necromancerReviveTarget = index;
+      necromancerUsed = true;
+
+      currentVoterIndex++;
+      showNextVoter();
+    };
+
+    optionsBox.appendChild(btn);
   });
 }
 
