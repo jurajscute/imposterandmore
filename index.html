@@ -4346,6 +4346,8 @@ if (!meetingSkipped && !skipTie) {
       } else {
 
         attemptKill(hunterIndex, targetIndex);
+        const killSuccess = attemptKill(hunterIndex, targetIndex);
+        if (killSuccess) {
 
 const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
@@ -4419,7 +4421,7 @@ if (
 }
       }
     }
-
+  }
     hunterPendingKill = null;
   }
 
@@ -4566,7 +4568,9 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
     } else {
       attemptKill(butcherIndex, targetIndex);
+      const killSuccess = attemptKill(butcherIndex, targetIndex);
       handleLoverChainDeath(targetIndex);
+      if (killSuccess) {
 
       meetingMessages += `
         ${butcherRevealMessage}
@@ -4597,6 +4601,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 }
     }
   }
+}
 
   butcherPendingKill = null;
   butcherRevealMessage = "";
@@ -4718,7 +4723,8 @@ if (evilVotedSame) {
 
       attemptKill(sheriffIndex, targetIndex);
       const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
-
+      const killSuccess = attemptKill(sheriffIndex, targetIndex);
+if (killSuccess) {
       meetingMessages += `
   <hr>
   <div class="roles-reveal-content">
@@ -4731,6 +4737,7 @@ if (evilVotedSame) {
     </p>
   </div>
 `;
+
 
       if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
@@ -4759,7 +4766,7 @@ if (evilVotedSame) {
           <h3>🪦 ${sheriff.name} shot an innocent and died!</h3>
         </div>
       `;
-      
+    }
 if (loverDeathIndex !== null) {
   const lover = players[loverDeathIndex];
 
