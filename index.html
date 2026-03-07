@@ -2895,13 +2895,14 @@ function showRevivedPlayerVote(playerIndex) {
 
     btn.onclick = () => {
 
-      revived.vote = index;
+  revived.vote = index;
 
-      if (!votes[index]) votes[index] = 0;
-      votes[index] += 1;
+  if (!votes[index]) votes[index] = 0;
+  votes[index] += 1;
 
-      finishVoting(); // resume final result calculation
-    };
+  necromancerReviveTarget = null; // 🔥 prevents second revive
+  finishVoting();
+};
 
     voteOptions.appendChild(btn);
   });
