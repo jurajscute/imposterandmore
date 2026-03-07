@@ -3643,7 +3643,7 @@ function resolveSheriffNow() {
 
   if (sheriffAllowedRoles.includes(target.role)) {
 
-    attemptKill(attackerIndex, targetIndex);
+    attemptKill(sheriffIndex, targetIndex);
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
@@ -4342,7 +4342,7 @@ if (!meetingSkipped && !skipTie) {
 
       } else {
 
-        attemptKill(attackerIndex, targetIndex);
+        attemptKill(hunterIndex, targetIndex);
 
 const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
@@ -4564,7 +4564,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
     } else {
 
-      attemptKill(attackerIndex, targetIndex);
+      attemptKill(butcherIndex, targetIndex);
       handleLoverChainDeath(targetIndex);
 
       meetingMessages += `
@@ -4716,7 +4716,7 @@ if (evilVotedSame) {
 
     if (isEvil) {
 
-      attemptKill(attackerIndex, targetIndex);
+      attemptKill(sheriffIndex, targetIndex);
       const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
       meetingMessages += `
@@ -5306,7 +5306,7 @@ function resolveSheriffAfterShield() {
 
   if (sheriffAllowedRoles.includes(target.role)) {
 
-    attemptKill(attackerIndex, targetIndex);
+    attemptKill(sheriffIndex, targetIndex);
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
