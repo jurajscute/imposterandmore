@@ -4202,6 +4202,9 @@ function attemptKill(attackerIndex, targetIndex) {
 }
 
 function finishVoting() {
+  const hunterIndex = players.findIndex(p => p.role === "Hunter");
+const butcherIndex = players.findIndex(p => p.role === "Butcher");
+const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
   votingRound++;
 
   meetingMessages = "";
@@ -4347,7 +4350,6 @@ if (!meetingSkipped && !skipTie) {
 const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
         // 🎯 SPECIAL: Sheriff tried to shoot Hunter
-const hunterIndex = players.findIndex(p => p.role === "Hunter");
 
 if (
   target.role === "Sheriff" &&
@@ -4563,7 +4565,6 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 }
 
     } else {
-const butcherIndex = players.findIndex(p => p.role === "Butcher");
       attemptKill(butcherIndex, targetIndex);
       handleLoverChainDeath(targetIndex);
 
@@ -4655,7 +4656,6 @@ if (evilVotedSame) {
 
   if (sheriffShotTarget !== null) {
 
-    const sheriffIndex = players.findIndex(p => p.role === "Sheriff");
     const sheriff = players[sheriffIndex];
     const target = players[sheriffShotTarget];
 
