@@ -3606,53 +3606,6 @@ function handleLoverChainDeath(deadIndex) {
   return null;
 }
 
-function resolveJinx(attackerIndex, targetIndex) {
-
-  const attacker = players[attackerIndex];
-  const target = players[targetIndex];
-
-  if (!target || !attacker) return false;
-
-  if (target.role === "Jinx" && target.alive) {
-
-    attacker.alive = false;
-
-    const loverDeathIndex = handleLoverChainDeath(attackerIndex);
-
-    meetingMessages += `
-      <hr>
-      <div class="roles-reveal-content">
-        <h3>🩸 A gut-wrenching scream is heard!</h3>
-        <p>
-          ${attacker.name} tried to kill ${target.name}...
-        </p>
-        <p>
-          But ${target.name} was the 
-          <span style="color:${roleColors["Jinx"]}; font-weight:bold;">
-            Jinx
-          </span>
-        </p>
-        <p>
-          ${attacker.name} died instead!
-        </p>
-      </div>
-    `;
-
-    if (loverDeathIndex !== null) {
-      const lover = players[loverDeathIndex];
-      meetingMessages += `
-        <div class="lover-death-message">
-          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
-        </div>
-      `;
-    }
-
-    return true; // attack reflected
-  }
-
-  return false;
-}
-
 function resolveSheriffNow() {
 
   if (sheriffShotTarget === null) {
@@ -3690,12 +3643,7 @@ function resolveSheriffNow() {
 
   if (sheriffAllowedRoles.includes(target.role)) {
 
-    if (resolveJinx(sheriffIndex, sheriffShotTarget)) {
-  sheriffShotTarget = null;
-  return;
-}
-
-target.alive = false;
+    attemptKill(attackerIndex, targetIndex);
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
@@ -4192,6 +4140,67 @@ skipBtn.onclick = () => {
   container.appendChild(skipBtn);
 }
 
+function attemptKill(attackerIndex, targetIndex) {
+
+  const attacker = players[attackerIndex];
+  const target = players[targetIndex];
+
+  if (!attacker || !target) return false;
+  if (!attacker.alive || !target.alive) return false;
+
+  // JINX REFLECTION
+  if (target.role === "Jinx") {
+
+    attacker.alive = false;
+
+    meetingMessages += `
+      <hr>
+      <div class="roles-reveal-content">
+        <h3>⚡ A cursed aura explodes!</h3>
+        <p>${attacker.name} tried to kill ${target.name}...</p>
+        <p>
+          But ${target.name} was the 
+          <span style="color:${roleColors["Jinx"]}; font-weight:bold;">
+          Jinx
+          </span>!
+        </p>
+        <p>${attacker.name} died instead!</p>
+      </div>
+    `;
+
+    const loverDeathIndex = handleLoverChainDeath(attackerIndex);
+
+    if (loverDeathIndex !== null) {
+      const lover = players[loverDeathIndex];
+
+      meetingMessages += `
+        <div class="lover-death-message">
+          <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+        </div>
+      `;
+    }
+
+    return false; // attack failed
+  }
+
+  // NORMAL KILL
+  target.alive = false;
+
+  const loverDeathIndex = handleLoverChainDeath(targetIndex);
+
+  if (loverDeathIndex !== null) {
+    const lover = players[loverDeathIndex];
+
+    meetingMessages += `
+      <div class="lover-death-message">
+        <h3>💔 ${lover.name} collapsed from heartbreak...</h3>
+      </div>
+    `;
+  }
+
+  return true;
+}
+
 function finishVoting() {
   votingRound++;
 
@@ -4333,12 +4342,7 @@ if (!meetingSkipped && !skipTie) {
 
       } else {
 
-        if (resolveJinx(hunterIndex, targetIndex)) {
-  hunterPendingKill = null;
-  return;
-}
-
-target.alive = false;
+        attemptKill(attackerIndex, targetIndex);
 
 const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
@@ -4560,14 +4564,7 @@ const loverDeathIndex = handleLoverChainDeath(targetIndex);
 
     } else {
 
-      const butcherIndex = players.findIndex(p => p.role === "Butcher");
-
-if (resolveJinx(butcherIndex, targetIndex)) {
-  butcherPendingKill = null;
-  return;
-}
-
-target.alive = false;
+      attemptKill(attackerIndex, targetIndex);
       handleLoverChainDeath(targetIndex);
 
       meetingMessages += `
@@ -4719,12 +4716,7 @@ if (evilVotedSame) {
 
     if (isEvil) {
 
-if (resolveJinx(sheriffIndex, sheriffShotTarget)) {
-  sheriffShotTarget = null;
-  return;
-}
-
-      target.alive = false;
+      attemptKill(attackerIndex, targetIndex);
       const loverDeathIndex = handleLoverChainDeath(sheriffShotTarget);
 
       meetingMessages += `
@@ -5313,11 +5305,8 @@ function resolveSheriffAfterShield() {
   let loverDeathIndex = null;
 
   if (sheriffAllowedRoles.includes(target.role)) {
-if (resolveJinx(sheriffIndex, sheriffShotTarget)) {
-  sheriffShotTarget = null;
-  return;
-}
-    target.alive = false;
+
+    attemptKill(attackerIndex, targetIndex);
     if (
   hunterMarkedTarget !== null &&
   !players[hunterMarkedTarget]?.alive
